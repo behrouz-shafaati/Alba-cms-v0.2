@@ -1,0 +1,9 @@
+{
+  "language": "فارسی",
+  "dir": "rtl",
+  "installer": {
+    "title": "نصب اولیه",
+    "chooseLanguage": "انتخاب زبان",
+    "next": "ادامه"
+  }
+}

@@ -1,0 +1,48 @@
+.root {
+  position: relative;
+}
+
+.trigger {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.desktopPanel {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 100%;
+  background: var(--panel-bg);
+  border-radius: 12px;
+  z-index: 50;
+}
+
+.mobilePanel {
+  position: fixed;
+  inset: 0;
+  background: var(--panel-bg);
+  z-index: 100;
+  padding: 16px;
+}
+
+.search {
+  width: 100%;
+  padding: 8px;
+}
+
+.list {
+  margin-top: 8px;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}

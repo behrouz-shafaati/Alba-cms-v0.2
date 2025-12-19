@@ -1,0 +1,9 @@
+{
+  "language": "English",
+  "dir": "ltr",
+  "installer": {
+    "title": "Installation",
+    "chooseLanguage": "Choose language",
+    "next": "Continue"
+  }
+}
