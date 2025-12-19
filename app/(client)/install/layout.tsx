@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { getDirection, resolveLocale } from '@/lib/i18n/resolve-locale'
-import '../../globals.css'
+import '@/app/globals.css'
 import { ThemeScript } from '@/components/ui/theme-toggle/theme-script'
 
 const geistSans = Geist({

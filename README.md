@@ -1,36 +1,118 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ALBA CMS
 
-## Getting Started
+ALBA CMS is an open-source, Next.js 15-based content management system focused on **static-first (SSG)** content generation, performance, and SEO. It uses **TailwindCSS** with **shadcn/ui**, **Tiptap** for JSON-based rich text, and **Server Actions** instead of API routes.
 
-First, run the development server:
+---
+
+## Features
+
+- Static-first content generation (SSG)
+- Fully optimized for SEO and performance (LCP, FCP, etc.)
+- Server Actions-based backend
+- Rich text support via Tiptap (JSON)
+- TailwindCSS + shadcn/ui components
+- Migration tools for importing content, users, categories, and comments from WordPress
+- WAF-friendly request patterns with authentication
+
+---
+
+## Installation
+
+1. Clone the repository:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/behrouz-shafaati/Alba-cms
+cd Alba-cms
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Set environment variables in `.env`:
 
-## Learn More
+```
+DATABASE_URL=<your-database-connection-string>
+ALBACMS_SECRET=<your-secret-key>
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Seed data** (required for first run):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Open `@/lib/seed-data.js` and set your **super admin user**:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```js
+export const superAdmin = {
+  email: 'admin@example.com',
+  username: 'superadmin',
+  password: 'strongpassword',
+}
+```
 
-## Deploy on Vercel
+Run the seed script:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm seed
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This initializes the database with default content and the super admin account.
+
+5. Start the development server:
+
+```bash
+pnpm dev
+```
+
+---
+
+## Migration Tool
+
+ALBA CMS includes a migration tool to safely import content from WordPress.
+
+### Key points
+
+- Requests must include the custom API key in headers: `X-Albacms-Key`.
+- Requests must identify themselves using the User-Agent:
+
+```text
+ALBA-CMS-Migrator/0.1 (+https://github.com/behrouz-shafaati/Alba-cms)
+```
+
+- Use `define('ALBACMS_MIGRATION_MODE', true);` in your plugin or `wp-config.php` to enable migration endpoints.
+- Migration endpoints are **WAF-friendly**, use **rate-limiting**, and batch requests to avoid IP blocking.
+
+---
+
+## Versioning
+
+ALBA CMS follows **semantic versioning**:
+
+- `0.x` → Pre-release / development
+- `0.1.1` → Initial internal release
+- `1.0.0` → Public stable release
+
+---
+
+## Tech Stack
+
+- **Frontend:** Next.js 15, TailwindCSS, shadcn/ui, Tiptap
+- **Backend:** Next.js Server Actions, Mongo DB, SSG-first
+- **Database:** MongoDb
+- **Migration:** WordPress API importer with secure headers and batch requests
+
+---
+
+## Security
+
+- All migration requests are authenticated using an **API key**.
+- Requests are identified with a clear **User-Agent** pointing to the public repo.
+- Endpoints are only active when `ALBACMS_MIGRATION_MODE` is enabled.
+- Requests are batch-oriented and rate-limited to avoid IP blocking from WordPress WAFs like BitNinja.
+
+---
+
+## Author
+
+**Behrouz Shafaati**  
+GitHub: [https://github.com/behrouz-shafaati/Alba-cms](https://github.com/behrouz-shafaati/Alba-cms)

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import { DropdownContext } from './DropdownContext'
 
 interface DropdownProps {
   trigger: React.ReactNode
@@ -17,7 +18,8 @@ export default function Dropdown({ trigger, children }: DropdownProps) {
   const triggerRef = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const toggle = () => setOpen(!open)
+  const close = () => setOpen(false)
+  const toggle = () => setOpen((v) => !v)
 
   useEffect(() => {
     if (!open) return
@@ -69,17 +71,19 @@ export default function Dropdown({ trigger, children }: DropdownProps) {
 
       {open &&
         createPortal(
-          <div
-            ref={dropdownRef}
-            className="absolute z-50 bg-white shadow-lg rounded-md border border-gray-200 p-2"
-            style={{
-              top: position.top + window.scrollY,
-              left: position.left + window.scrollX,
-              minWidth: triggerRef.current?.offsetWidth,
-            }}
-          >
-            {children}
-          </div>,
+          <DropdownContext.Provider value={{ close }}>
+            <div
+              ref={dropdownRef}
+              className="absolute z-50 bg-white shadow-lg rounded-md border border-gray-200 p-2"
+              style={{
+                top: position.top + window.scrollY,
+                left: position.left + window.scrollX,
+                minWidth: triggerRef.current?.offsetWidth,
+              }}
+            >
+              {children}
+            </div>
+          </DropdownContext.Provider>,
           document.body
         )}
     </div>

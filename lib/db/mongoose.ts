@@ -1,11 +1,6 @@
 import mongoose, { type Mongoose } from 'mongoose'
 import { readConfig } from '@/lib/config/config'
 
-const MONGO_URI = readConfig()?.db?.uri
-if (!MONGO_URI) {
-  throw new Error('❌ MongoDB connection string is missing')
-}
-
 type MongooseCache = {
   conn: Mongoose | null
   promise: Promise<Mongoose> | null
@@ -22,7 +17,12 @@ if (!cached) {
   cached = global.mongoose = { conn: null, promise: null }
 }
 
-export async function connectMongo(): Promise<Mongoose> {
+export default async function dbConnect(): Promise<Mongoose> {
+  const MONGO_URI = readConfig()?.db?.uri
+  if (!MONGO_URI) {
+    throw new Error('MongoDB connection string is missing')
+  }
+
   if (cached!.conn) {
     return cached!.conn
   }

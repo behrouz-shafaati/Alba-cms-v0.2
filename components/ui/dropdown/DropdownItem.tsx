@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { useDropdown } from './DropdownContext'
 
 interface DropdownItemProps {
   children: React.ReactNode
@@ -13,10 +14,17 @@ export default function DropdownItem({
   onClick,
   disabled,
 }: DropdownItemProps) {
+  const { close } = useDropdown()
+  const handleClick = () => {
+    if (disabled) return
+    onClick?.()
+    close()
+  }
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       disabled={disabled}
       className={`
         w-full text-start px-4 py-2 rounded-md
