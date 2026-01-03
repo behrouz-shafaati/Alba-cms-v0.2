@@ -1,8 +1,11 @@
 'use server'
 
 import { getSettings } from './controller'
-import { SettingsKey } from './interface'
+import { GetSessingsProps, Settings } from './interface'
 
-export async function getSettingsAction(key: SettingsKey = '') {
-  return getSettings(key)
+export async function getSettingsAction({
+  key = '',
+  lang = '',
+}: GetSessingsProps = {}): Promise<Settings> {
+  return getSettings({ key, lang })
 }

@@ -12,7 +12,6 @@ interface ResolveLocaleOptions {
 }
 
 export function resolveLocale({ locale }: ResolveLocaleOptions): Locale {
-  console.log('#234 raw locale:', locale)
   let resolvedLocale = DEFAULT_LOCALE
   // 1. اگر در URL زبان هست
   if (locales.includes(locale as Locale)) {
@@ -20,7 +19,6 @@ export function resolveLocale({ locale }: ResolveLocaleOptions): Locale {
   }
 
   // 2. اگر زبان در URL نیست
-  console.log('#2376 resolvedLocale:', resolvedLocale)
   return resolvedLocale as Locale
 }
 

@@ -1,9 +1,86 @@
 {
+  "$schema": "./schema.json",
+  "lang": "en",
   "language": "English",
   "dir": "ltr",
+  "shared": {
+    "chooseYorLanguage": "Choose your language",
+    "next": "Next",
+    "previous": "Previous",
+    "mongodbUri": "Mongodb URI",
+    "failMongodbConnection": "Connection to database failed.",
+    "fillForm": "Please fill in the required fields.",
+    "dbError": "Database error",
+    "login": "Login"
+  },
   "installer": {
     "title": "Installation",
     "chooseLanguage": "Choose language",
-    "next": "Continue"
+    "steps": {
+      "dashboard_lang": {
+        "title": "Your language"
+      },
+      "db": {
+        "title": "Database"
+      },
+      "admin": {
+        "title": "Create admin"
+      },
+      "suported_lang": {
+        "title": "Site Languages"
+      },
+      "finish": {
+        "title": "Finish",
+        "description": "Configuration completed successfully 🥳"
+      }
+    }
+  },
+  "input": {
+    "combobox": {
+      "placeholder": "Choose"
+    }
+  },
+  "user": {
+    "fName": {
+      "title": "First name",
+      "required_error": "Please enter your name."
+    },
+    "lName": {
+      "title": "Last name",
+      "required_error": "Please enter your last name."
+    },
+    "email": {
+      "title": "Email",
+      "required_error": "Please enter your email.",
+      "valid_error": "Please enter a valid email."
+    },
+    "mobile": {
+      "title": "Mobile",
+      "required_error": "Please enter your mobile."
+    },
+    "password": {
+      "title": "Password",
+      "required_error": "Please enter your password.",
+      "min_error": "The password must be at least 6 characters long."
+    },
+    "confirmPassword": {
+      "title": "Confirm password",
+      "required_error": "Please enter password confirmation.",
+      "dontEqual_error": "Password confirmation is not the same as a password."
+    },
+    "createSuccessful": "User created successfully."
+  },
+  "languages": {
+    "locales": {
+      "title": "Site languages",
+      "placeholder": "Choose your site languages...",
+      "required_error": "Please select your site languages."
+    },
+    "siteDefault": {
+      "title": "Default language",
+      "placeholder": "Select default language...",
+      "required_error": "Please select your default site language."
+    },
+    "success": "Languages ​​were successfully set."
   }
 }

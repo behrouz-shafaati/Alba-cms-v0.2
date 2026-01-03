@@ -11,5 +11,5 @@ export function useClickOutside(
     }
     document.addEventListener('mousedown', listener)
     return () => document.removeEventListener('mousedown', listener)
-  }, [])
+  }, [ref, handler])
 }

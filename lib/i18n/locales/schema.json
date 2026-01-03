@@ -1,0 +1,193 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "lang": { "type": "string" },
+    "language": { "type": "string" },
+    "dir": { "type": "string" },
+    "shared": {
+      "type": "object",
+      "properties": {
+        "chooseYorLanguage": { "type": "string" },
+        "mongodbUri": { "type": "string" },
+        "failMongodbConnection": { "type": "string" },
+        "next": { "type": "string" },
+        "previous": { "type": "string" },
+        "dbError": { "type": "string" },
+        "fillForm": { "type": "string" },
+        "login": { "type": "string" }
+      },
+      "required": [
+        "chooseYorLanguage",
+        "next",
+        "previous",
+        "mongodbUri",
+        "failMongodbConnection",
+        "fillForm",
+        "dbError",
+        "login"
+      ]
+    },
+    "installer": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "chooseLanguage": { "type": "string" },
+        "steps": {
+          "type": "object",
+          "properties": {
+            "dashboard_lang": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" }
+              },
+              "required": ["title"]
+            },
+            "db": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" }
+              },
+              "required": ["title"]
+            },
+            "admin": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" }
+              },
+              "required": ["title"]
+            },
+            "suported_lang": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" }
+              },
+              "required": ["title"]
+            },
+            "finish": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "description": { "type": "string" }
+              },
+              "required": ["title", "description"]
+            }
+          },
+          "required": [
+            "dashboard_lang",
+            "db",
+            "admin",
+            "suported_lang",
+            "finish"
+          ]
+        }
+      },
+      "required": ["title", "chooseLanguage", "steps"]
+    },
+    "input": {
+      "type": "object",
+      "properties": {
+        "combobox": {
+          "type": "object",
+          "properties": {
+            "placeholder": { "type": "string" }
+          },
+          "required": ["placeholder"]
+        }
+      },
+      "required": ["combobox"]
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "fName": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "required_error": { "type": "string" }
+          },
+          "required": ["title", "required_error"]
+        },
+        "lName": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "required_error": { "type": "string" }
+          },
+          "required": ["title", "required_error"]
+        },
+        "email": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "valid_error": { "type": "string" },
+            "required_error": { "type": "string" }
+          },
+          "required": ["title", "required_error", "valid_error"]
+        },
+        "mobile": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "required_error": { "type": "string" }
+          },
+          "required": ["title", "required_error"]
+        },
+        "password": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "min_error": { "type": "string" },
+            "required_error": { "type": "string" }
+          },
+          "required": ["title", "required_error", "min_error"]
+        },
+        "confirmPassword": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "dontEqual_error": { "type": "string" },
+            "required_error": { "type": "string" }
+          },
+          "required": ["title", "required_error", "dontEqual_error"]
+        },
+        "createSuccessful": { "type": "string" }
+      },
+      "required": [
+        "fName",
+        "confirmPassword",
+        "password",
+        "mobile",
+        "email",
+        "lName",
+        "createSuccessful"
+      ]
+    },
+    "languages": {
+      "type": "object",
+      "properties": {
+        "locales": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "required_error": { "type": "string" },
+            "placeholder": { "type": "string" }
+          },
+          "required": ["title", "required_error", "placeholder"]
+        },
+        "siteDefault": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "required_error": { "type": "string" },
+            "placeholder": { "type": "string" }
+          },
+          "required": ["title", "required_error", "placeholder"]
+        },
+        "success": { "type": "string" }
+      },
+      "required": ["locales", "siteDefault", "success"]
+    }
+  },
+  "required": ["installer", "input", "user"]
+}

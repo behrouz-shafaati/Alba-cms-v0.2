@@ -11,6 +11,7 @@ interface DropdownProps {
 
 export default function Dropdown({ trigger, children }: DropdownProps) {
   const [open, setOpen] = useState(false)
+  const [ready, setReady] = useState(false)
   const [position, setPosition] = useState<{ top: number; left: number }>({
     top: 0,
     left: 0,
@@ -18,7 +19,10 @@ export default function Dropdown({ trigger, children }: DropdownProps) {
   const triggerRef = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const close = () => setOpen(false)
+  const close = () => {
+    setOpen(false)
+    setReady(false)
+  }
   const toggle = () => setOpen((v) => !v)
 
   useEffect(() => {
@@ -31,7 +35,7 @@ export default function Dropdown({ trigger, children }: DropdownProps) {
         !triggerRef.current.contains(e.target as Node) &&
         !dropdownRef.current.contains(e.target as Node)
       ) {
-        setOpen(false)
+        close()
       }
     }
 
@@ -61,6 +65,7 @@ export default function Dropdown({ trigger, children }: DropdownProps) {
     }
 
     setPosition({ top: Math.max(top, 8), left: Math.max(left, 8) })
+    setReady(true)
   }, [open])
 
   return (
@@ -74,11 +79,17 @@ export default function Dropdown({ trigger, children }: DropdownProps) {
           <DropdownContext.Provider value={{ close }}>
             <div
               ref={dropdownRef}
-              className="absolute z-50 bg-white shadow-lg rounded-md border border-gray-200 p-2"
+              className={`
+                absolute z-50 rounded-md 
+                bg-white text-gray-800 shadow-lg
+                dark:bg-gray-800 dark:text-gray-100 dark:shadow-xl
+                transition-opacity duration-150
+              `}
               style={{
                 top: position.top + window.scrollY,
                 left: position.left + window.scrollX,
                 minWidth: triggerRef.current?.offsetWidth,
+                opacity: ready ? 1 : 0,
               }}
             >
               {children}

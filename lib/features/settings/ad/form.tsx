@@ -1,0 +1,126 @@
+'use client'
+import { useActionState, useEffect, useRef, useState } from 'react'
+import { Link } from 'lucide-react'
+import { Settings } from '../interface'
+import { useSession } from '@/components/context/SessionContext'
+import { CampaignTranslation } from '@/lib/features/campaign/interface'
+import { updateAdSettings } from './actions'
+import authorize from '@/lib/utils/authorize'
+import { FormActionState, Option } from '@/lib/types'
+import { toast } from 'sonner'
+import AccessDenied from '@/components/other/access-denied'
+import getTranslation from '@/lib/utils/getTranslation'
+import Select from '@/components/input/select'
+import Text from '@/components/input/text'
+import FileUpload from '@/components/input/file-upload'
+import SubmitButton from '@/components/input/submit-button'
+
+interface SettingsFormProps {
+  settings: Settings
+}
+
+export const FormAD: React.FC<SettingsFormProps> = ({ settings }) => {
+  console.log('#ad form settings:', settings)
+  const locale = 'fa'
+  const { user } = useSession()
+  const userRoles = user?.roles || []
+
+  const canModerate = authorize(userRoles, 'settings.moderate.any')
+  const formRef = useRef<HTMLFormElement>(null)
+  const initialState: FormActionState = {
+    values: settings?.ad,
+    message: null,
+    errors: {},
+    success: true,
+  }
+  const [state, dispatch] = useActionState(
+    updateAdSettings as any,
+    initialState
+  )
+
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    if (state.message && state.message !== null)
+      if (state.success) toast.success(state.message)
+      else toast.error(state.message)
+  }, [state])
+  if (!canModerate) return <AccessDenied />
+  const translation: CampaignTranslation = getTranslation({
+    translations: state?.values?.translations || [],
+  })
+  const fallbackBehaviorOptions: Option[] = [
+    { label: 'نمایش یک بنر تصادفی', value: 'random' },
+    { label: 'نمایش بنر پیش‌فرض', value: 'default_banner' },
+    { label: 'عدم نمایش', value: 'hide' },
+  ]
+  const aspectKeys = ['1/1', '4/1', '10/1', '20/1', '30/1']
+  return (
+    <>
+      <div className=" p-4 md:p-8 pt-6">
+        <div className="flex items-center justify-between">
+          {/* <Heading title={title} description={description} /> */}
+        </div>
+        {/* <Separator /> */}
+        <form action={dispatch} ref={formRef} className="space-y-8 w-full">
+          <div className="md:grid md:grid-cols-3 gap-8">
+            <input type="hidden" name="locale" value="fa" readOnly />
+
+            {/* رفتار در صورت نبود تبلیغ */}
+            <Select
+              title="رفتار در صورت نبود تبلیغ"
+              name="fallbackBehavior"
+              placeholder="رفتار در صورت نبود تبلیغ"
+              options={fallbackBehaviorOptions}
+              defaultValue={state?.values?.fallbackBehavior || 'random'}
+              icon={<Link className="w-4 h-4" />}
+            />
+
+            {/* targetUrl */}
+            <Text
+              title="لینک مقصد بنرهای پیش فرض"
+              name="targetUrl"
+              defaultValue={state?.values?.targetUrl}
+              placeholder="لینک مقصد"
+              state={state}
+              icon={<Link className="w-4 h-4" />}
+            />
+          </div>
+          <h3>بنرهای پیش‌فرض</h3>
+          {/* نمایش لیست بنرها */}
+          <div>
+            {aspectKeys.map((aspectKey, index) => {
+              const ratio = aspectKey.split('/')
+              const defaultValu = translation?.banners?.find(
+                (b) => b.aspect === aspectKey
+              )
+              return (
+                <section
+                  key={index}
+                  className="mt-2 rounded-md  p-4 md:mt-0 md:p-6"
+                >
+                  <input
+                    type="hidden"
+                    name="banners[][aspect]"
+                    value={aspectKey}
+                  />
+                  <FileUpload
+                    title={`نسبت عرض به طول ${ratio[0]}/${ratio[1]}`}
+                    name="banners[][file]"
+                    state={state}
+                    maxFiles={1}
+                    allowedFileTypes={['image']}
+                    defaultValues={
+                      defaultValu?.fileDetails ? [defaultValu?.fileDetails] : []
+                    }
+                    onLoading={setLoading}
+                  />
+                </section>
+              )
+            })}
+          </div>
+          <SubmitButton loading={loading} />
+        </form>
+      </div>
+    </>
+  )
+}

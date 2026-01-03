@@ -1,16 +1,15 @@
-import { getDictionary } from '@/lib/i18n/index'
-import { PageComponentProps } from '@/lib/types/types'
 import SelectLanguageForm from './form'
-import { ThemeToggle } from '@/components/ui/theme-toggle/ThemeToggle'
+import InstallerSteper from '../InstallerStepper'
 
-export default function InstallLanguagePage({ locale }: PageComponentProps) {
-  const dict = getDictionary(locale) // fallback
-
+export default function InstallLanguagePage() {
   return (
-    <>
-      <h1 className="text-2xl font-bold">{dict.installer.chooseLanguage}</h1>
-      <SelectLanguageForm />
-      <ThemeToggle />
-    </>
+    <div className=" flex flex-col items-center justify-center">
+      <div className="w-full my-16">
+        <InstallerSteper currentStep="dashboard_lang" />
+      </div>
+      <div>
+        <SelectLanguageForm />
+      </div>
+    </div>
   )
 }

@@ -1,13 +1,12 @@
 const getTranslation = ({
   translations,
-  locale = 'fa',
+  lang = 'fa',
 }: {
   translations: any[]
-  locale?: string
+  lang?: string
 }) => {
   if (typeof translations === 'undefined' || translations == null) return {}
-  const translation =
-    translations?.find((t) => t.lang === locale) || translations[0] || {}
+  const translation = translations?.find((t) => t.lang === lang) || {}
   return translation
 }
 

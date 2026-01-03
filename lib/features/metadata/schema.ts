@@ -28,12 +28,11 @@ const MetadataSchema = new Schema<T>(
 
 // Unique slug per type (فقط برای غیر حذف شده‌ها)
 // Partial Unique Index
-MetadataSchema.index({ type: 1, key: 1 }, { unique: true })
+MetadataSchema.index({ scope: 1, key: 1 }, { unique: true })
 
 // ==================== Middlewares ====================
-// MetadataSchema.pre(['findOne', 'find'], function (next: any) {
+// MetadataSchema.pre(['findOne', 'find'], function () {
 //   this.where({ deleted: false })
-//   next()
 // })
 
 const transform = (doc: any, ret: any, options: any) => {
@@ -41,6 +40,7 @@ const transform = (doc: any, ret: any, options: any) => {
   delete ret._id
   delete ret.__v
   delete ret.deleted
+  return ret
 }
 
 MetadataSchema.set('toObject', {

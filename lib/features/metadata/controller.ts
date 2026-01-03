@@ -110,6 +110,7 @@ export default class metadataController extends baseController {
   async findOneAndUpdate(payload: Update) {
     payload.params = this.makeCleanDataBeforeSave(payload.params)
     payload.filters = this.standardizationFilters(payload.filters)
+    console.log('#4098 metadata payload:', payload)
     return super.findOneAndUpdate(payload)
   }
 

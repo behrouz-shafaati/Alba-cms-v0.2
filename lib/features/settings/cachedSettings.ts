@@ -10,6 +10,7 @@ const getCachedSettings = unstable_cache(
       settingsFromDB?.reason == 'MISSING_DB_URI'
     )
       return { appInstalled: false }
+    if (!settingsFromDB.data) return { appInstalled: false }
     return Object.fromEntries(settingsFromDB.data.map((s) => [s.key, s.value]))
   },
   ['site-settings'],

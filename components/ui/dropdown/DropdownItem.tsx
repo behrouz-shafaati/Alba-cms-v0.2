@@ -28,7 +28,7 @@ export default function DropdownItem({
       disabled={disabled}
       className={`
         w-full text-start px-4 py-2 rounded-md
-        text-gray-700 hover:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed
+        dark:hover:bg-gray-700 hover:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed
         transition-colors duration-150
       `}
     >

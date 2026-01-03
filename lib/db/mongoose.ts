@@ -18,16 +18,19 @@ if (!cached) {
 }
 
 export default async function dbConnect(): Promise<Mongoose> {
-  const MONGO_URI = readConfig()?.db?.uri
-  if (!MONGO_URI) {
-    throw new Error('MongoDB connection string is missing')
-  }
-
   if (cached!.conn) {
     return cached!.conn
   }
 
+  console.log('☢️ MongoDB connection MONGO_URI')
+  const MONGO_URI = readConfig()?.db?.uri
+  if (!MONGO_URI) {
+    console.log('🟥 MongoDB connection string is missing')
+    throw new Error('MongoDB connection string is missing')
+  }
+
   if (!cached!.promise) {
+    console.log('🔴 try connect mongo db')
     cached!.promise = mongoose.connect(MONGO_URI as string).then((m) => m) // ⬅️ m = Mongoose connection
   }
 

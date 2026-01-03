@@ -1,0 +1,114 @@
+{
+  "$schema": "./schema.json",
+  "lang": "en",
+  "language": "English",
+  "dir": "ltr",
+  "shared": {
+    "chooseYorLanguage": "Choose your language",
+    "next": "Next",
+    "previous": "Previous",
+    "mongodbUri": "Mongodb URI",
+    "failMongodbConnection": "Connection to database failed.",
+    "fillForm": "Please fill in the required fields.",
+    "dbError": "Database error",
+    "login": "Login",
+    "dashboard": "Dashboard",
+    "submitLabel": "Save",
+    "notAuthorized": "You do not have permission to perform this operation."
+  },
+  "input": {
+    "combobox": {
+      "placeholder": "Choose...",
+      "notFound": "No items found.",
+      "loading": "Loading...",
+      "all": "All"
+    }
+  },
+  "feature": {
+    "dashboard": { "title": "Dashboard" },
+    "post": { "title": "Posts", "create": "Add post" },
+    "postComment": { "title": "Comments" },
+    "user": { "title": "Users", "create": "Add user" },
+    "category": { "title": "Categories", "create": "Add category" },
+    "tag": { "title": "Tags", "create": "Add tag" },
+    "menu": { "title": "Menus", "create": "Add menu" },
+    "page": { "title": "Pages", "create": "Add page" },
+    "adCampaign": { "title": "AD Campaign", "create": "Add campaign" },
+    "form": { "title": "Forms", "create": "Add form" },
+    "file": {
+      "title": "Files",
+      "dropHere": "Drop files here...",
+      "dropHereOrClick": "Drag and drop files here or click to select files.",
+      "featured": "Featured",
+      "fileDetailsForm": {
+        "title": "File Details",
+        "name": "Title",
+        "alt": "Alt",
+        "description": "Description",
+        "href": "Link href",
+        "target": "Open in",
+        "targetSelf": "Self",
+        "targetBlamk": "Blank",
+        "cancel": "Cancel",
+        "save": "Save"
+      },
+      "error": {
+        "upload": "Error in file upload.",
+        "maxCount": "A maximum of %s% files can be uploaded.",
+        "delete": "Error deleting file."
+      }
+    },
+    "template": { "title": "Templates", "create": "Add template" },
+    "section": { "title": "Sections", "create": "Add section" },
+    "setting": {
+      "title": "Settings",
+      "success": "Settings saved successfully.",
+      "general": {
+        "title": "General",
+        "siteTitle": "Site title",
+        "siteIntroduction": "Short introduction",
+        "siteUrl": "Site URL",
+        "homePage": "Home page",
+        "termsPage": "Terms page",
+        "privacyPage": "Privacy page",
+        "favicon": "Favicon"
+      },
+      "users": {
+        "title": "Users"
+      },
+      "locales": {
+        "title": "Locales",
+        "locales": {
+          "title": "Site languages",
+          "placeholder": "Choose your site languages...",
+          "required_error": "Please select your site languages."
+        },
+        "siteDefault": {
+          "title": "Default language",
+          "placeholder": "Select default language...",
+          "required_error": "Please select your default site language."
+        },
+        "success": "Languages ​​were successfully set."
+      },
+      "appearance": {
+        "title": "Appearance"
+      },
+      "adCampaign": {
+        "title": "AD Campaign"
+      },
+      "email": {
+        "title": "Email"
+      },
+      "sms": {
+        "title": "SMS"
+      },
+      "validation": {
+        "title": "Validation"
+      },
+      "wpEmigration": {
+        "title": "WP Emigration"
+      }
+    },
+    "logout": { "title": "Logout" }
+  }
+}

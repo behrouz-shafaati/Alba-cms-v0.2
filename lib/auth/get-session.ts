@@ -3,13 +3,21 @@ import 'server-only'
 import { cookies } from 'next/headers'
 import { cache } from 'react'
 import { decrypt } from './decrypt'
-import type { Session } from './types'
+import { Session } from '../types'
+
+const guestUser = { user: { roles: ['guest'] } }
 
 export const getSession = cache(async (): Promise<Session | null> => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get('session')?.value
+  try {
+    const cookieStore = await cookies()
+    const session = cookieStore.get('session')?.value
+    if (!session) return guestUser
 
-  if (!token) return null
-
-  return await decrypt(token)
+    const decryptedSession = await decrypt(session)
+    if (!decryptedSession) return guestUser
+    return decryptedSession
+  } catch (err) {
+    console.error('❌ cookies() called outside request context', err)
+    return guestUser
+  }
 })

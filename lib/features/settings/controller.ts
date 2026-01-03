@@ -1,9 +1,9 @@
-import { Create, QueryFind, Update } from '@/lib/features/core/interface'
+import { Update } from '@/lib/features/core/interface'
 import metadataController from '@/lib/features/metadata/controller'
 import getTranslation from '@/lib/utils/getTranslation'
 import getCachedSettings from './cachedSettings'
 import { revalidateTag } from 'next/cache'
-import { Settings, SettingsKey } from './interface'
+import { GetSessingsProps, Settings, SettingsKey } from './interface'
 
 class controller extends metadataController {
   /**
@@ -73,9 +73,12 @@ export default settingsCtrl
  * - If no key is provided, returns the full settings object.
  * - If a key is provided, returns the value for that key or null if not found.
  */
-export const getSettings = async (
-  key: SettingsKey = ''
-): Promise<Record<string, unknown> | unknown | null | Settings> => {
+export const getSettings = async ({
+  key = '',
+  lang = '',
+}: GetSessingsProps = {}): Promise<
+  Record<string, unknown> | unknown | null | Settings
+> => {
   const settings: Settings = await getCachedSettings()
 
   if (!key) {
@@ -84,6 +87,7 @@ export const getSettings = async (
 
   const siteInfo = getTranslation({
     translations: settings?.general?.translations || [],
+    lang,
   })
   const _settings = { ...settings, ...siteInfo }
   return Object.prototype.hasOwnProperty.call(_settings, key)

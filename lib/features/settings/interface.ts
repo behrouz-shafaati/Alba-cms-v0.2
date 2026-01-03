@@ -1,4 +1,5 @@
-import { SupportedLanguage } from '@/lib/types/types'
+import { SupportedLanguage } from '@/lib/types'
+import { Language } from './locales/interface'
 
 type GeneralTranslation = {
   lang: SupportedLanguage
@@ -22,6 +23,7 @@ type General = {
 export interface Settings {
   appInstalled?: boolean
   general?: General
+  language?: Language
 }
 
 export type SettingsKey =
@@ -32,3 +34,9 @@ export type SettingsKey =
   | 'general'
   | 'validation'
   | 'users'
+  | 'language'
+
+export type GetSessingsProps = {
+  key?: SettingsKey
+  lang?: string
+}

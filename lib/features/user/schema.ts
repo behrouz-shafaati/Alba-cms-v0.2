@@ -1,0 +1,148 @@
+import mongoose, { Schema, model } from 'mongoose'
+import { UserSchema } from '@/lib/features/user/interface'
+import hashPassword from '@/lib/utils/hashPassword'
+
+const TranslationsUserSchema = new Schema(
+  {
+    lang: { type: String, required: true }, // "fa", "en", "de", ...
+    about: { type: String, default: '' },
+  },
+  { _id: false }
+)
+
+const userSchema = new Schema<UserSchema>(
+  {
+    roles: { type: [String], required: true },
+    mobile: {
+      type: String,
+      default: null, // می‌تونه null باشه. ممکنه کاربر با این موبال پاک شده باشد یا موبال خود را وریفای نکرده باشد
+      trim: true,
+    },
+    mobileVerified: { type: Boolean, default: false },
+    email: {
+      type: String,
+      default: null, // می‌تونه null باشه
+      trim: true,
+      lowercase: true,
+    },
+    userName: { type: String, required: true, unique: true },
+    emailVerified: { type: Boolean, default: false },
+    password: { type: String, required: true },
+    firstName: String,
+    lastName: String,
+    country: String,
+    state: String,
+    city: String,
+    address: String,
+    image: {
+      type: Schema.Types.ObjectId,
+      ref: 'file',
+      default: null,
+      required: false,
+    },
+    language: String,
+    darkMode: Boolean,
+    active: { type: Boolean, default: true },
+    passwordNeedsReset: {
+      type: Boolean,
+      default: false,
+    },
+    metadata: {
+      type: Schema.Types.Mixed,
+    },
+    deleted: { type: Boolean, default: false },
+    translations: [TranslationsUserSchema],
+  },
+  { timestamps: true }
+)
+
+userSchema.index({
+  firstName: 'text',
+  lastName: 'text',
+  email: 'text',
+  mobile: 'text',
+})
+
+userSchema.pre('save', async function () {
+  if (this.isModified('password')) {
+    this.password = await hashPassword(this.password)
+  }
+  if (this.email) {
+    this.email = this.email.toLowerCase()
+  }
+})
+
+userSchema.pre('findOneAndUpdate', async function () {
+  const update = this.getUpdate() as any
+  if (!update) return
+
+  // همیشه با $set کار کن
+  update.$set = update.$set || {}
+
+  // ===== password =====
+  const rawPassword = update.password ?? update.$set.password
+  if (rawPassword) {
+    update.$set.password = await hashPassword(rawPassword)
+    delete update.password
+  }
+
+  // ===== email =====
+  if (typeof update.$set.email === 'string') {
+    update.$set.email = update.$set.email.toLowerCase()
+  }
+
+  this.setUpdate(update)
+})
+
+// برای اینکه null‌تکراری مجاز باشد
+userSchema.index(
+  { mobile: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      mobile: { $exists: true, $ne: null },
+      deleted: false,
+    },
+  }
+)
+
+userSchema.index(
+  { email: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      email: { $exists: true, $ne: null },
+      deleted: false,
+    },
+  }
+)
+
+userSchema
+  .pre('findOne', function () {
+    this.populate('image')
+  })
+  .pre('find', function () {
+    this.populate('image')
+  })
+
+const transform = (doc: any, ret: any, options: any) => {
+  ret.id = ret._id?.toHexString()
+  ret.name =
+    ret.firstName && ret.lastName
+      ? `${ret.firstName} ${ret.lastName}`
+      : ret.email
+  delete ret._id
+  delete ret.__v
+  // delete ret.password;
+  delete ret.deleted
+}
+
+userSchema.set('toObject', {
+  transform,
+})
+
+userSchema.set('toJSON', {
+  transform,
+})
+
+export default mongoose.models?.user || model<UserSchema>('user', userSchema)

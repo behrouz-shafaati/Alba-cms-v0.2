@@ -3,6 +3,14 @@ import '@/app/globals.css'
 import { getSettings } from '@/lib/features/settings/controller'
 import { Settings } from '@/lib/features/settings/interface'
 import { redirect } from 'next/navigation'
+import { ThemeProvider } from '@/components/context/theme-provider'
+import { DashboardLocaleProvider } from '@/components/context/dashboard-locale-provider'
+import { getDashboardDictionary } from '@/lib/i18n/dashboard'
+import { getSession } from '@/lib/auth/get-session'
+import { Session } from '@/lib/types'
+import authorize from '@/lib/utils/authorize'
+import { resolveLocale } from '@/lib/i18n/resolve-locale'
+import { SessionProvider } from '@/components/context/SessionContext'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -16,9 +24,35 @@ export default async function RootLayout({
 }>) {
   const siteSettings: Settings = (await getSettings()) as Settings
   if (siteSettings?.appInstalled == false) redirect('/install/language')
+
+  const session = (await getSession()) as Session
+  const user = session?.user
+  const haveDashboardAccess = await authorize(
+    user.roles,
+    'dashboard.view.any',
+    false
+  )
+  if (!haveDashboardAccess) {
+    redirect('/login')
+  }
+  const locale = user?.locale || siteSettings?.language?.dashboardDefault || ''
+  const resolvedLocale = resolveLocale({ locale })
+  const dictionary = getDashboardDictionary(resolvedLocale)
+  const dir = dictionary.dir
   return (
-    <html lang="en">
-      <body className={`antialiased`}>{children}</body>
+    <html lang={resolvedLocale} dir={dir}>
+      <body className={`antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <DashboardLocaleProvider dictionary={dictionary}>
+            <SessionProvider session={session}>{children}</SessionProvider>
+          </DashboardLocaleProvider>
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
