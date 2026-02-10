@@ -1,4 +1,4 @@
-import { Id, Model, SchemaModel } from '@/lib/entity/core/interface'
+import { Id, Model, SchemaModel } from '@/lib/features/core/interface'
 import {
   Content as PageContentComponent,
   Row as PageRowComponent,
@@ -18,7 +18,7 @@ export type PageTranslationSchema = {
   /**
    * زبان مطلب
    */
-  lang: string // "fa", "en", "de", ...
+  locale: string // "fa", "en", "de", ...
   /**
    * عنوان برگه
    */

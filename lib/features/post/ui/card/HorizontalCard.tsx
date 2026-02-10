@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { FastLink } from '@/components/FastLink'
+import { LinkAlba } from '@/components/other/link-alba'
 
 type HorizontalCardProps = {
   imageUrl?: string
@@ -28,7 +28,7 @@ export default function HorizontalCard({
         <h2 className="text-lg font-semibold">{title}</h2>
         <p className="text-sm text-muted-foreground line-clamp-3">{excerpt}</p>
         <Button asChild className="mt-auto w-fit">
-          <FastLink href={href}>ادامه مطلب</FastLink>
+          <LinkAlba href={href}>ادامه مطلب</LinkAlba>
         </Button>
       </CardContent>
     </Card>

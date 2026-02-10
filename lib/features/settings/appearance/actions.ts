@@ -90,7 +90,7 @@ async function sanitizeSettingsData(validatedFields: any) {
   const locale = validatedFields.locale
   // const session = (await getSession()) as Session
   // Create the settings
-  const settings: Appearance = await getSettings(METADATA_KEY)
+  const settings: Appearance = await getSettings({ key: METADATA_KEY })
   const settingsPayload = validatedFields
   const params = {
     value: settingsPayload,

@@ -3,15 +3,15 @@
 import { z } from 'zod'
 import tagCtrl from './controller'
 import { redirect } from 'next/navigation'
-import { Option, Session, State } from '@/types'
+import { Option, Session, FormActionState } from '@/lib/types'
 import { Tag, TagTranslationSchema } from './interface'
 import { getSession } from '@/lib/auth/get-session'
 import revalidatePathCtrl from '@/lib/revalidatePathCtrl'
 import { revalidatePath, unstable_cache } from 'next/cache'
 import { User } from '../user/interface'
-import { can } from '@/lib/utils/can.server'
-import { slugify } from '@/lib/utils'
+import slugify from '@/lib/utils/slugify'
 import stableHash from 'stable-hash'
+import authorize from '@/lib/utils/authorize'
 
 const FormSchema = z.object({
   title: z.string({}).min(1, { message: 'لطفا عنوان را وارد کنید.' }),
@@ -60,7 +60,10 @@ async function sanitizePostData(validatedFields: any, id?: string | undefined) {
  * @param formData - The form data.
  * @returns An object with errors and a message if there are any, or redirects to the tag dashboard.
  */
-export async function createTag(prevState: State, formData: FormData) {
+export async function createTag(
+  prevState: FormActionState,
+  formData: FormData
+) {
   const rawValues = Object.fromEntries(formData)
   const values = {
     ...rawValues,
@@ -76,7 +79,7 @@ export async function createTag(prevState: State, formData: FormData) {
   )
   try {
     const user = (await getSession())?.user as User
-    await can(user.roles, 'tag.create')
+    authorize(user.roles, 'tag.create')
     // If form validation fails, return errors early. Otherwise, continue.
     if (!validatedFields.success) {
       return {
@@ -127,7 +130,7 @@ export async function createTag(prevState: State, formData: FormData) {
 
 export async function updateTag(
   id: string,
-  prevState: State,
+  prevState: FormActionState,
   formData: FormData
 ) {
   const rawValues = Object.fromEntries(formData)
@@ -145,7 +148,7 @@ export async function updateTag(
   try {
     const user = (await getSession())?.user as User
     const prevTag = await tagCtrl.findById({ id })
-    await can(
+    authorize(
       user.roles,
       prevTag?.user.id !== user.id ? 'tag.edit.any' : 'tag.edit.own'
     )
@@ -195,7 +198,7 @@ export async function deleteTagsAction(ids: string[]) {
       filters: { _id: { $in: ids } },
     })
     for (const prevTag of prevTagResult.data) {
-      await can(
+      authorize(
         user.roles,
         prevTag?.user.id !== user.id ? 'tag.delete.any' : 'tag.delete.own'
       )

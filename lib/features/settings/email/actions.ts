@@ -13,6 +13,7 @@ import authorize from '@/lib/utils/authorize'
 const METADATA_KEY = 'email'
 
 const FormSchema = z.object({
+  locale: z.string({}).nullable().optional(),
   mail_host: z.string({}).nullable().optional(),
   mail_port: z.string({}).nullable().optional(),
   mail_username: z.string({}).nullable().optional(),

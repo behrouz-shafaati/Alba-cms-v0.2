@@ -36,9 +36,8 @@ export default function Combobox({
   onChange,
   showClean = false,
 }: ComboboxProps) {
-  const t = useLocale().input.combobox
-  const defaultPlaceholder = t.placeholder
-  const notFound = t.notFound
+  const t = useLocale()?.input?.combobox
+  const defaultPlaceholder = t?.placeholder || 'Choose...'
   const initialOptions = options ?? []
   const [_options, setOptions] = useState<Option[]>(initialOptions)
   const errorMessages = state?.errors?.[name] ?? []

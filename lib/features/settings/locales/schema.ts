@@ -1,9 +1,9 @@
 import { z } from 'zod'
-import { getDictionary } from '@/lib/i18n'
+import { getInstallDictionary } from '@/lib/i18n/install'
 import { SupportedLanguage } from '@/lib/types'
 
 export default function generateLocalesSchema(locale: SupportedLanguage) {
-  const t = getDictionary(locale)
+  const t = getInstallDictionary(locale)
 
   return z.object({
     locales: z

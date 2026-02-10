@@ -1,7 +1,7 @@
 import { Node, mergeAttributes } from '@tiptap/core'
 import { ReactNodeViewRenderer } from '@tiptap/react'
 import AdSlotView from '../node-view/AdSlotNodeView'
-import { generateObjectId } from '@/lib/utils/generateObjectId'
+import { generateObjectId } from '@/lib/utils/objectId'
 
 export const AdSlot = Node.create({
   name: 'adSlot',

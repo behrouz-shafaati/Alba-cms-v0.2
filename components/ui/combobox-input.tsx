@@ -119,7 +119,7 @@ export default function ComboboxInput({
             <CommandList>
               {loading && <CommandEmpty>{t.loading}</CommandEmpty>}
               {!loading && options.length === 0 && (
-                <CommandEmpty>{t.notFound}</CommandEmpty>
+                <CommandEmpty>{t?.notFound || 'No items found.'}</CommandEmpty>
               )}
               <CommandGroup>
                 {_options.map((option) => {

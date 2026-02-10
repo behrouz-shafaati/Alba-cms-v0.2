@@ -4,6 +4,7 @@ import { useState } from 'react'
 import MultipleSelectorInput, {
   Option as O,
 } from '../ui/multiple-selector-input'
+import { useLocale } from '@/hooks/useLocale'
 
 export interface Option extends O {
   value: string
@@ -38,6 +39,7 @@ export default function MultipleSelect({
   disabled = false,
   className = '',
 }: MultiSelect) {
+  const t = useLocale()
   const [values, setValues] = useState<Option[]>(defaultValues || [])
   const [defaultOptions, setDefaultOptions] = useState<Option[]>(
     defaultSuggestions || []
@@ -60,7 +62,9 @@ export default function MultipleSelect({
       <div className="relative">
         <div className=" top-16">
           <MultipleSelectorInput
-            placeholder={placeholder || 'انتخاب کنید'}
+            placeholder={
+              placeholder || t?.input?.combobox?.placeholder || 'Choose...'
+            }
             defaultOptions={defaultOptions || []}
             value={values}
             hidePlaceholderWhenSelected
@@ -70,7 +74,7 @@ export default function MultipleSelect({
             }}
             emptyIndicator={
               <p className="w-full text-center text-xs font-normal leading-10 text-gray-600 dark:text-gray-400 pt-4">
-                چیزی پیدا نشد
+                {t?.input?.combobox?.notFound || 'No items found.'}
               </p>
             }
             {...(onSearch ? { onSearch: onSearch } : {})}
@@ -79,7 +83,7 @@ export default function MultipleSelect({
           />
         </div>
         {icon && (
-          <span className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500">
+          <span className="pointer-events-none absolute end-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500">
             <InputIcon />
           </span>
         )}

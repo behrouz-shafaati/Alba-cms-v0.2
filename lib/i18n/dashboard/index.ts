@@ -4,7 +4,7 @@ import en from './locales/en.json'
 import { SupportedLanguage } from '@/lib/types'
 
 const dictionaries = { fa, en }
-export type LocaleSchema = typeof en
+export type DashboardLocaleSchema = typeof en
 
 export function getDashboardDictionary(
   locale: SupportedLanguage | undefined

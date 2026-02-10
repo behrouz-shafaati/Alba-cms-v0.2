@@ -1,0 +1,43 @@
+'use client'
+import { Form as FormType } from '@/lib/features/form/interface'
+import { useActionState } from 'react'
+import { createFormSubmission } from '@/lib/features/form-submission/actions'
+
+interface MainFormProps {
+  blockData: {
+    content: { formId: string }
+    type: 'form'
+    settings: {}
+  }
+  widgetName: string
+  form: FormType
+  formContent: any
+}
+
+function Form({
+  blockData,
+  widgetName,
+  form,
+  formContent,
+  ...props
+}: MainFormProps) {
+  const [state, dispatch] = useActionState(createFormSubmission as any, {})
+  if (!form) return null
+  form.translations = form?.translations || []
+
+  const { settings } = blockData
+  const { className, ...restProps } = props
+  return (
+    <form
+      action={dispatch}
+      {...restProps}
+      className={`w-full z-50 ${className}`}
+    >
+      <input name="form" type="hidden" value={form.id} />
+      {formContent}
+    </form>
+  )
+}
+
+Form.displayName = 'Form'
+export default Form

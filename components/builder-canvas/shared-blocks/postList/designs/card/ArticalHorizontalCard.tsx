@@ -1,0 +1,107 @@
+import HighlightText from '@/components/other/HighlightText'
+import { LinkAlba } from '@/components/other/link-alba'
+import { Separator } from '@/components/ui/separator'
+import { Post, PostTranslationSchema } from '@/lib/features/post/interface'
+import { FileTranslationSchema } from '@/lib/features/file/interface'
+import timeAgo from '@/lib/utils/timeAgo'
+import Image from 'next/image'
+
+type Props = {
+  post: Post
+  options: {
+    showExcerpt: boolean
+  }
+  query?: string
+  isLCP: boolean
+}
+
+const PostHorizontalCard = ({
+  post,
+  options,
+  query = '',
+  isLCP = false,
+}: Props) => {
+  const locale = 'fa'
+  const translationPost: PostTranslationSchema =
+    post?.translations?.find((t: PostTranslationSchema) => t.lang === locale) ||
+    post?.translations?.[0] ||
+    {}
+
+  const translationImage: FileTranslationSchema =
+    post.image?.translations?.find(
+      (t: FileTranslationSchema) => t.lang === locale
+    ) ||
+    post.image?.translations[0] ||
+    {}
+
+  const title = query
+    ? HighlightText(translationPost.title, query)
+    : translationPost.title
+  const excerpt = query
+    ? HighlightText(translationPost?.excerpt, query)
+    : translationPost?.excerpt
+  return (
+    <LinkAlba key={post?.id} href={post?.href || '#'}>
+      <div className="grid grid-cols-[1fr_7rem] md:grid-cols-[1fr_100px]  xl:grid-cols-[1fr_200px] items-center md:items-start border-b py-2 gap-2">
+        {/* عنوان و توضیح */}
+        <div className="p-2">
+          <h3 className="text-sm font-semibold mb-1 leading-5 min-h-[2.5rem] line-clamp-2">
+            {title}
+          </h3>
+          {options?.showExcerpt != false && (
+            <p
+              className="text-sm text-gray-600 dark:text-gray-400 m-0 hidden md:block"
+              style={{
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}
+            >
+              {excerpt}
+            </p>
+          )}
+        </div>
+
+        {/* تصویر */}
+        <div className="relative w-full h-full min-h-28 aspect-square md:aspect-[4/3] md:row-span-2 overflow-hidden rounded-sm">
+          {post?.image?.srcMedium && (
+            <Image
+              src={post?.image?.srcMedium || '/image-placeholder-Medium.webp'}
+              alt={translationImage?.alt || translationImage?.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 640px) 112px, 200px"
+              placeholder="blur"
+              blurDataURL={
+                post?.image?.blurDataURL || '/image-placeholder-Small.webp'
+              }
+              priority={isLCP} // برای تصویر LCP
+              loading={isLCP ? 'eager' : 'lazy'}
+              fetchPriority={isLCP ? 'high' : 'auto'}
+            />
+          )}
+        </div>
+
+        {/* اطلاعات پایین (تاریخ و دیدگاه) */}
+        <div className="flex text-xs h-full text-gray-400 gap-4 md:col-start-1 md:self-end px-2">
+          {post?.commentsCount && (
+            <>
+              <div className="flex items-center gap-1">
+                {/* <MessageCircleMore width={14} /> {post.commentsCount} */}
+                {post?.commentsCount} دیدگاه
+              </div>
+              <Separator orientation="vertical" />
+            </>
+          )}
+          <div className="flex items-center gap-1">
+            {/* <CalendarPlus width={14} /> حدود {timeAgo(post?.createdAt)} */}
+            حدود {timeAgo(post?.createdAt)}
+          </div>
+        </div>
+      </div>
+    </LinkAlba>
+  )
+}
+
+export default PostHorizontalCard

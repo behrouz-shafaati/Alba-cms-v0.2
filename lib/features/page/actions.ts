@@ -1,20 +1,22 @@
 'use server'
 
 import { z } from 'zod'
-import pageCtrl from '@/features/page/controller'
+import pageCtrl from '@/lib/features/page/controller'
 import { redirect } from 'next/navigation'
-import { Session, State } from '@/types'
 import settingsCtrl from '../settings/controller'
 import { generateUniquePageSlug } from './utils'
 import { getSession } from '@/lib/auth/get-session'
 import revalidatePathCtrl from '@/lib/revalidatePathCtrl'
 import { revalidatePath } from 'next/cache'
 import { User } from '../user/interface'
-import { can } from '@/lib/utils/can.server'
 import { PageTranslationSchema } from './interface'
+import { FormActionState, Session } from '@/lib/types'
+import authorize from '@/lib/utils/authorize'
+import { getSettingsAction } from '../settings/actions'
 
 const FormSchema = z.object({
   contentJson: z.string({}),
+  locale: z.string({}),
 })
 
 /**
@@ -24,12 +26,19 @@ const FormSchema = z.object({
  * @param formData - The form data.
  * @returns An object with errors and a message if there are any, or redirects to the page dashboard.
  */
-export async function createPage(prevState: State, formData: FormData) {
+export async function createPage(
+  prevState: FormActionState,
+  formData: FormData
+) {
   let newPage = null
   // Validate form fields
   const rawValues = Object.fromEntries(formData)
-
+  const settings = await getSettingsAction()
+  const LocaleFallback = settings.language?.siteDefault
   const content = JSON.parse(rawValues?.contentJson)
+  console.log('#234 raw page Values:', content)
+  const validateResult = validateInputs(content)
+  if (validateResult?.success == false) return validateResult
   const values = {
     ...rawValues,
     title: content?.title || '', // for generate slug
@@ -38,14 +47,14 @@ export async function createPage(prevState: State, formData: FormData) {
     slug: content.slug,
     status: content.status,
     translation: {
-      lang: content?.lang || 'fa',
+      locale: rawValues?.locale,
       title: content?.title || '',
       content,
     },
   }
   try {
     const user = (await getSession())?.user as User
-    await can(user.roles, 'page.create')
+    authorize(user.roles, 'page.create')
     const validatedFields = FormSchema.safeParse(rawValues)
     // If form validation fails, return errors early. Otherwise, continue.
     if (!validatedFields.success) {
@@ -112,13 +121,12 @@ export async function createPage(prevState: State, formData: FormData) {
 
 export async function updatePage(
   id: string,
-  prevState: State,
+  prevState: FormActionState,
   formData: FormData
 ) {
   let cleanedParams = {},
     updatedPage = {}
   const rawValues = Object.fromEntries(formData.entries())
-
   const content = JSON.parse(rawValues?.contentJson)
   const values = {
     ...rawValues,
@@ -128,7 +136,7 @@ export async function updatePage(
     slug: content.slug,
     status: content.status,
     translation: {
-      lang: content?.lang || 'fa',
+      locale: rawValues?.locale,
       title: content?.title || '',
       content,
     },
@@ -136,7 +144,7 @@ export async function updatePage(
   try {
     const user = (await getSession())?.user as User
     const prevPage = await pageCtrl.findById({ id })
-    await can(
+    authorize(
       user.roles,
       prevPage.user !== user.id ? 'page.edit.any' : 'page.edit.own'
     )
@@ -201,7 +209,7 @@ export async function deletePagesAction(ids: string[]) {
       filters: { _id: { $in: ids } },
     })
     for (const prevPage of prevPageResult.data) {
-      await can(
+      authorize(
         user.roles,
         prevPage.user !== user.id ? 'page.delete.any' : 'page.delete.own'
       )
@@ -259,15 +267,16 @@ async function sanitizePageData(validatedFields: any, id?: string | undefined) {
   const user = session.user.id
   // Create the page
   const content = JSON.parse(validatedFields.data.contentJson)
+  const locale = validatedFields.data.locale
   console.log('#45897 content in sandigo:', content)
   const translations = [
     {
-      lang: content.lang || 'fa',
+      locale,
       title: content.title || '',
       content,
     },
     ...prevState.translations.filter(
-      (t: PageTranslationSchema) => t.lang != content.lang
+      (t: PageTranslationSchema) => t.locale != locale
     ),
   ]
   const params = {
@@ -280,4 +289,13 @@ async function sanitizePageData(validatedFields: any, id?: string | undefined) {
     user,
   }
   return params
+}
+
+function validateInputs(content) {
+  if (content?.title == undefined || content?.title == '')
+    return {
+      success: false,
+      message: 'لطفا عنوان را وارد کنید.',
+      values: content,
+    }
 }

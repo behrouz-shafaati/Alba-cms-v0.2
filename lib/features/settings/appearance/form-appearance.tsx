@@ -10,13 +10,14 @@ import Text from '@/components/input/text'
 import SubmitButton from '@/components/input/submit-button'
 import { toast } from 'sonner'
 import authorize from '@/lib/utils/authorize'
+import { useLocale } from '@/hooks/useLocale'
 
 interface FormProps {
   settings: Settings
 }
 
 export const FormAppearance: React.FC<FormProps> = ({ settings }) => {
-  const locale = 'fa'
+  const t = useLocale()
   const { user } = useSession()
   const userRoles = user?.roles || []
 
@@ -50,7 +51,10 @@ export const FormAppearance: React.FC<FormProps> = ({ settings }) => {
           <div className="md:grid md:grid-cols-3 gap-8">
             {/* desktopHeaderHeight */}
             <Text
-              title="ارتفاع هدر در دسکتاپ"
+              title={
+                t?.feature?.setting?.appearance?.desktopHeaderHeight?.title ||
+                'Header height on desktop'
+              }
               name="desktopHeaderHeight"
               defaultValue={state?.values?.desktopHeaderHeight || ''}
               placeholder="px"
@@ -61,7 +65,10 @@ export const FormAppearance: React.FC<FormProps> = ({ settings }) => {
 
             {/* desktopHeaderHeight */}
             <Text
-              title="ارتفاع هدر در تبلت"
+              title={
+                t?.feature?.setting?.appearance?.tabletHeaderHeight?.title ||
+                'Header height on tablet'
+              }
               name="tabletHeaderHeight"
               defaultValue={state?.values?.tabletHeaderHeight || ''}
               placeholder="px"
@@ -72,7 +79,10 @@ export const FormAppearance: React.FC<FormProps> = ({ settings }) => {
 
             {/* mobileHeaderHeight */}
             <Text
-              title="ارتفاع هدر در موبایل"
+              title={
+                t?.feature?.setting?.appearance?.mobileHeaderHeight?.title ||
+                'Header height on mobile'
+              }
               name="mobileHeaderHeight"
               defaultValue={state?.values?.mobileHeaderHeight || ''}
               placeholder="px"

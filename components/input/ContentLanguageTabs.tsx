@@ -17,7 +17,7 @@ type ContentLanguageTabsProps = {
 export function ContentLanguageTabs({
   settings,
   defaultValue,
-  name = 'lang',
+  name = 'locale',
   onChange,
 }: ContentLanguageTabsProps) {
   const router = useRouter()
@@ -29,7 +29,7 @@ export function ContentLanguageTabs({
   const fallback = defaultValue ?? settings.language?.siteDefault
 
   const initial =
-    searchParams.get('lang') ??
+    searchParams.get('locale') ??
     locales.find((l) => l.value === fallback)?.value ??
     locales[0]?.value
 
@@ -37,9 +37,9 @@ export function ContentLanguageTabs({
 
   // sync state if url changes (back/forward)
   useEffect(() => {
-    const lang = searchParams.get('lang')
-    if (lang && lang !== active) {
-      setActive(lang)
+    const locale = searchParams.get('locale')
+    if (locale && locale !== active) {
+      setActive(locale)
     }
   }, [searchParams, active])
 
@@ -48,7 +48,7 @@ export function ContentLanguageTabs({
     onChange?.(value)
 
     const params = new URLSearchParams(searchParams.toString())
-    params.set('lang', value)
+    params.set('locale', value)
 
     router.replace(`${pathname}?${params.toString()}`, {
       scroll: false,
@@ -66,7 +66,6 @@ export function ContentLanguageTabs({
       <div className="flex items-center gap-1 rounded-lg border bg-muted/40 p-1 max-w-fit">
         {locales.map((locale) => {
           const isActive = locale.value === active
-
           return (
             <button
               key={locale.value}

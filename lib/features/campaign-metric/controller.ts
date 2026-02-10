@@ -1,8 +1,7 @@
-import { Create, Id, QueryFind, Update } from '@/lib/entity/core/interface'
-import baseController from '@/lib/entity/core/controller'
+import { Create, Id, QueryFind, Update } from '@/lib/features/core/interface'
+import baseController from '@/lib/features/core/controller'
 import campaignSchema from './schema'
 import campaignMetricService from './service'
-import { toUtcMidnight } from '@/lib/utils'
 import campaignCtrl from '../campaign/controller'
 
 class controller extends baseController {

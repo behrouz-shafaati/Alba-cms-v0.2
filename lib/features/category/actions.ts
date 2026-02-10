@@ -3,16 +3,16 @@
 import { z } from 'zod'
 import categoryCtrl from './controller'
 import { redirect } from 'next/navigation'
-import { Option, Session, State } from '@/types'
+import { Option, Session, FormActionState } from '@/lib/types'
 import { Category, CategoryTranslationSchema } from './interface'
-import { createCatrgoryBreadcrumb, slugify } from '@/lib/utils'
+import slugify from '@/lib/utils/slugify'
+import createCatrgoryBreadcrumb from '@/lib/utils/createCatrgoryBreadcrumb'
 import revalidatePathCtrl from '@/lib/revalidatePathCtrl'
 import { revalidatePath, unstable_cache } from 'next/cache'
 import { User } from '../user/interface'
-import { can } from '@/lib/utils/can.server'
 import { getSession } from '@/lib/auth/get-session'
 import stableHash from 'stable-hash'
-import getTranslation from '@/lib/utils/getTranslation'
+import authorize from '@/lib/utils/authorize'
 
 const FormSchema = z.object({
   title: z.string({}).min(1, { message: 'لطفا عنوان را وارد کنید.' }),
@@ -62,7 +62,10 @@ async function sanitizePostData(validatedFields: any, id?: string | undefined) {
  * @param formData - The form data.
  * @returns An object with errors and a message if there are any, or redirects to the category dashboard.
  */
-export async function createCategory(prevState: State, formData: FormData) {
+export async function createCategory(
+  prevState: FormActionState,
+  formData: FormData
+) {
   // Validate form fields
   const rawValues = Object.fromEntries(formData)
   const values = {
@@ -75,7 +78,7 @@ export async function createCategory(prevState: State, formData: FormData) {
   }
   try {
     const user = (await getSession())?.user as User
-    await can(user.roles, 'category.create')
+    authorize(user.roles, 'category.create')
     const validatedFields = FormSchema.safeParse(rawValues)
     // If form validation fails, return errors early. Otherwise, continue.
     if (!validatedFields.success) {
@@ -128,7 +131,7 @@ export async function createCategory(prevState: State, formData: FormData) {
 
 export async function updateCategory(
   id: string,
-  prevState: State,
+  prevState: FormActionState,
   formData: FormData
 ) {
   const user = (await getSession())?.user as User
@@ -153,7 +156,7 @@ export async function updateCategory(
   }
   try {
     const prevCategory = await categoryCtrl.findById({ id })
-    await can(
+    authorize(
       user.roles,
       prevCategory.user !== user.id ? 'category.edit.any' : 'category.edit.own'
     )
@@ -194,7 +197,7 @@ export async function deleteCategorysAction(ids: string[]) {
       filters: { _id: { $in: ids } },
     })
     for (const prevCategory of prevCategoryResult.data) {
-      await can(
+      authorize(
         user.roles,
         prevCategory.user !== user.id
           ? 'category.delete.any'

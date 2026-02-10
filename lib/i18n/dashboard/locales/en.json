@@ -65,16 +65,20 @@
       "success": "Settings saved successfully.",
       "general": {
         "title": "General",
-        "siteTitle": "Site title",
-        "siteIntroduction": "Short introduction",
-        "siteUrl": "Site URL",
-        "homePage": "Home page",
-        "termsPage": "Terms page",
-        "privacyPage": "Privacy page",
-        "favicon": "Favicon"
+        "siteTitle": { "title": "Site title" },
+        "siteIntroduction": { "title": "Short introduction" },
+        "siteUrl": { "title": "Site URL" },
+        "homePage": { "title": "Home page" },
+        "termsPage": { "title": "Terms page" },
+        "privacyPage": { "title": "Privacy page" },
+        "favicon": { "title": "Favicon" }
       },
       "users": {
-        "title": "Users"
+        "title": "Users",
+        "defaultRoles": {
+          "title": "Default roles",
+          "placeholder": "Select default roles"
+        }
       },
       "locales": {
         "title": "Locales",
@@ -84,29 +88,99 @@
           "required_error": "Please select your site languages."
         },
         "siteDefault": {
-          "title": "Default language",
+          "title": "Site default language",
           "placeholder": "Select default language...",
           "required_error": "Please select your default site language."
+        },
+        "dashboardDefault": {
+          "title": "Dashboard default language",
+          "placeholder": "Select Dashboard default language...",
+          "required_error": "Please select dashboard default language."
         },
         "success": "Languages ​​were successfully set."
       },
       "appearance": {
-        "title": "Appearance"
+        "title": "Appearance",
+        "desktopHeaderHeight": {
+          "title": "Header height on desktop"
+        },
+        "tabletHeaderHeight": {
+          "title": "Header height on tablet"
+        },
+        "mobileHeaderHeight": {
+          "title": "Header height on mobile"
+        }
       },
       "adCampaign": {
-        "title": "AD Campaign"
+        "title": "AD Campaign",
+        "defaultBanners": "Default banners",
+        "ratio": "Width to length ratio",
+        "fallbackBehavior": {
+          "title": "Behavior in the absence of advertising",
+          "placeholder": "Behavior in the absence of advertising",
+          "options": {
+            "random": "Show a random banner",
+            "default_banner": "Show default banner",
+            "hide": "No display"
+          }
+        },
+        "targetUrl": {
+          "title": "Default banner destination link",
+          "placeholder": "Destination link"
+        }
       },
       "email": {
-        "title": "Email"
+        "title": "Email",
+        "mail_host": {
+          "title": "Mail host",
+          "placeholder": "mail.example.com",
+          "description": "The SMTP server address you get from your host or email service."
+        },
+        "mail_port": {
+          "title": "Mail post",
+          "placeholder": "Usually 465 or 587",
+          "description": "The port number used to connect to SMTP."
+        },
+        "mail_username": {
+          "title": "Mail usename",
+          "placeholder": "noreply@example.com",
+          "description": "The same email address you use for sending."
+        },
+        "mail_password": {
+          "title": "Mail password",
+          "placeholder": "",
+          "description": "Password or App Password of the same email."
+        }
       },
       "sms": {
         "title": "SMS"
       },
       "validation": {
-        "title": "Validation"
+        "title": "Validation",
+        "commentApprovalRequired": {
+          "title": "Show comments only after approval/review"
+        },
+        "emailVerificationRequired": {
+          "title": "Verify user email ownership"
+        },
+        "mobileVerificationRequired": {
+          "title": "Verify ownership of users' mobile numbers"
+        }
       },
       "wpEmigration": {
-        "title": "WP Emigration"
+        "title": "Migrating from WordPress",
+        "note": "Note: For a successful WordPress migration, your database must be completely empty. In other words, the first thing you do after the site is up and running is to perform the migration.",
+        "baseUrl": { "title": "Site address" },
+        "apiKey": { "title": "API Key" },
+        "newDomain": {
+          "title": "New site address",
+          "description": "If you change the domain by filling in this field, the internal links will change to the new domain. If the domain is not going to change, leave this field blank."
+        },
+        "testBtn": "Connection test",
+        "userBtn": "Starting user migration",
+        "taxoBtn": "Taxonomy migration begins",
+        "postBtn": "Start post migration",
+        "commentBtn": "Start migration Post views"
       }
     },
     "logout": { "title": "Logout" }

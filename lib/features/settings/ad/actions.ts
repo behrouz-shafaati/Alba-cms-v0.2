@@ -15,6 +15,7 @@ const METADATA_KEY = 'ad'
 
 const FormSchema = z.object({
   locale: z.string({}).nullable().optional(),
+  lang: z.string({}).nullable().optional(),
   //ad
   fallbackBehavior: z.string().nullable().optional(),
   targetUrl: z.string().nullable().optional(),
@@ -115,16 +116,15 @@ export async function updateAdSettings(
 }
 
 async function sanitizeSettingsData(validatedFields: any) {
-  const locale = validatedFields.locale
+  const lang = validatedFields.lang
   // const session = (await getSession()) as Session
   // Create the settings
-  const adSettings: AD = await getSettings(METADATA_KEY)
+  const adSettings: AD = await getSettings({ key: METADATA_KEY })
   const settingsPayload = validatedFields
   const bannersTranslations = [
-    ...((adSettings?.translations || []).filter((t) => t?.lang !== locale) ||
-      []),
+    ...((adSettings?.translations || []).filter((t) => t?.lang !== lang) || []),
     {
-      lang: locale,
+      lang,
       banners: settingsPayload.banners,
     },
   ]

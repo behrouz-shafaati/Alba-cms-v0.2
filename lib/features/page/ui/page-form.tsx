@@ -1,69 +1,74 @@
 'use client'
-import * as z from 'zod'
-import { useActionState, useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { useToast } from '@/hooks/use-toast'
-import roleCtrl from '@/features/role/controller'
+import { useActionState, useEffect, useMemo, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import roleCtrl from '@/lib/features/role/controller'
 import { createPage, deletePagesAction, updatePage } from '../actions'
-import { Option } from '@/components/form-fields/combobox'
-import { AlertModal } from '@/components/modal/alert-modal'
-import { Category } from '@/features/category/interface'
+import { Category } from '@/lib/features/category/interface'
 import { Page, PageContent, PageTranslationSchema } from '../interface'
 import BuilderPage from '@/components/builder-page'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
-import AccessDenied from '@/components/access-denied'
+import authorize from '@/lib/utils/authorize'
+import { Option } from '@/lib/types'
+import { toast } from 'sonner'
+import AccessDenied from '@/components/other/access-denied'
+import { AlertModal } from '@/components/other/modal/alert-modal'
+import getTranslation from '@/lib/utils/getTranslation'
 
 export const IMG_MAX_LIMIT = 3
 
 interface PageFormProps {
+  settings: any
   initialData: Page | null
   allTemplates: PageContent[]
   allCategories: Category[]
 }
 
 export const PageForm: React.FC<PageFormProps> = ({
+  settings,
   initialData: page,
   allTemplates,
   allCategories,
 }) => {
+  const searchParams = useSearchParams()
+
   const { user } = useSession()
   const userRoles = user?.roles || []
 
-  const canCreate = can(userRoles, 'page.create')
-  const canEdit = can(
+  const canCreate = authorize(userRoles, 'page.create')
+  const canEdit = authorize(
     userRoles,
     page?.user !== user?.id ? 'page.edit.any' : 'page.edit.own'
   )
-  const locale = 'fa' //  from formData
-  const translation: PageTranslationSchema =
-    page?.translations?.find((t: PageTranslationSchema) => t.lang === locale) ||
-    page?.translations[0] ||
-    {}
-  const initialState = {
+
+  const localedFallback = settings.language?.siteDefault
+
+  const locale = searchParams.get('locale') ?? localedFallback
+
+  const translation: PageTranslationSchema = getTranslation({
+    translations: page?.translations,
+    locale,
+  })
+  const initialActionState = {
     message: null,
     errors: {},
     values: { ...page, translation },
   }
+
   const actionHandler = page
     ? updatePage.bind(null, String(page.id))
     : createPage
-  const [state, dispatch] = useActionState(actionHandler as any, initialState)
+  const [state, dispatch] = useActionState(
+    actionHandler as any,
+    initialActionState
+  )
   const roleOptions: Option[] = roleCtrl.getRoles().map((role) => ({
     label: role.title,
     value: role.slug,
   }))
 
-  const params = useParams()
   const router = useRouter()
-  const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [imgLoading, setImgLoading] = useState(false)
-  const title = page ? 'ویرایش برگه' : 'افزودن برگه'
-  const description = page ? 'ویرایش برگه' : 'افزودن برگه'
-  const toastMessage = page ? 'برگه بروزرسانی شد' : 'برگه اضافه شد'
-  const action = page ? 'ذخیره تغییرات' : 'ذخیره'
 
   const onDelete = async () => {
     try {
@@ -76,11 +81,8 @@ export const PageForm: React.FC<PageFormProps> = ({
   useEffect(() => {
     console.log('#299 page state:', state)
     if (state?.message && state.message !== null)
-      toast({
-        variant: state?.success ? 'default' : 'destructive',
-        title: '',
-        description: state.message,
-      })
+      if (state?.success) toast.success(state.message)
+      else toast.error(state.message)
     if (state?.success && state?.isCreatedJustNow) {
       router.replace(`/dashboard/pages/${state?.values?.id}`)
     }
@@ -95,13 +97,10 @@ export const PageForm: React.FC<PageFormProps> = ({
         loading={loading}
       />
       <BuilderPage
+        settings={settings}
         title="صفحه ساز"
         submitFormHandler={dispatch}
         name="contentJson"
-        // initialContent={{
-        //   ...state?.values?.translation?.content,
-        //   slug: state?.values?.slug,
-        // }}
         {...(page || state?.values?.translation?.content
           ? {
               initialContent: {
@@ -114,6 +113,7 @@ export const PageForm: React.FC<PageFormProps> = ({
             })}
         allTemplates={allTemplates}
         allCategories={allCategories}
+        locale={locale}
       />
     </>
   )

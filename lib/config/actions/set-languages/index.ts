@@ -2,7 +2,7 @@
 import revalidatePathCtrl from '@/lib/revalidatePathCtrl'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
-import { getDictionary } from '@/lib/i18n'
+import { getInstallDictionary } from '@/lib/i18n/install'
 import generateLanguagesSchema from './schema'
 import { getSettingsAction } from '@/lib/features/settings/actions'
 import { Language } from '@/lib/features/settings/locales/interface'
@@ -19,7 +19,7 @@ export default async function installLanguagesAction(
 ) {
   const rawValues = Object.fromEntries(formData)
   const locale = formData.get('locale')?.toString() || 'en'
-  const t = getDictionary(locale)
+  const t = getInstallDictionary(locale)
   const FormSchema = generateLanguagesSchema(locale)
   // Validate form fields
   console.log('#234897 rawValues:', rawValues)

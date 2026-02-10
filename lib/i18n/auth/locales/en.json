@@ -1,0 +1,38 @@
+{
+  "$schema": "./schema.json",
+  "lang": "en",
+  "language": "English",
+  "dir": "ltr",
+  "shared": {
+    "chooseYorLanguage": "Choose your language",
+    "next": "Next",
+    "previous": "Previous",
+    "mongodbUri": "Mongodb URI",
+    "failMongodbConnection": "Connection to database failed.",
+    "fillForm": "Please fill in the required fields.",
+    "dbError": "Database error",
+    "login": "Login",
+    "dashboard": "Dashboard",
+    "submitLabel": "Submit",
+    "notAuthorized": "You do not have permission to perform this operation."
+  },
+  "input": {
+    "combobox": {
+      "placeholder": "Choose...",
+      "notFound": "No items found.",
+      "loading": "Loading...",
+      "all": "All"
+    }
+  },
+  "login": {
+    "title": "Login",
+    "titleWithSiteTitle": "Login to %s%",
+    "dontHaveAccount": "Don't have an account?",
+    "signup": "Signup",
+    "forgotPassword": "Forgot your password?",
+    "resetPassword": "Reset password",
+    "identifier": { "title": "Email or mobile" },
+    "password": { "title": "Password" },
+    "submit": "Login"
+  }
+}

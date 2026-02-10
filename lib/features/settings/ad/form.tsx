@@ -14,14 +14,20 @@ import Select from '@/components/input/select'
 import Text from '@/components/input/text'
 import FileUpload from '@/components/input/file-upload'
 import SubmitButton from '@/components/input/submit-button'
+import { useLocale } from '@/hooks/useLocale'
+import { ContentLanguageTabs } from '@/components/input/ContentLanguageTabs'
+import { useSearchParams } from 'next/navigation'
 
 interface SettingsFormProps {
   settings: Settings
 }
 
 export const FormAD: React.FC<SettingsFormProps> = ({ settings }) => {
-  console.log('#ad form settings:', settings)
-  const locale = 'fa'
+  const searchParams = useSearchParams()
+  const contantLang = searchParams?.get('lang')
+
+  const _t = useLocale()
+  const t = _t?.feature?.setting?.adCampaign
   const { user } = useSession()
   const userRoles = user?.roles || []
 
@@ -47,11 +53,22 @@ export const FormAD: React.FC<SettingsFormProps> = ({ settings }) => {
   if (!canModerate) return <AccessDenied />
   const translation: CampaignTranslation = getTranslation({
     translations: state?.values?.translations || [],
+    lang: contantLang || settings.language?.siteDefault,
   })
   const fallbackBehaviorOptions: Option[] = [
-    { label: 'نمایش یک بنر تصادفی', value: 'random' },
-    { label: 'نمایش بنر پیش‌فرض', value: 'default_banner' },
-    { label: 'عدم نمایش', value: 'hide' },
+    {
+      label: t?.fallbackBehavior?.options?.random || 'Show a random banner',
+      value: 'random',
+    },
+    {
+      label:
+        t?.fallbackBehavior?.options?.default_banner || 'Show default banner',
+      value: 'default_banner',
+    },
+    {
+      label: t?.fallbackBehavior?.options?.hide || 'No display',
+      value: 'hide',
+    },
   ]
   const aspectKeys = ['1/1', '4/1', '10/1', '20/1', '30/1']
   return (
@@ -61,15 +78,27 @@ export const FormAD: React.FC<SettingsFormProps> = ({ settings }) => {
           {/* <Heading title={title} description={description} /> */}
         </div>
         {/* <Separator /> */}
-        <form action={dispatch} ref={formRef} className="space-y-8 w-full">
+        <form
+          action={dispatch}
+          ref={formRef}
+          className="space-y-8 w-full"
+          key={`ad_${contantLang}`}
+        >
+          <ContentLanguageTabs settings={settings} />
           <div className="md:grid md:grid-cols-3 gap-8">
             <input type="hidden" name="locale" value="fa" readOnly />
 
             {/* رفتار در صورت نبود تبلیغ */}
             <Select
-              title="رفتار در صورت نبود تبلیغ"
+              title={
+                t?.fallbackBehavior?.title ||
+                'Behavior in the absence of advertising'
+              }
               name="fallbackBehavior"
-              placeholder="رفتار در صورت نبود تبلیغ"
+              placeholder={
+                t?.fallbackBehavior?.placeholder ||
+                'Behavior in the absence of advertising'
+              }
               options={fallbackBehaviorOptions}
               defaultValue={state?.values?.fallbackBehavior || 'random'}
               icon={<Link className="w-4 h-4" />}
@@ -77,15 +106,15 @@ export const FormAD: React.FC<SettingsFormProps> = ({ settings }) => {
 
             {/* targetUrl */}
             <Text
-              title="لینک مقصد بنرهای پیش فرض"
+              title={t?.targetUrl?.title || 'Default banner destination link'}
               name="targetUrl"
               defaultValue={state?.values?.targetUrl}
-              placeholder="لینک مقصد"
+              placeholder={t?.targetUrl?.placeholder || 'Destination link'}
               state={state}
               icon={<Link className="w-4 h-4" />}
             />
           </div>
-          <h3>بنرهای پیش‌فرض</h3>
+          <h3>{t?.defaultBanners || 'Default banners'}</h3>
           {/* نمایش لیست بنرها */}
           <div>
             {aspectKeys.map((aspectKey, index) => {
@@ -104,7 +133,9 @@ export const FormAD: React.FC<SettingsFormProps> = ({ settings }) => {
                     value={aspectKey}
                   />
                   <FileUpload
-                    title={`نسبت عرض به طول ${ratio[0]}/${ratio[1]}`}
+                    title={` ${t?.ratio || 'Width to length ratio'} ${
+                      ratio[0]
+                    }/${ratio[1]}`}
                     name="banners[][file]"
                     state={state}
                     maxFiles={1}

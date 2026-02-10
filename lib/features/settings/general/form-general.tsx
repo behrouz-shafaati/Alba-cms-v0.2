@@ -33,7 +33,6 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
   allPages,
 }) => {
   const searchParams = useSearchParams()
-
   const lang = searchParams?.get('lang')
 
   const t = useLocale()
@@ -84,15 +83,15 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
 
   const pageBreadCrumb = [
     {
-      title: t.shared.dashboard,
+      title: t?.shared?.dashboard || 'Dashboard',
       link: '/dashboard',
     },
     {
-      title: t.feature.setting.title,
+      title: t?.feature?.setting?.title || 'Settings',
       link: '/dashboard/settings/general',
     },
     {
-      title: t.feature.setting.general.title,
+      title: t?.feature?.setting?.general?.title || 'General',
       link: '/dashboard/settings/general',
     },
   ]
@@ -111,12 +110,14 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
           className="space-y-8 w-full"
           key={`form_${siteInfo.lang}`}
         >
-          <input type="hidden" name="locale" value={t.lang} readOnly />
+          <input type="hidden" name="locale" value={t?.lang || 'en'} readOnly />
           <ContentLanguageTabs settings={settings} />
           <div className="md:grid md:grid-cols-3 gap-8">
             {/* Site title */}
             <Text
-              title={t.feature.setting.general.siteTitle}
+              title={
+                t?.feature?.setting?.general?.siteTitle?.title || 'Site title'
+              }
               name="site_title"
               defaultValue={siteInfo?.site_title || ''}
               placeholder=""
@@ -126,7 +127,10 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
             />
             {/* site introduction */}
             <Text
-              title={t.feature.setting.general.siteIntroduction}
+              title={
+                t?.feature?.setting?.general?.siteIntroduction?.title ||
+                'Short introduction'
+              }
               name="site_introduction"
               defaultValue={siteInfo?.site_introduction || ''}
               placeholder=""
@@ -136,7 +140,7 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
             />
             {/* site introduction */}
             <Text
-              title={t.feature.setting.general.siteUrl}
+              title={t?.feature?.setting?.general?.siteUrl?.title || 'Site URL'}
               name="site_url"
               defaultValue={settings?.general?.site_url || ''}
               placeholder=""
@@ -147,7 +151,9 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
 
             {/* first page */}
             <Combobox
-              title={t.feature.setting.general.homePage}
+              title={
+                t?.feature?.setting?.general?.homePage?.title || 'Home page'
+              }
               name="homePageId"
               defaultValue={String(settings?.general?.homePageId)}
               options={pagesOptions}
@@ -157,7 +163,9 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
             />
             {/* terms page */}
             <Combobox
-              title={t.feature.setting.general.termsPage}
+              title={
+                t?.feature?.setting?.general?.termsPage?.title || 'Terms page'
+              }
               name="termsPageId"
               defaultValue={String(settings?.general?.termsPageId)}
               options={pagesOptions}
@@ -167,7 +175,10 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
             />
             {/* privacy page */}
             <Combobox
-              title={t.feature.setting.general.privacyPage}
+              title={
+                t?.feature?.setting?.general?.privacyPage?.title ||
+                'Privacy page'
+              }
               name="privacyPageId"
               defaultValue={String(settings?.general?.privacyPageId)}
               options={pagesOptions}
@@ -177,7 +188,7 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
             />
 
             <SingleImagePicker
-              title={t.feature.setting.general.favicon}
+              title={t?.feature?.setting?.general?.favicon?.title || 'Favicon'}
               name="favicon"
               defaultValue={settings?.general?.faviconDetails}
               targetFormat="png"

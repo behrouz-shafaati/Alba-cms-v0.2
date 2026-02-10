@@ -70,7 +70,9 @@ export async function uploadFile(formData: FormData) {
   return fileCtrl.saveFile(formData)
 }
 
-export async function updateFileDetails(filesDetails: FileDetailsPayload[]) {
+export async function updateFileDetailsAction(
+  filesDetails: FileDetailsPayload[]
+) {
   console.log('#234876 request to update File Details')
   return fileCtrl.updateFileDetails(filesDetails)
 }

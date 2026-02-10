@@ -70,7 +70,7 @@ export default function Select({
               )
             }}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full ps-9">
               <SelectValue
                 placeholder={placeholder || `یک ${title} انتخاب کنید`}
               />
@@ -87,7 +87,7 @@ export default function Select({
           </SelectInput>
         </div>
         {icon && (
-          <span className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500">
+          <span className="pointer-events-none absolute start-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500">
             <InputIcon />
           </span>
         )}

@@ -4,7 +4,7 @@ import revalidatePathCtrl from '@/lib/revalidatePathCtrl'
 import { revalidatePath } from 'next/cache'
 import createConfigSuperAdminSchema from './schema'
 import z from 'zod'
-import { getDictionary } from '@/lib/i18n'
+import { getInstallDictionary } from '@/lib/i18n/install'
 import { writeConfigAction } from '../../action'
 
 export default async function configSuperAdminAction(
@@ -14,7 +14,7 @@ export default async function configSuperAdminAction(
   let newUser = null
   const rawValues = Object.fromEntries(formData)
   const locale = formData.get('locale')?.toString() || 'en'
-  const t = getDictionary(locale)
+  const t = getInstallDictionary(locale)
   const FormSchema = createConfigSuperAdminSchema(locale)
   // Validate form fields
   const validatedFields = FormSchema.safeParse(

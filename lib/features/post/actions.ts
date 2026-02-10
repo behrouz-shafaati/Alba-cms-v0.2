@@ -1,22 +1,19 @@
 'use server'
 
 import { z } from 'zod'
-import postCtrl from '@/features/post/controller'
+import postCtrl from '@/lib/features/post/controller'
 import { redirect } from 'next/navigation'
 import { createPostHref } from './utils'
 import { getSession } from '@/lib/auth/get-session'
-import { Option, Session, State } from '@/types'
-import tagCtrl from '../tag/controller'
-import { QueryFind, QueryResult } from '@/lib/entity/core/interface'
+import { Option, Session, FormActionState } from '@/lib/types'
+import { QueryFind, QueryResult } from '@/lib/features/core/interface'
 import { Post, PostTranslationSchema } from './interface'
 import revalidatePathCtrl from '@/lib/revalidatePathCtrl'
 import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache'
 import { User } from '../user/interface'
-import { can } from '../../lib/utils/can.server'
 import extractExcerptFromContentJson from '@/lib/utils/extractExcerptFromContentJson'
 import getTranslation from '@/lib/utils/getTranslation'
-import fs from 'fs/promises'
-import path from 'path'
+import authorize from '@/lib/utils/authorize'
 
 const FormSchema = z.object({
   title: z.string({}).nullable(),
@@ -42,7 +39,10 @@ const FormSchema = z.object({
  * @param formData - The form data.
  * @returns An object with errors and a message if there are any, or redirects to the post dashboard.
  */
-export async function createPost(prevState: State, formData: FormData) {
+export async function createPost(
+  prevState: FormActionState,
+  formData: FormData
+) {
   let newPost = null
   const rawValues = Object.fromEntries(formData.entries())
   const values = {
@@ -55,7 +55,7 @@ export async function createPost(prevState: State, formData: FormData) {
   }
   try {
     const user = (await getSession())?.user as User
-    await can(user.roles, 'post.create')
+    authorize(user.roles, 'post.create')
     // Validate form fields
 
     const validatedFields = FormSchema.safeParse(rawValues)
@@ -70,7 +70,7 @@ export async function createPost(prevState: State, formData: FormData) {
     }
     const params = await sanitizePostData(validatedFields)
     if (params.status === 'published') {
-      await can(
+      authorize(
         user.roles,
         params.author !== user.id ? 'post.publish.any' : 'post.publish.own'
       )
@@ -125,7 +125,7 @@ export async function createPost(prevState: State, formData: FormData) {
 
 export async function updatePost(
   id: string,
-  prevState: State,
+  prevState: FormActionState,
   formData: FormData
 ) {
   let updatedPost = {}
@@ -141,7 +141,7 @@ export async function updatePost(
   try {
     const user = (await getSession())?.user as User
     const prevPost = await postCtrl.findById({ id })
-    await can(
+    authorize(
       user.roles,
       prevPost.author?.id !== user.id ? 'post.edit.any' : 'post.edit.own'
     )
@@ -158,7 +158,7 @@ export async function updatePost(
     }
     const params = await sanitizePostData(validatedFields, id)
     if (params.status === 'published') {
-      await can(
+      authorize(
         user.roles,
         prevPost.author?.id !== user.id
           ? 'post.publish.any'
@@ -209,7 +209,7 @@ export async function deletePostsAction(ids: string[]) {
       filters: { _id: { $in: ids } },
     })
     for (const prevPost of prevPostResult.data) {
-      await can(
+      authorize(
         user.roles,
         prevPost.author?.id !== user.id ? 'post.delete.any' : 'post.delete.own'
       )

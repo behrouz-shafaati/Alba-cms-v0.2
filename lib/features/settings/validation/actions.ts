@@ -13,6 +13,7 @@ import authorize from '@/lib/utils/authorize'
 const METADATA_KEY = 'validation'
 
 const FormSchema = z.object({
+  locale: z.string({}).nullable().optional(),
   commentApprovalRequired: z.string({}).nullable().optional(),
   emailVerificationRequired: z.string({}).nullable().optional(),
   mobileVerificationRequired: z.string({}).nullable().optional(),

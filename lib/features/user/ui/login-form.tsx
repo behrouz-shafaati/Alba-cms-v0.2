@@ -9,6 +9,7 @@ import SubmitButton from '@/components/input/submit-button'
 import ImageAlba from '@/components/other/image-alba'
 import { FormActionState } from '@/lib/types'
 import { toast } from 'sonner'
+import { useLocale } from '@/hooks/useLocale'
 
 function UserAuthFormComponent() {
   const initialState: FormActionState = {
@@ -17,6 +18,7 @@ function UserAuthFormComponent() {
     errors: {},
     success: false,
   }
+  const t = useLocale()
   const [state, dispatch] = useActionState(loginAction as any, initialState)
 
   useEffect(() => {
@@ -31,7 +33,7 @@ function UserAuthFormComponent() {
       <form action={dispatch} className="space-y-2 w-full">
         {/* Identifier */}
         <Text
-          title="ایمیل یا موبایل"
+          title={t.login.identifier.title}
           name="identifier"
           defaultValue={state?.values?.identifier || ''}
           placeholder=""
@@ -41,7 +43,7 @@ function UserAuthFormComponent() {
 
         {/* Password */}
         <Password
-          title="رمز ورود"
+          title={t.login.password.title}
           name="password"
           placeholder="******"
           defaultValue={state?.values?.password || ''}
@@ -50,7 +52,7 @@ function UserAuthFormComponent() {
           icon={<KeyRound className="w-4 h-4" />}
         />
 
-        <SubmitButton text="ورود" className="w-full" />
+        <SubmitButton text={t.login.submit} className="w-full" />
       </form>
     </>
   )
@@ -63,6 +65,7 @@ export default function LoginForm({
   site_title: any
   logo: any
 }) {
+  const t = useLocale()
   return (
     <Suspense fallback={<div className="flex m-auto">Loading...</div>}>
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
@@ -71,26 +74,28 @@ export default function LoginForm({
             {logo && <ImageAlba zoomable={false} file={logo} />}
           </Link>
           <p className="text-sm text-muted-foreground">
-            ورود {site_title && ` به ${site_title}`}
+            {site_title
+              ? t.login.titleWithSiteTitle.replace('%s%', site_title)
+              : t.login.title}
           </p>
         </div>
         <UserAuthFormComponent />
         <div className="text-center text-sm">
-          حساب کاربری ندارید؟{' '}
+          {t.login.dontHaveAccount}{' '}
           <Link
             href="/signup"
             className="underline underline-offset-4 hover:text-primary"
           >
-            ثبت نام کنید
+            {t.login.signup}
           </Link>
         </div>
         <div className="text-center text-sm">
-          رمز ورود را فراموش کرده‌اید؟{' '}
+          {t.login.forgotPassword}{' '}
           <Link
             href="/resetPass"
             className="underline underline-offset-4 hover:text-primary"
           >
-            بازنشانی رمز ورود
+            {t.login.resetPassword}
           </Link>
         </div>
       </div>

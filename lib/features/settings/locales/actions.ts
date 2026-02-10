@@ -1,7 +1,6 @@
 'use server'
 const METADATA_KEY = 'language'
 
-import { z } from 'zod'
 import settingsCtrl from '@/lib/features/settings/controller'
 import revalidatePathCtrl from '@/lib/revalidatePathCtrl'
 import { revalidatePath } from 'next/cache'
@@ -22,7 +21,7 @@ import { getDashboardDictionary } from '@/lib/i18n/dashboard'
  * @returns An object with errors and a message if there are any, or redirects to the settings dashboard.
  */
 
-export async function updateValidationSettings(
+export async function updateLocaleSettings(
   prevState: FormActionState,
   formData: FormData
 ) {
@@ -64,7 +63,9 @@ export async function updateValidationSettings(
     }
 
     return {
-      message: t.feature.setting.locales.success,
+      message:
+        t?.feature?.setting?.locales?.success ||
+        'Languages ​​were successfully set.',
       success: true,
       values: rawValues,
     }

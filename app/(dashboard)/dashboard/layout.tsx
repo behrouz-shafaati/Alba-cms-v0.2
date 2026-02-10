@@ -9,8 +9,9 @@ import { getDashboardDictionary } from '@/lib/i18n/dashboard'
 import { getSession } from '@/lib/auth/get-session'
 import { Session } from '@/lib/types'
 import authorize from '@/lib/utils/authorize'
-import { resolveLocale } from '@/lib/i18n/resolve-locale'
+import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 import { SessionProvider } from '@/components/context/SessionContext'
+import { Toaster } from '@/components/ui/sonner'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -50,6 +51,7 @@ export default async function RootLayout({
         >
           <DashboardLocaleProvider dictionary={dictionary}>
             <SessionProvider session={session}>{children}</SessionProvider>
+            <Toaster />
           </DashboardLocaleProvider>
         </ThemeProvider>
       </body>

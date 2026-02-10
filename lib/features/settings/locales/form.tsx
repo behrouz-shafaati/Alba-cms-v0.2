@@ -2,9 +2,9 @@
 import { useActionState, useEffect, useRef, useState } from 'react'
 import { Settings } from '../interface'
 import { useSession } from '@/components/context/SessionContext'
-import { updateValidationSettings } from './actions'
+import { updateLocaleSettings } from './actions'
 import authorize from '@/lib/utils/authorize'
-import { FormActionState } from '@/lib/types'
+import { FormActionState, Option } from '@/lib/types'
 import { toast } from 'sonner'
 import AccessDenied from '@/components/other/access-denied'
 import { LANGUAGES } from '@/lib/i18n/languages'
@@ -18,24 +18,27 @@ interface SettingsFormProps {
 }
 
 export const FormLocales: React.FC<SettingsFormProps> = ({ settings }) => {
-  const locale = 'fa'
-  const t = useLocale().feature.setting.locales
+  const _t = useLocale()
+  const t = _t?.feature?.setting?.locales
   const { user } = useSession()
   const userRoles = user?.roles || []
 
-  const [selectdlanguages, setSelectdlanguages] = useState([])
   const canModerate = authorize(userRoles, 'settings.moderate.any')
   const formRef = useRef<HTMLFormElement>(null)
   const initialState: FormActionState = {
     message: null,
     errors: {},
     success: true,
-    values: settings?.validation,
+    values: settings?.language,
   }
   const [state, dispatch] = useActionState(
-    updateValidationSettings as any,
+    updateLocaleSettings as any,
     initialState
   )
+  const defaultLocaleOptions = LANGUAGES.filter((lang) =>
+    state?.values?.locales?.includes(lang.value)
+  )
+  const [selectdlanguages, setSelectdlanguages] = useState(defaultLocaleOptions)
 
   useEffect(() => {
     if (state.message && state.message !== null)
@@ -44,6 +47,12 @@ export const FormLocales: React.FC<SettingsFormProps> = ({ settings }) => {
   }, [state])
 
   if (!canModerate) return <AccessDenied />
+
+  const options: Option[] = [
+    { label: 'English', value: 'en' },
+    { label: 'فارسی', value: 'fa' },
+  ]
+
   return (
     <>
       <div className=" p-4 md:p-8 pt-6">
@@ -52,22 +61,34 @@ export const FormLocales: React.FC<SettingsFormProps> = ({ settings }) => {
         </div>
         {/* <Separator /> */}
         <form action={dispatch} ref={formRef} className="space-y-8 w-full">
-          <div className="max-w-md flex flex-col gap-4">
+          <input type="hidden" name="locale" value={_t.lang || 'en'} readOnly />
+          <div className="md:grid md:grid-cols-3 gap-8">
             <MultipleSelect
-              title={t.locales.title}
+              title={t?.locales?.title || 'Site languages'}
               name="locales"
-              placeholder={t.locales.placeholder}
+              placeholder={
+                t?.locales?.placeholder || 'Choose your site languages...'
+              }
               state={state}
               defaultSuggestions={LANGUAGES}
+              defaultValues={defaultLocaleOptions}
               onChange={(options) => setSelectdlanguages(options)}
             />
             <Combobox
-              title={t.siteDefault.title}
+              title={t?.siteDefault?.title || 'Site default language'}
               name="siteDefault"
-              defaultValue={state.values?.mainCategory?.id || null}
+              defaultValue={state?.values?.siteDefault || null}
               options={selectdlanguages}
-              placeholder={t.siteDefault.placeholder}
+              placeholder={
+                t?.siteDefault?.placeholder || 'Select default language...'
+              }
               state={state}
+            />
+            <Combobox
+              name="dashboardDefault"
+              title={t?.dashboardDefault?.title || 'Dashboard default language'}
+              defaultValue={state?.values?.dashboardDefault || null}
+              options={options}
             />
           </div>
           <SubmitButton />

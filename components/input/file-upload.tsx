@@ -19,7 +19,7 @@ import Checkbox from './checkbox'
 import clsx from 'clsx'
 import {
   deleteFile,
-  updateFileDetails,
+  updateFileDetailsAction,
   uploadFile,
 } from '@/lib/features/file/actions'
 import {
@@ -204,7 +204,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
         filesDetails: FileDetailsPayload[]
       ) => {
         if (!filesDetails.length) return
-        const updatedFilesArray = await updateFileDetails(filesDetails)
+        const updatedFilesArray = await updateFileDetailsAction(filesDetails)
         updateFileDetailsHandler?.(updatedFilesArray)
       }
 
@@ -241,7 +241,8 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
         console.log('#88823 files are different, updating file details...')
         void handelUpdateFileDetails(filesDetails)
       }
-    }, [files, attachedTo, locale, updateFileDetailsHandler])
+    }, [files, attachedTo, locale])
+    // }, [files, attachedTo, locale, updateFileDetailsHandler])
 
     const removeFile = useCallback(
       async (index: number) => {

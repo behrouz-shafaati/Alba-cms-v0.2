@@ -1,4 +1,4 @@
-import c_service from '@/lib/entity/core/service'
+import c_service from '@/lib/features/core/service'
 
 export default class campaignMetricService extends c_service {
   /**

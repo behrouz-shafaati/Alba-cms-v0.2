@@ -20,13 +20,15 @@ import AccessDenied from '@/components/other/access-denied'
 import Text from '@/components/input/text'
 import { LoadingButton as Button } from '@/components/ui/loading-button'
 import { FormActionState } from '@/lib/types'
+import { useLocale } from '@/hooks/useLocale'
 
 interface SettingsFormProps {
   settings: Settings
 }
 
 export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
-  const locale = 'fa'
+  const _t = useLocale()
+  const t = _t.feature.setting.wpEmigration
   const { user } = useSession()
   const userRoles = user?.roles || []
 
@@ -139,26 +141,28 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
         </div>
         {/* <Separator /> */}
         <form ref={formRef} className="space-y-8 w-full">
-          <h3 className="text-2xlg">مهاجرت از ورد پرس</h3>
+          <input type="hidden" name="locale" value={_t.lang} readOnly />
+          <h3 className="text-2xlg">
+            {t?.title || 'Migrating from WordPress'}
+          </h3>
           <p>
-            توجه: برای مهاجرت موفق از ورد پرس باید پایگاه داده ی شما کاملا خالی
-            باشد. به عبارت دیگر بعد از بالا آمدن سایت اولین کاری که انجام مید
-            هید انجام مهاجرت باشد.
+            {t?.note ||
+              'Note: For a successful WordPress migration, your database must be completely empty. In other words, the first thing you do after the site is up and running is to perform the migration.'}
           </p>
           <div className="md:grid md:grid-cols-3 gap-8">
             {/* baseUrl */}
             <Text
-              title="baseUrl"
+              title={t?.baseUrl?.title || 'Site address'}
               name="baseUrl"
               defaultValue={state?.values?.baseUrl || ''}
-              placeholder=""
+              placeholder="https://example.com"
               state={state}
               icon={<Server className="w-4 h-4" />}
               description=""
             />
             {/* apiKey */}
             <Text
-              title="apiKey"
+              title={t?.apiKey?.title || 'API Key'}
               name="apiKey"
               defaultValue={state?.values?.apiKey || ''}
               placeholder=""
@@ -168,13 +172,13 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
             />
             {/* baseUrl */}
             <Text
-              title="آدرس سایت جدید"
+              title={t?.newDomain?.title || 'New site address'}
               name="newDomain"
               defaultValue={state?.values?.newDomain || ''}
               placeholder="https://example.com"
               state={state}
               icon={<Server className="w-4 h-4" />}
-              description="در صورت تغییر دامنه با پر کردن این فیلد، لینک های داخلی به دامنه ی جدید تغییر می کنند. اگر دامنه قرار نیست تغییر کنید این فیلد را خالی بگذارید."
+              description=""
             />
           </div>
           <div className="flex flex-row gap-2">
@@ -184,7 +188,7 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
               role="button"
               onClick={handleTestConnection}
             >
-              تست اتصال
+              {t?.testBtn || 'Connection test'}
             </Button>
             <Button
               loading={loading}
@@ -192,7 +196,7 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
               role="button"
               onClick={handleStartEmigration}
             >
-              شروع مهاجرت کاربران
+              {t?.userBtn || 'Starting user migration'}
             </Button>
             <Button
               loading={loading}
@@ -200,7 +204,7 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
               role="button"
               onClick={handleStartTaxonomyEmigration}
             >
-              شروع مهاجرت تاکسونومی
+              {t?.taxoBtn || 'Taxonomy migration begins'}
             </Button>
             <Button
               loading={loading}
@@ -208,7 +212,7 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
               role="button"
               onClick={handleStartPostEmigration}
             >
-              شروع مهاجرت مطالب
+              {t?.postBtn || 'Start post migration'}
             </Button>
             <Button
               loading={loading}
@@ -216,7 +220,7 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
               role="button"
               onClick={handleStartPostCommentEmigration}
             >
-              شروع مهاجرت دیدگاه‌های مطالب
+              {t?.commentBtn || 'Start migration Post views'}
             </Button>
             {/* <Button
               loading={loading}

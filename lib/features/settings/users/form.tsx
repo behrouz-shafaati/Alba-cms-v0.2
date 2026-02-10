@@ -13,12 +13,14 @@ import { Role } from '../../role/interface'
 import roleCtrl from '../../role/controller'
 import SubmitButton from '@/components/input/submit-button'
 import MultipleSelect from '@/components/input/multiple-select'
+import { useLocale } from '@/hooks/useLocale'
 
 interface FormProps {
   settings: Settings
 }
 
 export const FormUsers: React.FC<FormProps> = ({ settings }) => {
+  const t = useLocale()
   const user = useSessionUser()
   const loginedUserRoles = user?.roles || []
 
@@ -48,7 +50,6 @@ export const FormUsers: React.FC<FormProps> = ({ settings }) => {
     value: role.slug,
   }))
 
-  console.log('#234987 state: ', state.values?.defaultRoles)
   const userRoles: Option[] = Array.isArray(state.values?.defaultRoles)
     ? state.values?.defaultRoles.map((slug: string) => {
         const findedRole: Role | undefined = allRoles.find(
@@ -57,7 +58,6 @@ export const FormUsers: React.FC<FormProps> = ({ settings }) => {
         return { label: findedRole?.title, value: slug }
       })
     : []
-  console.log('#234987 userRoles: ', userRoles)
 
   return (
     <>
@@ -70,10 +70,10 @@ export const FormUsers: React.FC<FormProps> = ({ settings }) => {
           <div className="md:grid md:grid-cols-3 gap-8">
             {/* Roles */}
             <MultipleSelect
-              title="نقش پیش فرض کاربر"
+              title={t.feature.setting.users.defaultRoles.title}
               name="defaultRoles"
               defaultValues={userRoles}
-              placeholder="نقش پیش فرض را انتخاب کنید"
+              placeholder={t.feature.setting.users.defaultRoles.placeholder}
               state={state}
               defaultSuggestions={roleOptions}
               icon={<ShieldQuestionIcon className="w-4 h-4" />}

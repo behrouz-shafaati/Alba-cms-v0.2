@@ -16,21 +16,21 @@ export default function getNavItems({ locale, dictionary }: Props) {
   const navItems: SidebarNavItem[] = [
     {
       slug: 'dashboard',
-      title: t.feature.dashboard.title,
+      title: t?.feature?.dashboard?.title || 'Dashboard',
       href: '/dashboard',
       icon: 'LayoutDashboard',
       authorized: ['dashboard.view.any'],
     },
     {
       slug: 'post',
-      title: t.feature.post.title,
+      title: t?.feature?.post?.title || 'Posts',
       href: '/dashboard/posts',
       icon: 'FileText',
       authorized: ['post.view.any', 'post.view.own', 'postComment.view.own'],
       sub: [
         {
           slug: 'createPost',
-          title: t.feature.post.create,
+          title: t?.feature?.post?.create || 'Add post',
           href: '/dashboard/posts/create',
           icon: 'Plus',
           authorized: ['post.create'],
@@ -39,7 +39,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
     },
     {
       slug: 'post-comment',
-      title: t.feature.postComment.title,
+      title: t?.feature?.postComment?.title || 'Comments',
       href: '/dashboard/post-comments',
       icon: 'MessageSquare',
       label: '',
@@ -47,7 +47,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
     },
     {
       slug: 'user',
-      title: t.feature.user.title,
+      title: t?.feature?.user?.title || 'Users',
       href: '/dashboard/users',
       icon: 'Users',
       label: '',
@@ -55,7 +55,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
       sub: [
         {
           slug: 'createUser',
-          title: t.feature.user.create,
+          title: t?.feature?.user?.create || 'Add user',
           href: '/dashboard/users/create',
           icon: 'Plus',
           label: '',
@@ -65,7 +65,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
     },
     {
       slug: 'category',
-      title: t.feature.category.title,
+      title: t?.feature?.category?.title || 'Categories',
       href: '/dashboard/categories',
       icon: 'FolderTree',
       label: '',
@@ -73,7 +73,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
       sub: [
         {
           slug: 'createCategory',
-          title: t.feature.category.create,
+          title: t?.feature?.category?.create || 'Add category',
           href: '/dashboard/categories/create',
           icon: 'Plus',
           label: '',
@@ -83,7 +83,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
     },
     {
       slug: 'tag',
-      title: t.feature.tag.title,
+      title: t?.feature?.tag?.title || 'Tags',
       href: '/dashboard/tags',
       icon: 'Tag',
       label: '',
@@ -91,7 +91,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
       sub: [
         {
           slug: 'createTag',
-          title: t.feature.tag.create,
+          title: t?.feature?.tag?.create || 'Add tag',
           href: '/dashboard/tags/create',
           icon: 'Plus',
           label: '',
@@ -101,7 +101,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
     },
     {
       slug: 'menu',
-      title: t.feature.menu.title,
+      title: t?.feature?.menu?.title || 'Menus',
       href: '/dashboard/menus',
       icon: 'Menu',
       label: '',
@@ -109,7 +109,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
       sub: [
         {
           slug: 'createMenu',
-          title: t.feature.menu.create,
+          title: t?.feature?.menu?.create || 'Add menu',
           href: '/dashboard/menus/create',
           icon: 'Plus',
           label: '',
@@ -119,7 +119,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
     },
     {
       slug: 'page',
-      title: t.feature.page.title,
+      title: t?.feature?.page?.title || 'Pages',
       href: '/dashboard/pages',
       icon: 'Files',
       label: '',
@@ -127,7 +127,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
       sub: [
         {
           slug: 'createPage',
-          title: t.feature.page.create,
+          title: t?.feature?.page?.create || 'Add page',
           href: '/dashboard/pages/create',
           icon: 'Plus',
           label: '',
@@ -137,7 +137,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
     },
     {
       slug: 'ad-campaign',
-      title: t.feature.adCampaign.title,
+      title: t?.feature?.adCampaign?.title || 'AD Campaign',
       href: '/dashboard/ad-campaigns',
       icon: 'Megaphone',
       label: '',
@@ -145,7 +145,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
       sub: [
         {
           slug: 'createADCampaign',
-          title: t.feature.adCampaign.create,
+          title: t?.feature?.adCampaign?.create || 'Add campaign',
           href: '/dashboard/ad-campaigns/create',
           icon: 'Plus',
           label: '',
@@ -156,7 +156,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
 
     {
       slug: 'form',
-      title: t.feature.form.title,
+      title: t?.feature?.form?.title || 'Forms',
       href: '/dashboard/forms',
       icon: 'ClipboardList',
       label: '',
@@ -164,7 +164,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
       sub: [
         {
           slug: 'createForm',
-          title: t.feature.form.create,
+          title: t?.feature?.form?.create || 'Add form',
           href: '/dashboard/forms/create',
           icon: 'Plus',
           label: '',
@@ -174,7 +174,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
     },
     {
       slug: 'template',
-      title: t.feature.template.title,
+      title: t?.feature?.template?.title || 'Templates',
       href: '/dashboard/templates',
       icon: 'LayoutTemplate',
       label: '',
@@ -182,7 +182,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
       sub: [
         {
           slug: 'createTemplate',
-          title: t.feature.template.create,
+          title: t?.feature?.template?.create || 'Add template',
           href: '/dashboard/templates/create',
           icon: 'Plus',
           label: '',
@@ -192,7 +192,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
     },
     {
       slug: 'section',
-      title: t.feature.section.title,
+      title: t?.feature?.section?.title || 'Sections',
       href: '/dashboard/sections',
       icon: 'Layers',
       label: '',
@@ -200,7 +200,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
       sub: [
         {
           slug: 'createSection',
-          title: t.feature.section.create,
+          title: t?.feature?.section?.create || 'Add section',
           href: '/dashboard/sections/create',
           icon: 'Plus',
           label: '',
@@ -210,7 +210,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
     },
     {
       slug: 'settings',
-      title: t.feature.setting.title,
+      title: t?.feature?.setting?.title || 'Settings',
       href: '/dashboard/settings/general',
       icon: 'Settings',
       label: '',
@@ -222,7 +222,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
       sub: [
         {
           slug: 'general',
-          title: t.feature.setting.general.title,
+          title: t?.feature?.setting?.general?.title || 'General',
           href: '/dashboard/settings/general',
           icon: 'Sliders',
           authorized: [
@@ -233,7 +233,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
         },
         {
           slug: 'users',
-          title: t.feature.setting.users.title,
+          title: t?.feature?.setting?.users?.title || 'Users',
           href: '/dashboard/settings/users',
           icon: 'UserCog',
           label: '',
@@ -245,7 +245,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
         },
         {
           slug: 'locales',
-          title: t.feature.setting.locales.title,
+          title: t?.feature?.setting?.locales?.title || 'Locales',
           href: '/dashboard/settings/locales',
           icon: 'Globe',
           authorized: [
@@ -256,7 +256,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
         },
         {
           slug: 'appearance',
-          title: t.feature.setting.appearance.title,
+          title: t?.feature?.setting?.appearance?.title || 'Appearance',
           href: '/dashboard/settings/appearance',
           icon: 'Palette',
           authorized: [
@@ -267,7 +267,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
         },
         {
           slug: 'ad',
-          title: t.feature.setting.adCampaign.title,
+          title: t?.feature?.setting?.adCampaign?.title || 'AD Campaign',
           href: '/dashboard/settings/ad',
           icon: 'Megaphone',
           authorized: [
@@ -278,7 +278,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
         },
         {
           slug: 'email',
-          title: t.feature.setting.email.title,
+          title: t?.feature?.setting?.email?.title || 'Email',
           href: '/dashboard/settings/email',
           icon: 'Mail',
           authorized: [
@@ -289,7 +289,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
         },
         {
           slug: 'sms',
-          title: t.feature.setting.sms.title,
+          title: t?.feature?.setting?.sms?.title || 'SMS',
           href: '/dashboard/settings/sms',
           icon: 'MessageCircle',
           authorized: [
@@ -300,7 +300,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
         },
         {
           slug: 'validation',
-          title: t.feature.setting.validation.title,
+          title: t?.feature?.setting?.validation?.title || 'Validation',
           href: '/dashboard/settings/validation',
           icon: 'ShieldCheck',
           authorized: [
@@ -311,7 +311,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
         },
         {
           slug: 'wpEmigration',
-          title: t.feature.setting.wpEmigration.title,
+          title: t?.feature?.setting?.wpEmigration?.title || 'WP Emigration',
           href: '/dashboard/settings/wp-emigration',
           icon: 'ArrowRightLeft',
           authorized: [
@@ -325,7 +325,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
 
     {
       slug: 'logout',
-      title: t.feature.logout.title,
+      title: t?.feature?.logout?.title || 'Logout',
       href: '/logout',
       icon: 'LogOut',
       label: '',

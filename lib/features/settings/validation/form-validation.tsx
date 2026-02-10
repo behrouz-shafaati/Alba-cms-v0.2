@@ -9,13 +9,15 @@ import { toast } from 'sonner'
 import AccessDenied from '@/components/other/access-denied'
 import Switch from '@/components/input/switch'
 import SubmitButton from '@/components/input/submit-button'
+import { useLocale } from '@/hooks/useLocale'
 
 interface SettingsFormProps {
   settings: Settings
 }
 
 export const FormValidation: React.FC<SettingsFormProps> = ({ settings }) => {
-  const locale = 'fa'
+  const _t = useLocale()
+  const t = _t.feature.setting.validation
   const { user } = useSession()
   const userRoles = user?.roles || []
 
@@ -47,20 +49,30 @@ export const FormValidation: React.FC<SettingsFormProps> = ({ settings }) => {
         </div>
         {/* <Separator /> */}
         <form action={dispatch} ref={formRef} className="space-y-8 w-full">
+          <input type="hidden" name="locale" value={_t.lang} readOnly />
           <div>
             <Switch
               name="commentApprovalRequired"
-              title="نمایش دیدگاه‌ها فقط بعد از تأیید/بررسی"
+              title={
+                t?.commentApprovalRequired?.title ||
+                'Show comments only after approval/review'
+              }
               defaultChecked={state?.values?.commentApprovalRequired ?? true}
             />
             <Switch
               name="emailVerificationRequired"
-              title="تایید مالکیت ایمیل کاربران بررسی شود"
+              title={
+                t?.emailVerificationRequired?.title ||
+                'Verify user email ownership'
+              }
               defaultChecked={state?.values?.emailVerificationRequired ?? false}
             />
             <Switch
               name="mobileVerificationRequired"
-              title="تایید مالکیت شماره موبایل کاربران بررسی شود"
+              title={
+                t?.mobileVerificationRequired?.title ||
+                "Verify ownership of users' mobile numbers"
+              }
               defaultChecked={
                 state?.values?.mobileVerificationRequired ?? false
               }

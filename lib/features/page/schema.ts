@@ -3,7 +3,7 @@ import { PageSchema } from './interface'
 
 const PageTranslationSchema = new Schema(
   {
-    lang: { type: String, required: true }, // "fa", "en", "de", ...
+    locale: { type: String, required: true }, // "fa", "en", "de", ...
     title: { type: String, required: true },
     content: {
       type: Schema.Types.Mixed, // whole page structure as JSON
