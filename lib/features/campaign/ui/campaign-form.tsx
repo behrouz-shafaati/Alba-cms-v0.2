@@ -13,7 +13,7 @@ import {
   Trash,
   Type,
 } from 'lucide-react'
-import { Heading } from '@/components/other/heading'
+import { Heading } from '@/components/other/ui/heading'
 import {
   createCampaign,
   deleteCampaignsAction,
@@ -55,13 +55,13 @@ export const CampaignForm: React.FC<CampaignFormProps> = ({
   const canCreate = authorize(userRoles, 'campaign.create')
   const canEdit = authorize(
     userRoles,
-    campaign?.user.id !== user?.id ? 'campaign.edit.any' : 'campaign.edit.own'
+    campaign?.user.id !== user?.id ? 'campaign.edit.any' : 'campaign.edit.own',
   )
   const canDelete = authorize(
     userRoles,
     campaign?.user.id !== user?.id
       ? 'campaign.delete.any'
-      : 'campaign.delete.own'
+      : 'campaign.delete.own',
   )
 
   const formRef = useRef<HTMLFormElement>(null)
@@ -261,7 +261,7 @@ export const CampaignForm: React.FC<CampaignFormProps> = ({
           {aspectKeys.map((aspectKey, index) => {
             const ratio = aspectKey.split('/')
             const defaultValu = translation?.banners?.find(
-              (b) => b.aspect === aspectKey
+              (b) => b.aspect === aspectKey,
             )
             return (
               <section

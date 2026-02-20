@@ -47,7 +47,7 @@ export async function createPage(
     slug: content.slug,
     status: content.status,
     translation: {
-      locale: rawValues?.locale,
+      locale: rawValues?.locale || LocaleFallback,
       title: content?.title || '',
       content,
     },

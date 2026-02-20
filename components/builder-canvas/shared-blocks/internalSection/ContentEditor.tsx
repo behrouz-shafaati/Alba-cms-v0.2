@@ -2,47 +2,52 @@
 import React from 'react'
 import { useBuilderStore } from '../../store/useBuilderStore'
 import { useDebouncedCallback } from 'use-debounce'
-import { Label } from '@radix-ui/react-dropdown-menu'
-import ColumnLayoutCombobox from '../row/ui/ColumnLayoutCombobox'
-import { Checkbox } from '@radix-ui/react-checkbox'
+import FileUpload from '@/components/input/file-upload'
 
-const ContentEditor = () => {
+type Props = {
+  savePage: () => void
+}
+
+const ContentEditor = ({ savePage }: Props) => {
   const { updateRowColumns, update, selectedBlock } = useBuilderStore()
 
   const debouncedUpdate = useDebouncedCallback(
     (id, key, form) => update(id, key, form),
-    400
+    400,
   )
 
   return (
     <>
-      <div className="flex flex-col gap-3 py-4">
-        <Label>چینش ستون</Label>
-        <ColumnLayoutCombobox
-          key={`block-${selectedBlock.id}`} //  باعث میشه فرم کاملاً ری‌ست و رندر بشه
-          value={selectedBlock.settings.rowColumns}
-          onChange={(value) => {
-            updateRowColumns(selectedBlock.id as string, value)
-            debouncedUpdate(selectedBlock.id as string, 'settings', {
-              ...selectedBlock?.settings,
-              rowColumns: value,
-            })
-          }}
-        />
-      </div>
-
-      {/* responsive design  */}
-
-      <Checkbox
-        name="responsiveDesign"
-        title="طراحی ریسپانسیو"
-        defaultChecked={selectedBlock?.settings?.responsiveDesign ?? true}
-        onChange={(value: boolean) => {
-          debouncedUpdate(selectedBlock?.id as string, 'settings', {
-            ...selectedBlock?.settings,
-            responsiveDesign: value,
+      <FileUpload
+        key={`image-block-${selectedBlock?.id}`} //  باعث میشه فرم کاملاً ری‌ست و رندر بشه
+        name="image"
+        title="پس زمینه"
+        maxFiles={1}
+        defaultValues={
+          selectedBlock?.settings?.bgMedia
+            ? [selectedBlock?.settings?.bgMedia]
+            : null
+        }
+        updateFileDetailsHandler={(files) => {
+          update(selectedBlock?.id as string, 'settings', {
+            bgMedia: {
+              id: files[0].id,
+              srcMedium: files[0].srcMedium,
+              srcSmall: files[0].srcSmall,
+            },
           })
         }}
+        deleteFileHnadler={(fileId) => {
+          update(selectedBlock?.id as string, 'settings', {
+            ...selectedBlock?.settings,
+            bgMedia: null,
+          })
+          requestAnimationFrame(() => {
+            savePage?.()
+          })
+        }}
+        showDeleteButton={true}
+        allowedFileTypes={['image', 'video']}
       />
     </>
   )

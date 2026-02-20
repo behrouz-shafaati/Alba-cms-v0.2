@@ -1,4 +1,4 @@
-import { getPosts } from '@/features/post/actions'
+import { getPosts } from '@/lib/features/post/actions'
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)

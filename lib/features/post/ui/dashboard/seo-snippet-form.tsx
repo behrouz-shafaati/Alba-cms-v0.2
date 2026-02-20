@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { cn, getTranslation } from '@/lib/utils'
+import { cn } from '@/lib/utils'
+import getTranslation from '@/lib/utils/getTranslation'
 
 const SEO_TITLE_LIMIT = 60
 const META_DESC_LIMIT = 160
@@ -23,7 +24,7 @@ export default function SeoSnippetForm({
   const [seoTitle, setSeoTitle] = useState(t?.seoTitle || '')
   const [slug, setSlug] = useState(defaultValues?.slug || '')
   const [metaDescription, setMetaDescription] = useState(
-    t?.metaDescription || ''
+    t?.metaDescription || '',
   )
 
   const handleChangeSlug = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +61,7 @@ export default function SeoSnippetForm({
           className={cn(
             'text-xs text-gray-500 text-right',
             seoTitle.length > SEO_TITLE_LIMIT - 10 && 'text-yellow-600',
-            seoTitle.length >= SEO_TITLE_LIMIT && 'text-red-600'
+            seoTitle.length >= SEO_TITLE_LIMIT && 'text-red-600',
           )}
         >
           {seoTitle.length}/{SEO_TITLE_LIMIT} کاراکتر
@@ -98,7 +99,7 @@ export default function SeoSnippetForm({
           className={cn(
             'text-xs text-gray-500 text-right',
             metaDescription.length > META_DESC_LIMIT - 20 && 'text-yellow-600',
-            metaDescription.length >= META_DESC_LIMIT && 'text-red-600'
+            metaDescription.length >= META_DESC_LIMIT && 'text-red-600',
           )}
         >
           {metaDescription.length}/{META_DESC_LIMIT} کاراکتر

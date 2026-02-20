@@ -1,9 +1,9 @@
-import { getTranslation, timeAgo } from '@/lib/utils'
 import React from 'react'
-import { Tag } from '@/features/tag/interface'
+import { Tag } from '@/lib/features/tag/interface'
 import { Button } from '../ui/button'
 import IconRenderer from '../builder-canvas/components/IconRenderer'
-import { FastLink } from '../FastLink'
+import getTranslation from '@/lib/utils/getTranslation'
+import { LinkAlba } from '../other/link-alba'
 
 type PostCoverProps = {
   tags: Tag[]
@@ -23,7 +23,7 @@ export const PostTags = ({ tags, styles = {}, ...props }: PostCoverProps) => {
               key={t.id}
               className="inline-flex w-fit p-0 !justify-start"
             >
-              <FastLink
+              <LinkAlba
                 href={`/archive/tags/${t.slug}`}
                 className="flex gap-1 px-2 items-center"
               >
@@ -31,7 +31,7 @@ export const PostTags = ({ tags, styles = {}, ...props }: PostCoverProps) => {
                   <IconRenderer name={t.icon} className={`w-5 h-5`} />
                 )}
                 {translation?.title}
-              </FastLink>
+              </LinkAlba>
             </Button>
           )
         })}

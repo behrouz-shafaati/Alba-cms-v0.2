@@ -1,6 +1,6 @@
-import { Option } from '@/types'
+import { Option } from '@/lib/types'
 import { Category, CategoryTranslationSchema } from '../category/interface'
-import { createCatrgoryBreadcrumb } from '@/lib/utils'
+import createCatrgoryBreadcrumb from '@/lib/utils/createCatrgoryBreadcrumb'
 
 export function getGoalCampaignOptions({
   allCategories,
@@ -12,7 +12,7 @@ export function getGoalCampaignOptions({
   const categoryOptions: Option[] = allCategories.map((category: Category) => {
     const translation: CategoryTranslationSchema =
       category?.translations?.find(
-        (t: CategoryTranslationSchema) => t.lang === locale
+        (t: CategoryTranslationSchema) => t.lang === locale,
       ) ||
       category?.translations[0] ||
       {}

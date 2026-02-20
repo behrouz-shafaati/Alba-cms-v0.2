@@ -129,6 +129,10 @@ export const computedStyles = (
         case 'fontSize':
           result.fontSize = `${value}px`
           break
+        case 'layout':
+          result.width = value?.width ? `${value?.width}px` : 'auto'
+          result.height = value?.height ? `${value?.height}px` : 'auto'
+          break
         default:
           result[key] = value
       }

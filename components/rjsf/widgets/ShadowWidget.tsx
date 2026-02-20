@@ -3,8 +3,9 @@
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import ColorPicker from '@/components/input/ColorPicker'
 import ColorPickerPopover from '@/components/input/ColorPickerPopover'
+import NumberInput from '@/components/input/number'
+import { Droplets, Expand } from 'lucide-react'
 
 type WidgetProps = {
   value: {
@@ -39,51 +40,52 @@ export const ShadowWidget = ({ value, onChange }: WidgetProps) => {
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
-        <Label className="w-24">رنگ</Label>
+        <NumberInput
+          value={shadow.x}
+          onChange={(e) => update('x', parseInt(e.target.value))}
+          icon={
+            <span className=" flex justify-center items-center text-center h-[18px]">
+              X
+            </span>
+          }
+        />
+        <NumberInput
+          value={shadow.y}
+          onChange={(e) => update('y', parseInt(e.target.value))}
+          icon={
+            <span className=" flex justify-center items-center text-center h-[18px]">
+              Y
+            </span>
+          }
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <NumberInput
+          value={shadow.blur}
+          onChange={(e) => update('blur', parseInt(e.target.value))}
+          icon={<Droplets className="w-4 h-4" />}
+          placeholder="Blur"
+        />
+        <NumberInput
+          value={shadow.spread}
+          onChange={(e) => update('spread', parseInt(e.target.value))}
+          icon={<Expand className="w-4 h-4" />}
+          placeholder="Spread"
+        />
+      </div>
+      <div className="flex items-center justify-between gap-2">
         <ColorPickerPopover
           defaultValue={shadow.color}
           onChange={(c: string) => update('color', c)}
         />
-      </div>
-      <div className="flex items-center gap-2">
-        <Label className="w-24">X</Label>
-        <Input
-          type="number"
-          value={shadow.x}
-          onChange={(e) => update('x', parseInt(e.target.value))}
-        />
-      </div>
-      <div className="flex items-center gap-2">
-        <Label className="w-24">Y</Label>
-        <Input
-          type="number"
-          value={shadow.y}
-          onChange={(e) => update('y', parseInt(e.target.value))}
-        />
-      </div>
-      <div className="flex items-center gap-2">
-        <Label className="w-24">Blur</Label>
-        <Input
-          type="number"
-          value={shadow.blur}
-          onChange={(e) => update('blur', parseInt(e.target.value))}
-        />
-      </div>
-      <div className="flex items-center gap-2">
-        <Label className="w-24">Spread</Label>
-        <Input
-          type="number"
-          value={shadow.spread}
-          onChange={(e) => update('spread', parseInt(e.target.value))}
-        />
-      </div>
-      <div className="flex items-center gap-2">
-        <Checkbox
-          id="inset"
-          checked={shadow.inset}
-          onCheckedChange={(c) => update('inset', !!c)}
-        />
-        <Label htmlFor="inset">سایه داخلی</Label>
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="inset"
+            checked={shadow.inset}
+            onCheckedChange={(c) => update('inset', !!c)}
+          />
+          <Label htmlFor="inset">سایه داخلی</Label>
+        </div>
       </div>
     </div>
   )

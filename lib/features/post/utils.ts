@@ -25,7 +25,7 @@ export function formatToJalali(dateString: string): string {
 export function createPostHref(post: Post) {
   if (!post?.mainCategory) return `/_nocategory_/${post?.slug}`
   const categorySection: string = buildCategoryHref(
-    post.mainCategory as Category
+    post.mainCategory as Category,
   )
   return `/${categorySection}${post.slug}`
 }
@@ -34,7 +34,7 @@ export function buildCategoryHref(category: Category, href: string = '') {
   if (!category) return href
   return buildCategoryHref(
     category?.parent,
-    (href = `${category.slug}/${href}`)
+    (href = `${category.slug}/${href}`),
   )
 }
 
@@ -46,7 +46,7 @@ export function updateFileDetailsInContentJson({
   fileDetails: FileDetails
 }): Post {
   const translation = post.translations.find(
-    (t) => t.lang == fileDetails.locale
+    (t) => t.lang == fileDetails.locale,
   )
   const parsedContent = JSON.parse(translation.contentJson)
   const content = parsedContent?.content || []
@@ -63,7 +63,7 @@ export function updateFileDetailsInContentJson({
     content: contentJsonSetedFileData,
   }
   const newTranslations = post.translations.filter(
-    (t) => t.lang != fileDetails.locale
+    (t) => t.lang != fileDetails.locale,
   )
   return {
     ...post,
@@ -126,11 +126,11 @@ export function generatePostSchema({
 
     ...createObjectIfValueExists(
       'datePublished',
-      post.createdAt ? new Date(post.createdAt).toISOString() : undefined
+      post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
     ),
     ...createObjectIfValueExists(
       'dateModified',
-      post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined
+      post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
     ),
   }
 
@@ -172,13 +172,13 @@ export function generateFAQSchema(doc: any) {
 
       // Extract question text
       const titleNode = item.content.find(
-        (c) => c.type === 'accordionItemTitle'
+        (c) => c.type === 'accordionItemTitle',
       )
       const questionText = extractPlainText(titleNode)
 
       // Extract answer text
       const answerNode = item.content.find(
-        (c) => c.type === 'accordionItemContent'
+        (c) => c.type === 'accordionItemContent',
       )
       const answerText = extractPlainText(answerNode)
 
@@ -235,7 +235,7 @@ export function buildBreadcrumbsArray(post: any, lang: string = 'fa') {
    * تابع بازگشتی برای جمع‌آوری سلسله‌مراتب دسته‌ها
    */
   function collectCategories(
-    category?: any | null
+    category?: any | null,
   ): { title: string; link: string }[] {
     if (!category) return []
 

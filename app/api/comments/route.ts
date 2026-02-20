@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getPostComments } from '@/features/post-comment/actions'
+import { getPostComments } from '@/lib/features/post-comment/actions'
 
 export async function GET(req: Request) {
   try {
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     console.error('Error fetching comments:', err)
     return NextResponse.json(
       { error: 'Failed to fetch comments' },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

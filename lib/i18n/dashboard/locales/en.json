@@ -14,7 +14,13 @@
     "login": "Login",
     "dashboard": "Dashboard",
     "submitLabel": "Save",
-    "notAuthorized": "You do not have permission to perform this operation."
+    "notAuthorized": "You do not have permission to perform this operation.",
+    "search": "Search",
+    "ah": "Ah!",
+    "isEmpty": "Is Empty",
+    "from": "From",
+    "selectedRow": "Selected row",
+    "filter": "Filter"
   },
   "input": {
     "combobox": {
@@ -26,7 +32,15 @@
   },
   "feature": {
     "dashboard": { "title": "Dashboard" },
-    "post": { "title": "Posts", "create": "Add post" },
+    "post": {
+      "posts": "Posts",
+      "title": "Posts",
+      "create": "Add post",
+      "description": "Post management",
+      "status": "Status",
+      "published": "Published",
+      "draft": "Draft"
+    },
     "postComment": { "title": "Comments" },
     "user": { "title": "Users", "create": "Add user" },
     "category": { "title": "Categories", "create": "Add category" },

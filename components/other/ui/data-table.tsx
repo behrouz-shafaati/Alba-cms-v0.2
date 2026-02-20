@@ -23,6 +23,7 @@ import { QueryResponse } from '@/lib/features/core/interface'
 import Search from './search'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import Pagination from './pagination'
+import { useLocale } from '@/hooks/useLocale'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -54,23 +55,26 @@ export function DataTable<TData, TValue>({
     url: buildUrlWithParams(refetchDataUrl),
     initialData: response,
   })
+  console.log('$234 refetchDataUrl: ', refetchDataUrl)
+  console.log('$2384 refetchDataUrl data: ', data)
   const table = useReactTable({
-    data: data.data,
+    data: data?.data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   })
   /* this can be used to get the selectedrows */
-  const isSelected = table.getFilteredSelectedRowModel().flatRows.length > 0
+  const isSelected = table?.getFilteredSelectedRowModel()?.flatRows?.length > 0
   const selectedItems = table
     .getFilteredSelectedRowModel()
     .flatRows.map((row) => row.original)
   const GroupAction = groupAction
+  const t = useLocale()
   return (
     <>
       <div className="flex space-x-2 space-x-reverse space-y-2 md:space-y-0 flex-col md:flex-row">
         {showSearch && <Search placeholder={searchTitle} />}
-        {showFilters && <Filters table={table} />}
+        {showFilters && <Filters table={table} dictianory={t} />}
       </div>
       <ScrollArea className="">
         <Table className="relative">
@@ -84,7 +88,7 @@ export function DataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   )
@@ -103,7 +107,7 @@ export function DataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -115,9 +119,9 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  عه!
+                  {t.shared.ah}
                   <br />
-                  خالیه که
+                  {t.shared.isEmpty}
                 </TableCell>
               </TableRow>
             )}
@@ -128,8 +132,8 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-end space-x-2 space-x-reverse py-4">
         {showGroupAction && (
           <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} از{' '}
-            {table.getFilteredRowModel().rows.length} ردیف انتخاب شده
+            {table.getFilteredSelectedRowModel().rows.length} {t.shared.from}{' '}
+            {table.getFilteredRowModel().rows.length} {t.shared.selectedRow}
           </div>
         )}
         {showPagination && (

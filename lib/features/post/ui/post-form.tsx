@@ -1,91 +1,89 @@
 'use client'
 import { useActionState, useCallback, useEffect, useRef, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import {
   Braces as PostIcon,
   Mail as MailIcon,
-  Target,
   Trash,
   Video as VideoIcon,
 } from 'lucide-react'
 // import { Separator } from "@/components/ui/separator";
-import { Heading } from '@/components/ui/heading'
+import { Heading } from '@/components/other/ui/heading'
 // import FileUpload from "@/components/FileUpload";
-import { useToast } from '../../../hooks/use-toast'
 import {
   createPost,
   deletePostsAction,
   updatePost,
-} from '@/features/post/actions'
-import Text from '../../../components/form-fields/text'
-import { AlertModal } from '../../../components/modal/alert-modal'
-import FileUpload from '../../../components/form-fields/file-upload'
-import Select from '../../../components/form-fields/select'
-import Combobox from '@/components/form-fields/combobox'
+} from '@/lib/features/post/actions'
+import Text from '@/components/input/text'
+import { AlertModal } from '@/components/other/modal/alert-modal'
+import FileUpload from '@/components/input/file-upload'
+import Select from '@/components/input/select'
+import Combobox from '@/components/input/combobox'
 import {
   Category,
   CategoryTranslationSchema,
-} from '@/features/category/interface'
-import { Option } from '@/types'
-import { createCatrgoryBreadcrumb } from '@/lib/utils'
+} from '@/lib/features/category/interface'
+import { Option } from '@/lib/types'
+import createCatrgoryBreadcrumb from '@/lib/utils/createCatrgoryBreadcrumb'
 import { Braces as CategoryIcon } from 'lucide-react'
 // import TagInput from '@/components/form-fields/TagInput'
-import { searchTags } from '@/features/tag/actions'
-import { Tag, TagTranslationSchema } from '@/features/tag/interface'
-import MultipleSelec from '@/components/form-fields/multiple-selector'
+import { searchTags } from '@/lib/features/tag/actions'
+import { Tag, TagTranslationSchema } from '@/lib/features/tag/interface'
+import MultipleSelect from '@/components/input/multiple-select'
 import Link from 'next/link'
 import { createPostHref } from '../utils'
-import SubmitButton from '@/components/form-fields/submit-button'
+import SubmitButton from '@/components/input/submit-button'
 import StickyBox from 'react-sticky-box'
 import RelatedPostsDashboard from './dashboard/related-post'
 import SeoSnippetForm from './dashboard/seo-snippet-form'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
-import AccessDenied from '@/components/access-denied'
+import AccessDenied from '@/components/other/access-denied'
+import VideoEmbed from '@/components/other/VideoEmbed'
+import { searchCategories } from '../../category/actions'
+import authorize from '@/lib/utils/authorize'
+import { toast } from 'sonner'
+import { ContentLanguageTabs } from '@/components/input/ContentLanguageTabs'
 import { getEmbedUrl } from '@/components/tiptap-editor/utils'
-import VideoEmbed from '@/components/video-embed/VideoEmbed'
-import { searchCategories } from '@/features/category/actions'
 import TiptapEditorLazy from '@/components/tiptap-editor/TiptapEditorLazy'
 
 interface PostFormProps {
-  initialData: any | null
+  post: any | null
   allCategories: Category[]
+  settings: any
+  initialState: any
 }
 
 export const PostForm: React.FC<PostFormProps> = ({
-  initialData: post,
+  post,
   allCategories,
+  settings,
+  initialState,
 }) => {
-  const locale = 'fa'
+  const searchParams = useSearchParams()
   const { user } = useSession()
+
   const userRoles = user?.roles || []
+  const localedFallback = settings.language?.siteDefault
 
-  const canCreate = can(userRoles, 'post.create')
-  const canEdit = can(
-    userRoles,
-    post?.author?.id !== user?.id ? 'post.edit.any' : 'post.edit.own'
-  )
-  const canDelete = can(
-    userRoles,
-    post?.author?.id !== user?.id ? 'post.delete.any' : 'post.delete.own'
-  )
-  const canPublish = can(
-    userRoles,
-    post?.author?.id !== user?.id ? 'post.publish.any' : 'post.publish.own'
-  )
+  const locale = searchParams.get('locale') ?? localedFallback
 
-  const translation: any =
-    post?.translations?.find((t: any) => t.lang === locale) ||
-    post?.translations[0] ||
-    {}
-  const initialState = {
-    message: null,
-    errors: {},
-    values: { ...post, translation },
-  }
+  const canCreate = authorize(userRoles, 'post.create')
+  const canEdit = authorize(
+    userRoles,
+    post?.author?.id !== user?.id ? 'post.edit.any' : 'post.edit.own',
+  )
+  const canDelete = authorize(
+    userRoles,
+    post?.author?.id !== user?.id ? 'post.delete.any' : 'post.delete.own',
+  )
+  const canPublish = authorize(
+    userRoles,
+    post?.author?.id !== user?.id ? 'post.publish.any' : 'post.publish.own',
+  )
 
   const formRef = useRef<HTMLFormElement>(null)
 
@@ -95,19 +93,16 @@ export const PostForm: React.FC<PostFormProps> = ({
   const [state, dispatch] = useActionState(actionHandler as any, initialState)
   const params = useParams()
   const router = useRouter()
-  const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showPrimaryVideoError, setShowPrimaryVideoError] = useState(false)
   const [primaryVideoEmbedUrl, setPrimaryVideoEmbedUrl] = useState(
-    state.values?.primaryVideoEmbedUrl || ''
+    state.values?.primaryVideoEmbedUrl || '',
   )
   useEffect(() => {
     if (state.message && state.message !== null) {
-      toast({
-        variant: state.success ? 'default' : 'destructive',
-        description: state.message,
-      })
+      if (state.success) toast.success(state.message)
+      else toast.error(state.message)
     }
   }, [state])
 
@@ -263,6 +258,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                 text="ذخیره مطلب"
                 className="my-4 w-full"
               />
+              <ContentLanguageTabs settings={settings} />
               {/* status */}
               <Select
                 title="وضعیت"
@@ -285,14 +281,14 @@ export const PostForm: React.FC<PostFormProps> = ({
                 fetchOptions={searchCategories}
               />
               {/* categories */}
-              <MultipleSelec
+              <MultipleSelect
                 title="سایر دسته‌ها"
                 name="categories"
                 defaultValues={
                   categoriesArray.map((category: Category) => {
                     const translation: CategoryTranslationSchema =
                       category?.translations?.find(
-                        (t: CategoryTranslationSchema) => t.lang === locale
+                        (t: CategoryTranslationSchema) => t.lang === locale,
                       ) ||
                       category?.translations[0] ||
                       {}
@@ -307,14 +303,14 @@ export const PostForm: React.FC<PostFormProps> = ({
                 // maxSelected={1}
               />
               {/* tags */}
-              <MultipleSelec
+              <MultipleSelect
                 title="برچسب ها"
                 name="tags"
                 defaultValues={
                   tagsArray.map((tag: Tag) => {
                     const translation: TagTranslationSchema =
                       tag?.translations?.find(
-                        (t: CategoryTranslationSchema) => t.lang === locale
+                        (t: CategoryTranslationSchema) => t.lang === locale,
                       ) ||
                       tag?.translations[0] ||
                       {}

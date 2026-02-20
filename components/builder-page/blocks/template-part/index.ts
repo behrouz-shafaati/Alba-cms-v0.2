@@ -4,7 +4,7 @@ import { TemplateBlockSchema } from './schema'
 import { templateBlockDefaults } from './defaultSettings'
 import { ContentEditor } from './ContentEditor'
 
-export const TemplatePartBlockDef = {
+export const SectionBlockDef = {
   type: 'templatePart',
   label: 'قطعه قالب',
   showInBlocksList: true,

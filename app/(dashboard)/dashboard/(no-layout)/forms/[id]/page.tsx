@@ -1,7 +1,7 @@
-import React from 'react'
 import { notFound } from 'next/navigation'
-import { Form } from '@/features/form/ui/form'
-import templatePartCtrl from '@/features/form/controller'
+import { Form } from '@/lib/features/form/ui/form'
+import templatePartCtrl from '@/lib/features/form/controller'
+import { getSettingsAction } from '@/lib/features/settings/actions'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -9,13 +9,17 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const resolvedParams = await params
   const { id } = resolvedParams
-  let page = null
+  let settings,
+    page = null
   let pageBreadCrumb = {
     title: 'افزودن',
     link: '/dashboard/forms/create',
   }
   if (id !== 'create') {
-    ;[page] = await Promise.all([templatePartCtrl.findById({ id })])
+    ;[settings, page] = await Promise.all([
+      getSettingsAction(),
+      templatePartCtrl.findById({ id }),
+    ])
 
     if (!page) {
       notFound()
@@ -24,10 +28,12 @@ export default async function Page({ params }: PageProps) {
       title: page.title,
       link: `/dashboard/forms/${id}`,
     }
+  } else {
+    ;[settings] = await Promise.all([getSettingsAction()])
   }
   return (
     <>
-      <Form initialData={page} />
+      <Form initialData={page} settings={settings} />
     </>
   )
 }

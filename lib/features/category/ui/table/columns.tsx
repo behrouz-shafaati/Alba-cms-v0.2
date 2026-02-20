@@ -1,9 +1,9 @@
 'use client'
 import { ColumnDef } from '@tanstack/react-table'
 import { CellAction } from './cell-action'
-import { CheckboxInput as Checkbox } from '@/components/ui/checkbox-input'
-import { Category } from '@/features/category/interface'
-import { Status } from '@/components/Status'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Category } from '@/lib/features/category/interface'
+import { Status } from '@/components/other/Status'
 
 export const columns: ColumnDef<Category>[] = [
   {

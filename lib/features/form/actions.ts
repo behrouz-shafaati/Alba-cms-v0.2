@@ -2,17 +2,17 @@
 
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
-import formCtrl from '@/features/form/controller'
+import formCtrl from '@/lib/features/form/controller'
 import { redirect } from 'next/navigation'
-import { Session, State } from '@/types'
-import { QueryFind, QueryResult } from '@/lib/entity/core/interface'
+import { FormActionState, Session } from '@/lib/types'
+import { QueryFind, QueryResult } from '@/lib/features/core/interface'
 import { Form, FormField } from './interface'
 import revalidatePathCtrl from '@/lib/revalidatePathCtrl'
 import { User } from '../user/interface'
-import { can } from '@/lib/utils/can.server'
 import { PostTranslationSchema } from '../post/interface'
 import { extractFieldsFromFormContent } from './utils'
 import { getSession } from '@/lib/auth/get-session'
+import authorize from '@/lib/utils/authorize'
 
 const FormSchema = z.object({
   contentJson: z.string({}),
@@ -25,7 +25,10 @@ const FormSchema = z.object({
  * @param formData - The form data.
  * @returns An object with errors and a message if there are any, or redirects to the Form dashboard.
  */
-export async function createForm(prevState: State, formData: FormData) {
+export async function createForm(
+  prevState: FormActionState,
+  formData: FormData,
+) {
   let newForm = null
   // Validate form fields
   const rawValues = Object.fromEntries(formData)
@@ -47,7 +50,7 @@ export async function createForm(prevState: State, formData: FormData) {
   }
   try {
     const user = (await getSession())?.user as User
-    await can(user.roles, 'form.create')
+    authorize(user.roles, 'form.create')
     const validatedFields = FormSchema.safeParse(rawValues)
     // If form validation fails, return errors early. Otherwise, continue.
     if (!validatedFields.success) {
@@ -114,8 +117,8 @@ export async function createForm(prevState: State, formData: FormData) {
 
 export async function updateForm(
   id: string,
-  prevState: State,
-  formData: FormData
+  prevState: FormActionState,
+  formData: FormData,
 ) {
   let params = {},
     updatedPage = {}
@@ -139,9 +142,9 @@ export async function updateForm(
   try {
     const user = (await getSession())?.user as User
     const prevForm = await formCtrl.findById({ id })
-    await can(
+    authorize(
       user.roles,
-      prevForm.user !== user.id ? 'form.edit.any' : 'form.edit.own'
+      prevForm.user !== user.id ? 'form.edit.any' : 'form.edit.own',
     )
     const validatedFields = FormSchema.safeParse(rawValues)
     // If form validation fails, return errors early. Otherwise, continue.
@@ -201,9 +204,9 @@ export async function deleteFormAction(ids: string[]) {
       filters: { _id: { $in: ids } },
     })
     for (const prevForm of prevFormResult.data) {
-      await can(
+      authorize(
         user.roles,
-        prevForm.user !== user.id ? 'form.delete.any' : 'form.delete.own'
+        prevForm.user !== user.id ? 'form.delete.any' : 'form.delete.own',
       )
     }
 
@@ -251,7 +254,7 @@ async function sanitizeFormData(validatedFields: any, id?: string | undefined) {
   const fields = extractFieldsFromFormContent(content)
   const formTranslations = [
     ...prevState.translations.filter(
-      (t: PostTranslationSchema) => t.lang != content.lang
+      (t: PostTranslationSchema) => t.lang != content.lang,
     ),
     {
       lang: content?.lang || 'fa',

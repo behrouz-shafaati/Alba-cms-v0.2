@@ -1,11 +1,15 @@
 'use client'
 import { ColumnDef } from '@tanstack/react-table'
 import { CellAction } from './cell-action'
-import { CheckboxInput as Checkbox } from '@/components/ui/checkbox-input'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Post } from '../../interface'
-import { Status } from '@/components/Status'
+import { Status } from '@/components/other/Status'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
-export const columns: ColumnDef<Post>[] = [
+export const getColumns = (
+  dictionary: DashboardLocaleSchema,
+  locale: string,
+): ColumnDef<Post>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -26,22 +30,21 @@ export const columns: ColumnDef<Post>[] = [
     enableHiding: false,
   },
   {
-    header: 'عنوان',
+    header: dictionary.feature.post.title,
     accessorFn: (row) => {
-      const locale = 'fa' // یا از context/state
       return row.translations?.find((t) => t.lang === locale)?.title ?? ''
     },
   },
   {
     accessorKey: 'status',
-    header: 'وضعیت',
+    header: dictionary.feature.post.status,
     cell: ({ row }) => <Status row={row} />,
     meta: {
       filterConfig: {
         type: 'select',
         options: [
-          { label: 'منتشر شده', value: 'published' },
-          { label: 'پیش‌نویس', value: 'draft' },
+          { label: dictionary.feature.post.published, value: 'published' },
+          { label: dictionary.feature.post.draft, value: 'draft' },
         ],
       },
     },

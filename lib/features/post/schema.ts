@@ -4,7 +4,7 @@ import { createPostHref } from './utils'
 
 const PostTranslationSchema = new Schema(
   {
-    lang: { type: String, required: true }, // "fa", "en", "de", ...
+    locale: { type: String, required: true }, // "fa", "en", "de", ...
     title: { type: String, default: '' },
     seoTitle: { type: String, default: '' },
     excerpt: { type: String, default: '' },
@@ -13,7 +13,7 @@ const PostTranslationSchema = new Schema(
     contentJson: { type: String, default: '' },
     readingTime: { type: Number, default: 0 },
   },
-  { _id: false }
+  { _id: false },
 )
 
 const postSchema = new Schema<PostSchema>(
@@ -81,7 +81,7 @@ const postSchema = new Schema<PostSchema>(
     publishedAt: { type: Date, default: null }, // تاریخ انتشار
     deleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 )
 
 // Partial Unique Index
@@ -90,7 +90,7 @@ postSchema.index(
   {
     unique: true,
     partialFilterExpression: { deleted: false },
-  }
+  },
 )
 
 postSchema.pre(['find', 'findOne', 'findOneAndUpdate'], function () {

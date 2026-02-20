@@ -13,8 +13,8 @@ export default async function Page({ params }: Props) {
   const locale = firstSlug || ''
   const resolvedLocale = resolveLocale({ locale })
   const slugsWithoutLocale = getSlugsWithoutLocale(slugs)
-  console.log('#234987 slugs:', slugs)
-  console.log('#234987 resolvedLocale:', resolvedLocale)
-  console.log('#234987 slugsWithoutLocale:', slugsWithoutLocale)
+  // console.log('#234987 slugs:', slugs)
+  // console.log('#234987 resolvedLocale:', resolvedLocale)
+  // console.log('#234987 slugsWithoutLocale:', slugsWithoutLocale)
   return <PageResolver locale={resolvedLocale} slugs={slugsWithoutLocale} />
 }

@@ -1,17 +1,17 @@
 'use client'
 import * as z from 'zod'
 import { useActionState, useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { useToast } from '@/hooks/use-toast'
-import roleCtrl from '@/features/role/controller'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import roleCtrl from '@/lib/features/role/controller'
 import { createForm, deleteFormAction, updateForm } from '../actions'
-import { Option } from '@/components/form-fields/combobox'
-import { AlertModal } from '@/components/modal/alert-modal'
+import { Option } from '@/lib/types'
+import { AlertModal } from '@/components/other/modal/alert-modal'
 import BuilderForm from '@/components/builder-form'
 import { FormTranslationSchema, Form as FormType } from '../interface'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
-import AccessDenied from '@/components/access-denied'
+import AccessDenied from '@/components/other/access-denied'
+import authorize from '@/lib/utils/authorize'
+import { toast } from 'sonner'
 
 export const IMG_MAX_LIMIT = 3
 const formSchema = z.object({
@@ -22,17 +22,22 @@ type FormValues = z.infer<typeof formSchema>
 
 interface FormProps {
   initialData: FormType | null
+  settings: any
 }
 
-export const Form: React.FC<FormProps> = ({ initialData: form }) => {
-  const locale = 'fa'
+export const Form: React.FC<FormProps> = ({ initialData: form, settings }) => {
+  const searchParams = useSearchParams()
   const { user } = useSession()
   const userRoles = user?.roles || []
 
-  const canCreate = can(userRoles, 'form.create')
-  const canEdit = can(
+  const localedFallback = settings.language?.siteDefault
+
+  const locale = searchParams.get('locale') ?? localedFallback
+
+  const canCreate = authorize(userRoles, 'form.create')
+  const canEdit = authorize(
     userRoles,
-    form?.user !== user?.id ? 'form.edit.any' : 'form.edit.own'
+    form?.user !== user?.id ? 'form.edit.any' : 'form.edit.own',
   )
   const translation: FormTranslationSchema =
     form?.translations?.find((t: FormTranslationSchema) => t.lang === locale) ||
@@ -54,7 +59,6 @@ export const Form: React.FC<FormProps> = ({ initialData: form }) => {
 
   const params = useParams()
   const router = useRouter()
-  const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [imgLoading, setImgLoading] = useState(false)
@@ -83,11 +87,8 @@ export const Form: React.FC<FormProps> = ({ initialData: form }) => {
 
   useEffect(() => {
     if (state?.message && state.message !== null)
-      toast({
-        variant: state?.success ? 'default' : 'destructive',
-        title: '',
-        description: state.message,
-      })
+      if (state?.success) toast.success(state.message)
+      else toast.error(state.message)
     if (state?.success && state?.isCreatedJustNow) {
       router.replace(`/dashboard/forms/${state?.values?.id}`)
     }
@@ -114,6 +115,7 @@ export const Form: React.FC<FormProps> = ({ initialData: form }) => {
           : {
               initialContent: { type: 'form', templateFor: ['form'], rows: [] },
             })}
+        locale={locale}
       />
     </>
   )

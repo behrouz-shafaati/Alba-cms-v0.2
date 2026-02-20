@@ -1,5 +1,5 @@
 'use client'
-import { AlertModal } from '@/components/modal/alert-modal'
+import { AlertModal } from '@/components/other/modal/alert-modal'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -14,8 +14,8 @@ import { useState } from 'react'
 import { createPostHref } from '../../utils'
 import Link from 'next/link'
 import { deletePostsAction } from '../../actions'
-import { can } from '@/lib/utils/can.client'
 import { useSession } from '@/components/context/SessionContext'
+import authorize from '@/lib/utils/authorize'
 
 interface CellActionProps {
   data: Post
@@ -28,13 +28,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { user } = useSession()
   const userRoles = user?.roles || []
 
-  const canEdit = can(
+  const canEdit = authorize(
     userRoles,
-    data?.author?.id !== user?.id ? 'post.edit.any' : 'post.edit.own'
+    data?.author?.id !== user?.id ? 'post.edit.any' : 'post.edit.own',
   )
-  const canDelete = can(
+  const canDelete = authorize(
     userRoles,
-    data?.author?.id !== user?.id ? 'post.delete.any' : 'post.delete.own'
+    data?.author?.id !== user?.id ? 'post.delete.any' : 'post.delete.own',
   )
 
   const onConfirm = async () => {

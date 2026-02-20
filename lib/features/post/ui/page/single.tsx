@@ -1,19 +1,19 @@
-import { BreadCrumbType } from '@/components/breadcrumb'
+import { BreadCrumbType } from '@/components/other/breadcrumb'
 import RenderedHtml from '@/components/tiptap-editor/render/RenderedHtml.server'
 import { Post, PostTranslationSchema } from '../../interface'
-import { getTranslation } from '@/lib/utils'
 import { PostCover } from '@/components/post/cover'
-import { PostBreadcrumb } from '@/components/post/breadcrumb'
 import { PostComments } from '@/components/post/comments'
 import { PostCommentForm } from '@/components/post/comment-form'
 import { PostContent } from '@/components/post/content'
 import { PostTitle } from '@/components/post/title'
 import ShareButtons from '@/components/share/share-buttons'
-import { Settings } from '@/features/settings/interface'
+import { Settings } from '@/lib/features/settings/interface'
 import { PostTags } from '@/components/post/tags'
 import { PostAuthorCard } from '@/components/post/author-card'
 import { CommentsHeader } from '@/components/post/comments-header'
 import PostMetaDataLazy from '@/components/post/meta-data-lazy'
+import getTranslation from '@/lib/utils/getTranslation'
+import { PostBreadcrumbServer } from '@/components/post/breadcrumb.server'
 
 type props = {
   locale?: string
@@ -26,7 +26,7 @@ type props = {
   searchParams?: any
 }
 
-const SinglePageBlog = ({
+const DefaultSinglePageBlog = ({
   breadcrumbItems,
   post,
   siteSettings,
@@ -42,7 +42,7 @@ const SinglePageBlog = ({
 
   return (
     <div className=" max-w-4xl m-auto text-justify p-2">
-      <PostBreadcrumb content={breadcrumbItems} />
+      <PostBreadcrumbServer content={breadcrumbItems} locale={locale} />
 
       {post?.image && (
         <PostCover
@@ -79,4 +79,4 @@ const SinglePageBlog = ({
   )
 }
 
-export default SinglePageBlog
+export default DefaultSinglePageBlog

@@ -18,7 +18,7 @@ export const BlockSettingsForm = ({
 
   const debouncedUpdate = useDebouncedCallback(
     (id, key, form) => update(id, key, form),
-    400
+    400,
   )
 
   if (!selectedBlock) return null

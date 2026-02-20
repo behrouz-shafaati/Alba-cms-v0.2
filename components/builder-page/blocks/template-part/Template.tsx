@@ -20,7 +20,7 @@ type TemplateProps = {
   categorySlug: string | null
 } & React.HTMLAttributes<HTMLParagraphElement> // ✅ اجازه‌ی دادن onclick, className و ...
 
-export const TemplatePart = ({
+export const Section = ({
   siteSettings,
   editroMode = false,
   template,

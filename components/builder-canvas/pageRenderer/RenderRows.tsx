@@ -9,6 +9,7 @@ import {
 } from '../utils/styleUtils'
 import RenderBlock from './RenderBlock'
 import { Settings } from '@/features/settings/interface'
+import Image from 'next/image'
 
 type Props = {
   siteSettings: Settings
@@ -56,11 +57,20 @@ const RendererRows = async ({
             data-row
             key={row.id}
             style={{ ...computedStyles(row.styles) }}
-            className={`grid grid-cols-12 gap-4 ${combineClassNames(
+            className={`relative grid grid-cols-12 gap-4 ${combineClassNames(
               row.classNames || {},
               computedStyles(row.styles),
             )} ${className} ${stickyClass} `}
           >
+            {row?.settings?.bgMedia && (
+              <Image
+                src={row?.settings?.bgMedia?.srcMedium}
+                alt="ALBA CMS Hero"
+                fill
+                priority
+                className="object-cover"
+              />
+            )}
             {row.columns.map((col) => {
               const visibilityClassName = getVisibilityClass(
                 col.styles?.visibility,
@@ -87,6 +97,15 @@ const RendererRows = async ({
                     ...computedStyles(col.settings),
                   }}
                 >
+                  {col?.settings?.bgMedia && (
+                    <Image
+                      src={col?.settings?.bgMedia?.srcMedium}
+                      alt="ALBA CMS Hero"
+                      fill
+                      priority
+                      className="object-cover"
+                    />
+                  )}
                   <div
                     data-block-wrapper
                     //When the row is sticky don't need sticky column

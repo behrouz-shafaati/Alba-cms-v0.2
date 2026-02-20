@@ -19,7 +19,7 @@ const PageResolver = ({ locale, slugs }: Props) => {
     case null:
       return <h1>Home page</h1>
     default:
-      return <Page locale={locale} pageSlug={finalSlug} />
+      return <Page locale={locale} slugs={slugs} pageSlug={finalSlug} />
   }
 }
 

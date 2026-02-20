@@ -1,8 +1,8 @@
-import { getTranslation } from '@/lib/utils'
+import getTranslation from '@/lib/utils/getTranslation'
 import { Post } from '../../interface'
 import { useEffect, useState } from 'react'
 import { getPosts } from '../../actions'
-import { CopyButton } from '@/components/ui/shadcn-io/copy-button'
+import { CopyButton } from '@/components/other/copy-button'
 import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 

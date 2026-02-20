@@ -67,7 +67,7 @@ export default function ComboboxInput({
   const _placeholder = placeholder ? placeholder : t.placeholder
 
   const _options = showClean
-    ? [{ label: t.all, value: '' }, ...options]
+    ? [{ label: t?.all, value: '' }, ...options]
     : options
 
   if (disabled)
@@ -136,7 +136,7 @@ export default function ComboboxInput({
                       <Check
                         className={cn(
                           'ml-2 h-4 w-4',
-                          value === option.value ? 'opacity-100' : 'opacity-0'
+                          value === option.value ? 'opacity-100' : 'opacity-0',
                         )}
                       />
                       {option.label}

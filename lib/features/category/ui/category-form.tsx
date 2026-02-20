@@ -11,30 +11,30 @@ import {
   Trash,
 } from 'lucide-react'
 // import { Separator } from "@/components/ui/separator";
-import { Heading } from '@/components/ui/heading'
+import { Heading } from '@/components/other/ui/heading'
 // import FileUpload from "@/components/FileUpload";
-import { useToast } from '../../../hooks/use-toast'
 import {
   createCategory,
   deleteCategorysAction,
   updateCategory,
 } from '../actions'
-import Text from '../../../components/form-fields/text'
-import SubmitButton from '../../../components/form-fields/submit-button'
-import { Option } from '../../../components/form-fields/combobox'
-import { AlertModal } from '../../../components/modal/alert-modal'
-import Combobox from '../../../components/form-fields/combobox'
+import Text from '@/components/input/text'
+import SubmitButton from '@/components/input/submit-button'
+import { Option } from '@/lib/types'
+import { AlertModal } from '@/components/other/modal/alert-modal'
+import Combobox from '@/components/input/combobox'
 import { Category, CategoryTranslationSchema } from '../interface'
-import { createCatrgoryBreadcrumb } from '@/lib/utils'
-import FileUpload from '../../../components/form-fields/file-upload'
-import Select from '../../../components/form-fields/select'
+import createCatrgoryBreadcrumb from '@/lib/utils/createCatrgoryBreadcrumb'
+import FileUpload from '@/components/input/file-upload'
+import Select from '@/components/input/select'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
-import AccessDenied from '@/components/access-denied'
+import AccessDenied from '@/components/other/access-denied'
 import StickyBox from 'react-sticky-box'
 import { Label } from '@/components/ui/label'
-import TiptapEditorLazy from '@/components/tiptap-editor/TiptapEditorLazy'
-import IconPicker from '@/components/form-fields/IconPicker'
+import TiptapEditorLazy from '@/components/other/tiptap-editor/TiptapEditorLazy'
+import IconPicker from '@/components/input/IconPicker'
+import authorize from '@/lib/utils/authorize'
+import { toast } from 'sonner'
 
 export const IMG_MAX_LIMIT = 1
 
@@ -52,20 +52,20 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   const { user } = useSession()
   const userRoles = user?.roles || []
 
-  const canCreate = can(userRoles, 'category.create')
-  const canEdit = can(
+  const canCreate = authorize(userRoles, 'category.create')
+  const canEdit = authorize(
     userRoles,
-    category?.user.id !== user?.id ? 'category.edit.any' : 'category.edit.own'
+    category?.user.id !== user?.id ? 'category.edit.any' : 'category.edit.own',
   )
-  const canDelete = can(
+  const canDelete = authorize(
     userRoles,
     category?.user.id !== user?.id
       ? 'category.delete.any'
-      : 'category.delete.own'
+      : 'category.delete.own',
   )
   const translation: CategoryTranslationSchema =
     category?.translations?.find(
-      (t: CategoryTranslationSchema) => t.lang === locale
+      (t: CategoryTranslationSchema) => t.lang === locale,
     ) ||
     category?.translations[0] ||
     {}
@@ -80,7 +80,6 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
     : createCategory
   const [state, dispatch] = useActionState(actionHandler as any, initialState)
 
-  const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const title = category ? 'ویرایش دسته بندی' : 'افزودن دسته بندی'
@@ -116,10 +115,8 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       else {
         setOpen(false)
         setLoading(false)
-        toast({
-          variant: deleteResult?.success ? 'default' : 'destructive',
-          description: deleteResult?.message,
-        })
+        if (deleteResult?.success) toast.success(deleteResult?.message)
+        else toast.error(deleteResult?.message)
       }
     } catch (error: any) {}
   }
@@ -127,11 +124,8 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   useEffect(() => {
     console.log('#234kuiyh state:', state)
     if (state.message && state.message !== null)
-      toast({
-        variant: 'destructive',
-        title: '',
-        description: state.message,
-      })
+      if (state.success) toast.success(state.message)
+      else toast.error(state.message)
   }, [state])
   const submitManually = () => {
     if (formRef.current) {

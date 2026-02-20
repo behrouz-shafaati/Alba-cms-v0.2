@@ -1,4 +1,3 @@
-import Authorization from '@/components/HOC/authorization'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -15,11 +14,7 @@ const PagesLayout: React.FC<PagesLayoutProps> = ({ children }) => {
 }
 
 const Layout: React.FC<PagesLayoutProps> = (props) => {
-  return (
-    <Authorization routeSlug="templates">
-      <PagesLayout>{props.children}</PagesLayout>
-    </Authorization>
-  )
+  return <PagesLayout>{props.children}</PagesLayout>
 }
 
 export default Layout

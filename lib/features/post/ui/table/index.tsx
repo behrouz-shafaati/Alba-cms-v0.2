@@ -1,16 +1,13 @@
-import { DataTable } from '@/components/ui/data-table'
-import { Heading } from '@/components/ui/heading'
-import { LinkButton } from '@/components/ui/link-button'
-import PostCtrl from '@/features/post/controller'
-import { Plus } from 'lucide-react'
-import { columns } from './columns'
-import { QueryResponse } from '@/lib/entity/core/interface'
+import PostCtrl from '@/lib/features/post/controller'
 import GroupAction from './group-action'
-import { Post } from '../../interface'
 import { postUrl } from '../../utils'
 import { getSession } from '@/lib/auth/get-session'
-import { User } from '@/features/user/interface'
-import { can } from '@/lib/utils/can.server'
+import { User } from '@/lib/features/user/interface'
+import authorize from '@/lib/utils/authorize'
+import { getSettings } from '@/lib/features/settings/controller'
+import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
+import { getDashboardDictionary } from '@/lib/i18n/dashboard'
+import { ClientPostTable } from './client-table'
 
 interface PostTableProps {
   filters: {
@@ -21,40 +18,33 @@ interface PostTableProps {
 
 export default async function PostTable({ filters, page }: PostTableProps) {
   const user = (await getSession())?.user as User
-  if (!(await can(user.roles, 'post.view.any', false))) {
+
+  if (!authorize(user.roles, 'post.view.any', false)) {
     filters = { ...filters, author: user.id }
   }
 
-  const canCreate = await can(user.roles, 'post.create', false)
+  const canCreate = authorize(user.roles, 'post.create', false)
 
-  const findResult: QueryResponse<Post> = await PostCtrl.find({
-    filters,
-    pagination: { page, perPage: 6 },
-  })
+  const [findResult, siteSettings] = await Promise.all([
+    PostCtrl.find({
+      filters,
+      pagination: { page, perPage: 6 },
+    }),
+    getSettings(),
+  ])
+
+  const locale = user?.locale || siteSettings?.language?.dashboardDefault || ''
+  const resolvedLocale = resolveLocale({ locale })
+  const dictionary = getDashboardDictionary(resolvedLocale)
 
   return (
-    <>
-      <div className="flex items-start justify-between">
-        <Heading
-          title={`مطالب (${findResult?.totalDocuments || 0})`}
-          description="مدیریت مطالب"
-        />
-        {canCreate && (
-          <LinkButton
-            className="text-xs md:text-sm"
-            href="/dashboard/posts/create"
-          >
-            <Plus className="ml-2 h-4 w-4" /> افزودن مطلب
-          </LinkButton>
-        )}
-      </div>
-      <DataTable
-        searchTitle="جستجو ..."
-        columns={columns}
-        response={findResult}
-        refetchDataUrl={postUrl}
-        groupAction={GroupAction}
-      />
-    </>
+    <ClientPostTable
+      GroupAction={GroupAction}
+      canCreate={canCreate}
+      dictionary={dictionary}
+      findResult={findResult}
+      locale={locale}
+      refetchDataUrl={postUrl}
+    />
   )
 }

@@ -6,7 +6,7 @@ const { JSDOM } = jsdom
 //   jsdom = require('jsdom')
 // }
 
-import { getTextFromNode } from '@/components/other/tiptap-editor/utils'
+import { getTextFromNode } from '@/components/tiptap-editor/utils'
 import slugify from '@/lib/utils/slugify'
 import { Schema, DOMSerializer, Node as ProseNode } from 'prosemirror-model'
 
@@ -550,7 +550,7 @@ export function renderTiptapJson2html(json: any): string {
     node.content,
     {
       document,
-    }
+    },
   )
 
   const container = document.createElement('div')

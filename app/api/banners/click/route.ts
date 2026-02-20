@@ -1,5 +1,5 @@
 // /app/api/banners/click/route.ts
-import campaignMetricCtrl from '@/features/campaign-metric/controller'
+import campaignMetricCtrl from '@/lib/features/campaign-metric/controller'
 import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {

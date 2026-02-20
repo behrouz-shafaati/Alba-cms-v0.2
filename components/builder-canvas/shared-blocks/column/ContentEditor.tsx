@@ -2,31 +2,54 @@
 import React from 'react'
 import { useBuilderStore } from '../../store/useBuilderStore'
 import { useDebouncedCallback } from 'use-debounce'
+import FileUpload from '@/components/input/file-upload'
 
-const ContentEditor = () => {
+type Props = {
+  savePage: () => void
+}
+
+const ContentEditor = ({ savePage }: Props) => {
   const { updateRowColumns, update, selectedBlock } = useBuilderStore()
 
   const debouncedUpdate = useDebouncedCallback(
     (id, key, form) => update(id, key, form),
-    400
+    400,
   )
 
   return (
-    <></>
-    // <Select
-    //   key={`block-${selectedBlock.id}`} //  باعث میشه فرم کاملاً ری‌ست و رندر بشه
-    //   title="چینش ستون"
-    //   name="rowColumns"
-    //   defaultValue={selectedBlock.settings.rowColumns}
-    //   options={columnOptions}
-    //   placeholder="چینش ستون"
-    //   onChange={(value) => {
-    //     updateRowColumns(selectedBlock.id as string, value)
-    //     debouncedUpdate(selectedBlock.id as string, 'settings', {
-    //       rowColumns: value,
-    //     })
-    //   }}
-    // />
+    <>
+      <FileUpload
+        key={`image-block-${selectedBlock?.id}`} //  باعث میشه فرم کاملاً ری‌ست و رندر بشه
+        name="image"
+        title="پس زمینه"
+        maxFiles={1}
+        defaultValues={
+          selectedBlock?.settings?.bgMedia
+            ? [selectedBlock?.settings?.bgMedia]
+            : null
+        }
+        updateFileDetailsHandler={(files) => {
+          update(selectedBlock?.id as string, 'settings', {
+            bgMedia: {
+              id: files[0].id,
+              srcMedium: files[0].srcMedium,
+              srcSmall: files[0].srcSmall,
+            },
+          })
+        }}
+        deleteFileHnadler={(fileId) => {
+          update(selectedBlock?.id as string, 'settings', {
+            ...selectedBlock?.settings,
+            bgMedia: null,
+          })
+          requestAnimationFrame(() => {
+            savePage?.()
+          })
+        }}
+        showDeleteButton={true}
+        allowedFileTypes={['image', 'video']}
+      />
+    </>
   )
 }
 

@@ -1,12 +1,11 @@
 'use client'
-import { AlertModal } from '@/components/modal/alert-modal'
+import { AlertModal } from '@/components/other/modal/alert-modal'
 import { Button } from '@/components/ui/button'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { deletePostCommentAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
 
 type GroupActionProps = {
   table: any

@@ -1,8 +1,8 @@
 // کامپوننت نمایشی بلاک
 import React from 'react'
 import { Block } from '../../../builder-canvas/types'
-import { TemplatePart } from './Template'
-import { getTemplatePart } from '@/lib/features/template-part/actions'
+import { Section } from './Template'
+import { getSection } from '@/lib/features/section/actions'
 
 type Props = {
   widgetName: string
@@ -26,9 +26,9 @@ export default async function TemplateBlock({
   ...props
 }: Props) {
   const { content } = blockData
-  const [template] = await Promise.all([getTemplatePart(content?.templateId)])
+  const [template] = await Promise.all([getSection(content?.templateId)])
   return (
-    <TemplatePart
+    <Section
       template={template}
       blockData={blockData}
       {...props}

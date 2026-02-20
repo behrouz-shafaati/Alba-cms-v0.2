@@ -2,8 +2,8 @@
 // کامپوننت نمایشی بلاک
 import React, { useEffect, useState } from 'react'
 import { Block } from '../../../builder-canvas/types'
-import { TemplatePart } from './Template'
-import { getTemplatePart } from '@/features/template-part/actions'
+import { Section } from './Template'
+import { getSection } from '@/lib/features/section/actions'
 import EmptyBlock from '@/components/builder-canvas/components/EmptyBlock'
 
 type TemplateBlockEditorProps = {
@@ -33,9 +33,7 @@ export default function TemplateBlockEditor({
   const { content } = blockData
   useEffect(() => {
     const fetchData = async () => {
-      const [template] = await Promise.all([
-        getTemplatePart(content?.templateId),
-      ])
+      const [template] = await Promise.all([getSection(content?.templateId)])
       setTemplate(template)
     }
 
@@ -52,7 +50,7 @@ export default function TemplateBlockEditor({
 
   //====> چون کامپوننت زیر تمام سروری شده است دیرگ نمیتواتنیم از ان استفاده کنیم
   // return (
-  //   <TemplatePart
+  //   <Section
   //     template={template}
   //     blockData={blockData}
   //     {...props}

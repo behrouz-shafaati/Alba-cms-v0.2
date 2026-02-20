@@ -1,5 +1,5 @@
 import React from 'react'
-import { BreadCrumb } from '../breadcrumb'
+import { BreadCrumb } from '../other/breadcrumb'
 
 type PostCoverProps = {
   content: any

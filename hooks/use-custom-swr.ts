@@ -26,6 +26,7 @@ export function useCustomSWR({
   refreshWhenOffline = false,
 }: Props) {
   const refreshPerSecends = refreshMs * 1000
+  console.log('#2349087  in SWR. url: ', url)
   const { data, isLoading, mutate } = useSWR(url ?? null, fetcher, {
     fallbackData: initialData,
     revalidateOnFocus, // هر وقت کاربر دوباره به تب/پنجره‌ی مرورگر برگرده (focus)، SWR دوباره داده رو فچ می‌کنه
@@ -35,6 +36,7 @@ export function useCustomSWR({
     refreshWhenHidden, // اگر فعال باشه، حتی وقتی تب مرورگر hidden یا minimize شده هم، interval فعال می‌مونه.
     refreshWhenOffline, //اگر فعال باشه، حتی وقتی کاربر offline بشه هم SWR تلاش می‌کنه fetch بزنه (که معمولاً خطا می‌ده).
   })
+  console.log('#2349087  in SWR. data: ', data)
 
   return {
     data,

@@ -1,12 +1,11 @@
 'use client'
-import { AlertModal } from '@/components/modal/alert-modal'
+import { AlertModal } from '@/components/other/modal/alert-modal'
 import { Button } from '@/components/ui/button'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { deleteUsersAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
 
 type GroupActionProps = {
   table: any
@@ -23,7 +22,7 @@ export default function GroupAction({ table, items }: GroupActionProps) {
   for (const item of items) {
     const canDeleteItem = can(
       userRoles,
-      item?.id !== user?.id ? 'user.delete.any' : 'user.delete.own'
+      item?.id !== user?.id ? 'user.delete.any' : 'user.delete.own',
     )
     if (!canDeleteItem) {
       canDelete = false

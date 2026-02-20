@@ -1,16 +1,14 @@
-import { DataTable } from '@/components/ui/data-table'
-import { Heading } from '@/components/ui/heading'
-import { LinkButton } from '@/components/ui/link-button'
-import PostCommentCtrl from '@/features/post-comment/controller'
-import { Plus } from 'lucide-react'
+import { DataTable } from '@/components/other/ui/data-table'
+import { Heading } from '@/components/other/ui/heading'
+import PostCommentCtrl from '@/lib/features/post-comment/controller'
 import { columns } from './columns'
-import { QueryResponse } from '@/lib/entity/core/interface'
+import { QueryResponse } from '@/lib/features/core/interface'
 import GroupAction from './group-action'
 import { PostComment } from '../../interface'
 import { commentsUrl } from '../../utils'
 import { getSession } from '@/lib/auth/get-session'
-import { User } from '@/features/user/interface'
-import { can } from '@/lib/utils/can.server'
+import { User } from '@/lib/features/user/interface'
+import authorize from '@/lib/utils/authorize'
 
 interface PostCommentTableProps {
   filters: {
@@ -25,7 +23,7 @@ export default async function PostCommentTable({
   page = 1,
 }: PostCommentTableProps) {
   const user = (await getSession())?.user as User
-  if (!(await can(user.roles, 'postComment.view.any', false))) {
+  if (!authorize(user.roles, 'postComment.view.any', false)) {
     filters = { ...filters, author: user.id }
   }
 
@@ -34,7 +32,7 @@ export default async function PostCommentTable({
       filters,
       pagination: { page, perPage: 6 },
     },
-    false
+    false,
   )
   console.log('#2340987 findResult:', findResult)
   return (

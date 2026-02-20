@@ -16,6 +16,7 @@ import { Category } from '@/lib/features/category/interface'
 import Combobox from '@/components/input/combobox'
 import { getTemplates } from '../actions'
 import { getTemplateForOptions } from '../utils'
+import { Option } from '@/lib/types'
 
 type TemplateType = 'page' | 'category' | 'single' | 'home'
 
@@ -101,7 +102,9 @@ export default function CreateTemplateModal({
           defaultValue={''}
           options={goalTemplateOptions}
           placeholder=""
-          onChange={(e) => handleSelect(e.target.value)}
+          onChange={(option: Option) => {
+            handleSelect(option.value)
+          }}
         />
         {loading && (
           <p className="text-sm text-gray-500 mt-2">در حال بررسی...</p>

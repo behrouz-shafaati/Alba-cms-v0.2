@@ -1,15 +1,14 @@
 'use client'
 
-import { AlertModal } from '@/components/modal/alert-modal'
+import { AlertModal } from '@/components/other/modal/alert-modal'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Category } from '@/features/category/interface'
+import { Category } from '@/lib/features/category/interface'
 import { Edit, Eye, MoreHorizontal, Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -17,7 +16,7 @@ import Link from 'next/link'
 import { buildCategoryHref } from '../../utils'
 import { deleteCategorysAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
+import authorize from '@/lib/utils/authorize'
 
 interface CellActionProps {
   data: Category
@@ -30,13 +29,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { user } = useSession()
   const userRoles = user?.roles || []
 
-  const canEdit = can(
+  const canEdit = authorize(
     userRoles,
-    data.user.id !== user?.id ? 'category.edit.any' : 'category.edit.own'
+    data.user.id !== user?.id ? 'category.edit.any' : 'category.edit.own',
   )
-  const canDelete = can(
+  const canDelete = authorize(
     userRoles,
-    data.user.id !== user?.id ? 'category.delete.any' : 'category.delete.own'
+    data.user.id !== user?.id ? 'category.delete.any' : 'category.delete.own',
   )
 
   const onConfirm = async () => {

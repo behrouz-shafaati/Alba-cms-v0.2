@@ -1,5 +1,5 @@
 'use client'
-import { AlertModal } from '@/components/modal/alert-modal'
+import { AlertModal } from '@/components/other/modal/alert-modal'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -7,14 +7,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Form } from '@/features/form/interface'
+import { Form } from '@/lib/features/form/interface'
 import { Edit, Inbox, MoreHorizontal, Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { deleteFormAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
 import Link from 'next/link'
+import authorize from '@/lib/utils/authorize'
 
 interface CellActionProps {
   data: Form
@@ -28,13 +28,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { user } = useSession()
   const userRoles = user?.roles || []
 
-  const canEdit = can(
+  const canEdit = authorize(
     userRoles,
-    data?.user !== user?.id ? 'form.edit.any' : 'form.edit.own'
+    data?.user !== user?.id ? 'form.edit.any' : 'form.edit.own',
   )
-  const canDelete = can(
+  const canDelete = authorize(
     userRoles,
-    data?.user !== user?.id ? 'form.delete.any' : 'form.delete.own'
+    data?.user !== user?.id ? 'form.delete.any' : 'form.delete.own',
   )
 
   const onConfirm = async () => {

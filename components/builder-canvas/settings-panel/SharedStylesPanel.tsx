@@ -66,31 +66,22 @@ export const backgroundColorSchema = {
   title: 'Background color',
   additionalProperties: true,
 }
+export const layoutSchema = {
+  type: 'object',
+  title: 'Layout',
+  additionalProperties: true,
+}
 
 export const publicStylesSchema = {
   type: 'object',
   title: '',
   properties: {
     backgroundColor: backgroundColorSchema,
-    width: {
-      type: 'number',
-      title: 'عرض',
-      default: undefined,
-    },
-    height: {
-      type: 'number',
-      title: 'ارتفاع',
-      default: undefined,
-    },
+    layout: layoutSchema,
     padding: {
       type: 'object',
       title: 'Padding',
-      properties: {
-        top: { type: 'number', title: 'بالا', default: undefined },
-        right: { type: 'number', title: 'راست', default: undefined },
-        bottom: { type: 'number', title: 'پایین', default: undefined },
-        left: { type: 'number', title: 'چپ', default: undefined },
-      },
+      additionalProperties: true,
     },
     margin: {
       type: 'object',

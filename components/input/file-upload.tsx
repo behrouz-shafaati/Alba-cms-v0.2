@@ -87,7 +87,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
       attachedTo,
       onLoading,
     },
-    ref: Ref<FileUploadRef>
+    ref: Ref<FileUploadRef>,
   ) {
     const t = useLocale()
     const locale = 'fa'
@@ -102,6 +102,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [files, setFiles] = useState<any[]>(normalizedDefaultValues)
+    console.log('#88823 defaultValues:', defaultValues)
     const [selectedFileIndex, setSelectedFileIndex] = useState<number>(0)
 
     const accept = buildAccept(allowedFileTypes)
@@ -127,7 +128,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
           formData.append('lang', file?.lang ?? locale)
           formData.append(
             'attachedTo',
-            JSON.stringify(file?.attachedTo ?? attachedTo ?? [])
+            JSON.stringify(file?.attachedTo ?? attachedTo ?? []),
           )
           formData.append('locale', locale)
 
@@ -144,7 +145,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
           onLoading?.(false)
         }
       },
-      [attachedTo, locale, onChange, onLoading, responseHnadler, toast]
+      [attachedTo, locale, onChange, onLoading, responseHnadler, toast],
     )
 
     const onDrop = useCallback(
@@ -154,7 +155,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
         if (maxFiles) {
           if ((files?.length ?? 0) + (accepted?.length ?? 0) > maxFiles) {
             toast.error(
-              t.feature.file.error.maxCount.replace('%s%', String(maxFiles))
+              t.feature.file.error.maxCount.replace('%s%', String(maxFiles)),
             )
             return
           }
@@ -179,7 +180,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
             description: '',
             attachedTo,
             locale,
-          })
+          }),
         )
 
         setFiles((previousFiles) => [...previousFiles, ...newFiles])
@@ -188,7 +189,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
           void submitFile(file)
         }
       },
-      [attachedTo, files.length, locale, maxFiles, submitFile, toast]
+      [attachedTo, files.length, locale, maxFiles, submitFile, toast],
     )
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -201,7 +202,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     // 🔹 آپدیت جزئیات فایل‌ها وقتی files عوض می‌شود
     useEffect(() => {
       const handelUpdateFileDetails = async (
-        filesDetails: FileDetailsPayload[]
+        filesDetails: FileDetailsPayload[],
       ) => {
         if (!filesDetails.length) return
         const updatedFilesArray = await updateFileDetailsAction(filesDetails)
@@ -235,7 +236,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
       // این قمست برای جلوگیری از افتادن در یک حلقه بی نهایت از  بازرندر کامپوننتها ضروری است
       const flgFilesIsDefferentWithDefaultValues = areFilesDifferent(
         files,
-        normalizedDefaultValues
+        normalizedDefaultValues,
       )
       if (flgFilesIsDefferentWithDefaultValues) {
         console.log('#88823 files are different, updating file details...')
@@ -271,7 +272,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
           onLoading?.(false)
         }
       },
-      [deleteFileHnadler, files, onChange, onLoading, toast]
+      [deleteFileHnadler, files, onChange, onLoading, toast],
     )
 
     const removeFileById = useCallback(
@@ -285,7 +286,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
           }
         }
       },
-      [files, removeFile]
+      [files, removeFile],
     )
 
     const removeAll = useCallback(() => {
@@ -345,7 +346,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
         getFiles: () => files,
         clearFiles: () => setFiles([]),
       }),
-      [files, removeAll, removeFile, removeFileById]
+      [files, removeAll, removeFile, removeFileById],
     )
 
     const makeIdsClean = () => {
@@ -393,7 +394,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
                       height={100}
                       className={clsx(
                         'h-full w-full cursor-pointer rounded-md object-contain shadow-sm',
-                        { 'border-2 border-blue-500': file?.main }
+                        { 'border-2 border-blue-500': file?.main },
                       )}
                       onClick={() => {
                         setSelectedFileIndex(index)
@@ -451,7 +452,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
         />
       </>
     )
-  }
+  },
 )
 
 const ModalContent = ({
@@ -466,7 +467,7 @@ const ModalContent = ({
   onSave: (newFile: any, index: number) => void
 }) => {
   const locale = 'fa'
-  const t = useDashboardLocale()
+  const t = useLocale()
   const translation = getTranslation({
     translations: file?.translations,
     locale,
@@ -481,7 +482,7 @@ const ModalContent = ({
     setNewFile((s: any) => ({
       ...s,
       translations: (s.translations ?? [{ lang: locale }]).map((t: any) =>
-        t.lang === locale ? { ...t, [key]: value } : t
+        t.lang === locale ? { ...t, [key]: value } : t,
       ),
     }))
   }
@@ -606,11 +607,14 @@ const FILE_ACCEPT_MAP: Record<AllowedFileCategory, Record<string, string[]>> = {
 function buildAccept(allowedTypes?: AllowedFileCategory[]) {
   if (!allowedTypes || allowedTypes.length === 0) return undefined
 
-  return allowedTypes?.reduce((acc, type) => {
-    const mapping = FILE_ACCEPT_MAP[type]
-    if (mapping) Object.assign(acc, mapping)
-    return acc
-  }, {} as Record<string, string[]>)
+  return allowedTypes?.reduce(
+    (acc, type) => {
+      const mapping = FILE_ACCEPT_MAP[type]
+      if (mapping) Object.assign(acc, mapping)
+      return acc
+    },
+    {} as Record<string, string[]>,
+  )
 }
 
 /* ======================================== */
@@ -624,7 +628,7 @@ function buildAccept(allowedTypes?: AllowedFileCategory[]) {
  */
 export function areFilesDifferent(
   currentFiles: any[] = [],
-  defaultFiles: any[] = []
+  defaultFiles: any[] = [],
 ): boolean {
   // اگر تعداد فایل‌ها متفاوت بود، حتماً فرق دارند
   if (currentFiles.length !== defaultFiles.length) return true
@@ -676,10 +680,10 @@ function areObjectsEqualIgnoringUpdatedAt(objA: any, objB: any): boolean {
   // آبجکت
   if (typeof objA === 'object') {
     const keysA = Object.keys(objA).filter(
-      (key) => key !== 'updatedAt' && key !== 'lang'
+      (key) => key !== 'updatedAt' && key !== 'lang',
     )
     const keysB = Object.keys(objB).filter(
-      (key) => key !== 'updatedAt' && key !== 'lang'
+      (key) => key !== 'updatedAt' && key !== 'lang',
     )
 
     if (keysA.length !== keysB.length) {

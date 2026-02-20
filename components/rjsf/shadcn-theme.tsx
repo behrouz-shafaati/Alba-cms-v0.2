@@ -9,10 +9,13 @@ import { CheckboxWidget } from './widgets/CheckboxWidget'
 import { TextareaWidget } from './widgets/TextareaWidget'
 import { NumberWidget } from './widgets/NumberWidget'
 import { SliderWidget } from './widgets/SliderWidget'
-import { FourSideBoxWidget } from './widgets/FourSideBoxWidget'
+import { FourSideBoxWidget } from './fields/FourSideBoxWidget'
 import { ShadowWidget } from './widgets/ShadowWidget'
 import { TailwindTextColorPickerWidget } from './widgets/TailwindTextColorPickerWidget'
 import IconPickerWidget from './widgets/IconPickerWidget'
+import LayoutField from './fields/Layout'
+import CornersRoundField from './fields/CornersRound'
+import ResponsiveVisibilityField from './fields/ResponsiveVisibility'
 
 const CustomFieldTemplate = ({
   id,
@@ -71,7 +74,7 @@ export const CustomTheme = {
       />
     ),
     BorderRadiusField: (props: FieldProps) => (
-      <FourSideBoxWidget
+      <CornersRoundField
         value={props.formData}
         onChange={(val) => props.onChange(val, ['borderRadius'])}
       />
@@ -80,6 +83,18 @@ export const CustomTheme = {
       <ShadowWidget
         value={props.formData}
         onChange={(val) => props.onChange(val, ['boxShadow'])}
+      />
+    ),
+    LayoutField: (props: FieldProps) => (
+      <LayoutField
+        value={props.formData}
+        onChange={(val) => props.onChange(val, ['layout'])}
+      />
+    ),
+    ResponsiveVisibilityField: (props: FieldProps) => (
+      <ResponsiveVisibilityField
+        value={props.formData}
+        onChange={(val) => props.onChange(val, ['visibility'])}
       />
     ),
     BackgroundColorField: (props: FieldProps) => {

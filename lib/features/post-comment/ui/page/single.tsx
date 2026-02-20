@@ -1,10 +1,11 @@
-import { BreadCrumb, BreadCrumbType } from '@/components/breadcrumb'
+import { BreadCrumb, BreadCrumbType } from '@/components/other/breadcrumb'
 import RenderedHtml from '@/components/tiptap-editor/render/RenderedHtml.server'
 import { PostComment, PostCommentTranslationSchema } from '../../interface'
-import { formatToJalali } from '@/features/post/utils'
-import { getTranslation, timeAgo } from '@/lib/utils'
-import { ImageAlba } from '@/components/image-alba'
-import getReadingTime from '@/lib/utils/getReadingTime'
+import { formatToJalali } from '@/lib/features/post/utils'
+import { ImageAlba } from '@/components/other/image-alba'
+import getReadingTime from '@/lib/utils/calculateReadingTime'
+import getTranslation from '@/lib/utils/getTranslation'
+import timeAgo from '@/lib/utils/timeAgo'
 
 type props = {
   locale?: string
@@ -29,7 +30,7 @@ const SinglePageBlog = ({
     json.content
       ?.filter((block: any) => block.type === 'paragraph')
       ?.map((block: any) =>
-        block.content?.map((c: any) => c.text || '').join('')
+        block.content?.map((c: any) => c.text || '').join(''),
       )
       .join('\n') || ''
 

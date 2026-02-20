@@ -10,7 +10,7 @@ const blockSchema = {
       type: 'string',
       title: 'Display',
       enum: ['flex', 'unset'],
-      default: 'flex',
+      default: 'unset',
     },
   },
   dependencies: {

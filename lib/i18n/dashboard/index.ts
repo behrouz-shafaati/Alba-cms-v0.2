@@ -7,8 +7,8 @@ const dictionaries = { fa, en }
 export type DashboardLocaleSchema = typeof en
 
 export function getDashboardDictionary(
-  locale: SupportedLanguage | undefined
-): LocaleSchema {
+  locale: SupportedLanguage | undefined,
+): DashboardLocaleSchema {
   const DEFAULT_LANGUAGE = 'en'
   if (locale === undefined) locale = DEFAULT_LANGUAGE
   return dictionaries[locale] ?? dictionaries.en

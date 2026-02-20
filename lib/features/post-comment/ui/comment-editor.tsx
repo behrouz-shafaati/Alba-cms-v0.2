@@ -16,11 +16,8 @@ import {
   Bold,
   Italic,
   Strikethrough,
-  Link as LinkIcon,
   Send,
   Trash2,
-  AtSign,
-  Smile,
   Loader2,
 } from 'lucide-react'
 
@@ -58,7 +55,7 @@ const CommentEditor = forwardRef<CommentEditorRef, CommentEditorProps>(
       className = '',
       isPending,
     },
-    ref
+    ref,
   ) => {
     const [submitting, setSubmitting] = useState(false)
     const [content, setContent] = useState(JSON.stringify({}))
@@ -291,7 +288,7 @@ const CommentEditor = forwardRef<CommentEditorRef, CommentEditorProps>(
         </TooltipProvider>
       </div>
     )
-  }
+  },
 )
 
 CommentEditor.displayName = 'CommentEditor'

@@ -5,6 +5,9 @@ export const uiSchema = {
   backgroundColor: {
     'ui:field': 'BackgroundColorField',
   },
+  layout: {
+    'ui:field': 'LayoutField',
+  },
   textColor: {
     'ui:widget': 'TailwindTextColorPickerWidget',
   },
@@ -44,5 +47,8 @@ export const uiSchema = {
       rows: 5,
       placeholder: 'مثلاً: flex gap-4 justify-center items-center',
     },
+  },
+  visibility: {
+    'ui:field': 'ResponsiveVisibilityField',
   },
 }

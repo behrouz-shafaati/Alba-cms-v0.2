@@ -1,13 +1,13 @@
 'use client'
 import { useActionState, useEffect, useRef } from 'react'
-import { useToast } from '@/hooks/use-toast'
-import { createPostComment } from '@/features/post-comment/actions'
+import { createPostComment } from '@/lib/features/post-comment/actions'
 import CommentEditor, { CommentEditorRef } from './comment-editor'
 import { mutate } from 'swr'
 import { usePostCommentStore } from './store/usePostCommentStore'
 import { AlertCircleIcon, X } from 'lucide-react'
-import { Button } from '@/components/custom/button'
+import { Button } from '@/components/ui/button'
 import { Alert, AlertTitle } from '@/components/ui/alert'
+import { toast } from 'sonner'
 
 interface PostCommentFormProps {
   needLogin?: boolean
@@ -19,7 +19,6 @@ const CommentForm: React.FC<PostCommentFormProps> = ({
   post,
 }) => {
   const { replayTo, setReplayTo } = usePostCommentStore()
-  const { toast } = useToast()
   const initialState = {
     success: false,
     message: null,
@@ -33,15 +32,13 @@ const CommentForm: React.FC<PostCommentFormProps> = ({
   const actionHandler = createPostComment.bind(null, String(post?.id))
   const [state, dispatch, isPending] = useActionState(
     actionHandler as any,
-    initialState
+    initialState,
   )
 
   useEffect(() => {
     if (state.message) {
-      toast({
-        variant: state.success ? 'default' : 'destructive',
-        description: state.message,
-      })
+      if (state.success) toast.success(state.message)
+      else toast.error(state.message)
     }
 
     if (state.success) {

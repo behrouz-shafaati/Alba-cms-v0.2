@@ -1,15 +1,15 @@
-import { DataTable } from '@/components/ui/data-table'
-import { Heading } from '@/components/ui/heading'
-import { LinkButton } from '@/components/ui/link-button'
-import formCtrl from '@/features/form/controller'
-import { Form } from '@/features/form/interface'
+import { DataTable } from '@/components/other/ui/data-table'
+import { Heading } from '@/components/other/ui/heading'
+import { LinkButton } from '@/components/other/ui/link-button'
+import formCtrl from '@/lib/features/form/controller'
+import { Form } from '@/lib/features/form/interface'
 import { Plus } from 'lucide-react'
 import { columns } from './columns'
-import { QueryResponse } from '@/lib/entity/core/interface'
+import { QueryResponse } from '@/lib/features/core/interface'
 import GroupAction from './group-action'
 import { getSession } from '@/lib/auth/get-session'
-import { User } from '@/features/user/interface'
-import { can } from '@/lib/utils/can.client'
+import { User } from '@/lib/features/user/interface'
+import authorize from '@/lib/utils/authorize'
 
 interface CategoriesTableProps {
   query: string
@@ -19,10 +19,10 @@ interface CategoriesTableProps {
 export default async function FormTable({ query, page }: CategoriesTableProps) {
   let filters = { query }
   const user = (await getSession())?.user as User
-  if (!(await can(user.roles, 'form.view.any', false))) {
+  if (!authorize(user.roles, 'form.view.any', false)) {
     filters = { ...filters, user: user.id }
   }
-  const canCreate = await can(user.roles, 'form.create', false)
+  const canCreate = authorize(user.roles, 'form.create', false)
   const findResult: QueryResponse<Form> = await formCtrl.find({
     filters,
     pagination: { page, perPage: 6 },

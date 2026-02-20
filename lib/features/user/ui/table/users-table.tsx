@@ -1,14 +1,14 @@
-import { DataTable } from '@/components/ui/data-table'
-import { Heading } from '@/components/ui/heading'
-import { LinkButton } from '@/components/ui/link-button'
-import userCtrl from '@/features/user/controller'
-import { User } from '@/features/user/interface'
+import { DataTable } from '@/components/other/ui/data-table'
+import { Heading } from '@/components/other/ui/heading'
+import { LinkButton } from '@/components/other/ui/link-button'
+import userCtrl from '@/lib/features/user/controller'
+import { User } from '@/lib/features/user/interface'
 import { Plus } from 'lucide-react'
 import { columns } from './columns'
-import { QueryResponse } from '@/lib/entity/core/interface'
+import { QueryResponse } from '@/lib/features/core/interface'
 import GroupAction from './group-action'
 import { getSession } from '@/lib/auth/get-session'
-import { can } from '@/lib/utils/can.server'
+import authorize from '@/lib/utils/authorize'
 
 interface UsersTableProps {
   query: string
@@ -18,11 +18,11 @@ interface UsersTableProps {
 export default async function UsersTable({ query, page }: UsersTableProps) {
   let filters = { query }
   const user = (await getSession())?.user as User
-  if (!(await can(user.roles, 'user.view.any', false))) {
+  if (!authorize(user.roles, 'user.view.any', false)) {
     filters = { ...filters, id: user.id }
   }
 
-  const canCreate = await can(user.roles, 'user.create', false)
+  const canCreate = authorize(user.roles, 'user.create', false)
 
   const findResult: QueryResponse<User> = await userCtrl.find({
     filters: filters,

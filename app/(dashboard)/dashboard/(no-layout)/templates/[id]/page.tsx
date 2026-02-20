@@ -1,9 +1,8 @@
-import { ScrollArea } from '@/components/ui/scroll-area'
-import React from 'react'
-import templateCtrl from '@/features/template/controller'
+import templateCtrl from '@/lib/features/template/controller'
 import { notFound } from 'next/navigation'
-import { Form } from '@/features/template/ui/form'
-import categoryCtrl from '@/features/category/controller'
+import { Form } from '@/lib/features/template/ui/form'
+import categoryCtrl from '@/lib/features/category/controller'
+import { getSettingsAction } from '@/lib/features/settings/actions'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -13,14 +12,16 @@ export default async function Page({ params }: PageProps) {
   const { id } = resolvedParams
   let page = null,
     allTemplates,
-    allCategories
+    allCategories,
+    settings
   let pageBreadCrumb = {
     title: 'افزودن',
     link: '/dashboard/templates/create',
   }
 
   if (id !== 'create') {
-    ;[page, allTemplates, allCategories] = await Promise.all([
+    ;[settings, page, allTemplates, allCategories] = await Promise.all([
+      getSettingsAction(),
       templateCtrl.findById({ id }),
       templateCtrl.findAll({}),
       categoryCtrl.findAll({}),
@@ -33,7 +34,8 @@ export default async function Page({ params }: PageProps) {
       link: `/dashboard/templates/${id}`,
     }
   } else {
-    ;[allTemplates, allCategories] = await Promise.all([
+    ;[settings, allTemplates, allCategories] = await Promise.all([
+      getSettingsAction(),
       templateCtrl.findAll({}),
       categoryCtrl.findAll({}),
     ])
@@ -42,6 +44,7 @@ export default async function Page({ params }: PageProps) {
   return (
     <>
       <Form
+        settings={settings}
         initialData={page}
         allCategories={allCategories.data}
         allTemplates={allTemplates.data}

@@ -2,6 +2,7 @@ import { Block } from '../../types'
 import { combineClassNames, computedStyles } from '../../utils/styleUtils'
 import RenderBlock from '../../pageRenderer/RenderBlock'
 import { Settings } from '@/lib/features/settings/interface'
+import Image from 'next/image'
 
 type BlockProps = {
   widgetName: string
@@ -29,11 +30,21 @@ export default function InternalSection({
 
   return (
     <div
-      className={`flex flex-col relative col-span-${
+      className={`relative flex flex-col relative col-span-${
         blockData?.width || 1
       }   ${combineClassNames(props?.className || {}, computedStyles(styles))}`}
       style={{ ...computedStyles(styles) }}
     >
+      {settings?.bgMedia && (
+        <Image
+          src={settings?.bgMedia?.srcMedium}
+          alt="ALBA CMS Hero"
+          fill
+          priority
+          className="object-cover"
+        />
+      )}
+
       {blockData?.blocks?.map((el: any, index: number) => (
         <RenderBlock
           siteSettings={siteSettings}

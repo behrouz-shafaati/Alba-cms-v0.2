@@ -1,5 +1,5 @@
-import { Create, Id, QueryFind, Update } from '@/lib/entity/core/interface'
-import baseController from '@/lib/entity/core/controller'
+import { Create, QueryFind, Update } from '@/lib/features/core/interface'
+import baseController from '@/lib/features/core/controller'
 import formSchema from './schema'
 import formService from './service'
 

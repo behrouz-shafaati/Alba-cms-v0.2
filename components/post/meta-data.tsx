@@ -1,7 +1,7 @@
 import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import timeAgo from '@/lib/utils/timeAgo'
-import { FastLink } from '../FastLink'
+import { LinkAlba } from '../other/link-alba'
 
 type PostCoverProps = {
   createdAt: any
@@ -28,9 +28,9 @@ const PostMetaData = ({
           </Avatar>
         </div>
         <div className="text-xs  flex flex-col justify-between">
-          <FastLink href={`/author/${author?.userName}`} className="flex gap-4">
+          <LinkAlba href={`/author/${author?.userName}`} className="flex gap-4">
             <span>{author?.name}</span>
-          </FastLink>
+          </LinkAlba>
           <span className="font-thin">
             خواندن {readingDuration} دقیقه . {timeAgo(createdAt)}
           </span>

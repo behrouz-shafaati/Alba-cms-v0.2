@@ -1,22 +1,21 @@
 'use client'
 
-import { AlertModal } from '@/components/modal/alert-modal'
+import { AlertModal } from '@/components/other/modal/alert-modal'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Campaign } from '@/features/campaign/interface'
+import { Campaign } from '@/lib/features/campaign/interface'
 import { Edit, Eye, MoreHorizontal, Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
 import { deleteCampaignsAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
+import authorize from '@/lib/utils/authorize'
 
 interface CellActionProps {
   data: Campaign
@@ -29,13 +28,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { user } = useSession()
   const userRoles = user?.roles || []
 
-  const canEdit = can(
+  const canEdit = authorize(
     userRoles,
-    data.user.id !== user?.id ? 'campaign.edit.any' : 'campaign.edit.own'
+    data.user.id !== user?.id ? 'campaign.edit.any' : 'campaign.edit.own',
   )
-  const canDelete = can(
+  const canDelete = authorize(
     userRoles,
-    data.user.id !== user?.id ? 'campaign.delete.any' : 'campaign.delete.own'
+    data.user.id !== user?.id ? 'campaign.delete.any' : 'campaign.delete.own',
   )
 
   const onConfirm = async () => {

@@ -14,13 +14,14 @@ import { User } from '../user/interface'
 import extractExcerptFromContentJson from '@/lib/utils/extractExcerptFromContentJson'
 import getTranslation from '@/lib/utils/getTranslation'
 import authorize from '@/lib/utils/authorize'
+import { getSettingsAction } from '../settings/actions'
 
 const FormSchema = z.object({
   title: z.string({}).nullable(),
   seoTitle: z.string({}).nullable(),
   contentJson: z.string({}),
   metaDescription: z.string({}),
-  lang: z.string({}),
+  locale: z.string({}),
   status: z.string({}),
   mainCategory: z.string({}).nullable(),
   primaryVideo: z.string({}).nullable(),
@@ -41,14 +42,16 @@ const FormSchema = z.object({
  */
 export async function createPost(
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   let newPost = null
   const rawValues = Object.fromEntries(formData.entries())
+  const settings = await getSettingsAction()
+  const LocaleFallback = settings.language?.siteDefault
   const values = {
     ...rawValues,
     translation: {
-      lang: rawValues?.lang || 'fa',
+      locale: rawValues?.locale || LocaleFallback,
       title: rawValues?.title || '',
       contentJson: rawValues.contentJson || '',
     },
@@ -72,7 +75,7 @@ export async function createPost(
     if (params.status === 'published') {
       authorize(
         user.roles,
-        params.author !== user.id ? 'post.publish.any' : 'post.publish.own'
+        params.author !== user.id ? 'post.publish.any' : 'post.publish.own',
       )
     }
     const cleanedParams = await postCtrl.generateUniquePostSlug(params)
@@ -126,14 +129,16 @@ export async function createPost(
 export async function updatePost(
   id: string,
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   let updatedPost = {}
+  const settings = await getSettingsAction()
+  const LocaleFallback = settings.language?.siteDefault
   const rawValues = Object.fromEntries(formData.entries())
   const values = {
     ...rawValues,
     translation: {
-      lang: rawValues?.lang || 'fa',
+      locale: rawValues?.locale || LocaleFallback,
       title: rawValues?.title || '',
       contentJson: rawValues.contentJson || '',
     },
@@ -143,7 +148,7 @@ export async function updatePost(
     const prevPost = await postCtrl.findById({ id })
     authorize(
       user.roles,
-      prevPost.author?.id !== user.id ? 'post.edit.any' : 'post.edit.own'
+      prevPost.author?.id !== user.id ? 'post.edit.any' : 'post.edit.own',
     )
 
     const validatedFields = FormSchema.safeParse(rawValues)
@@ -162,7 +167,7 @@ export async function updatePost(
         user.roles,
         prevPost.author?.id !== user.id
           ? 'post.publish.any'
-          : 'post.publish.own'
+          : 'post.publish.own',
       )
     }
     const cleanedParams = await postCtrl.generateUniquePostSlug(params, id)
@@ -211,7 +216,7 @@ export async function deletePostsAction(ids: string[]) {
     for (const prevPost of prevPostResult.data) {
       authorize(
         user.roles,
-        prevPost.author?.id !== user.id ? 'post.delete.any' : 'post.delete.own'
+        prevPost.author?.id !== user.id ? 'post.delete.any' : 'post.delete.own',
       )
     }
 
@@ -275,7 +280,7 @@ async function sanitizePostData(validatedFields: any, id?: string | undefined) {
   const postType = postPayload.primaryVideoEmbedUrl != '' ? 'video' : 'article'
   const translations = [
     {
-      lang: postPayload.lang,
+      locale: postPayload.locale,
       title: postPayload.title,
       seoTitle:
         postPayload.seoTitle != '' ? postPayload.seoTitle : postPayload.title,
@@ -289,7 +294,7 @@ async function sanitizePostData(validatedFields: any, id?: string | undefined) {
       jsonLd: postPayload.jsonLd,
     },
     ...prevState.translations.filter(
-      (t: PostTranslationSchema) => t.lang != postPayload.lang
+      (t: PostTranslationSchema) => t.locale != postPayload.locale,
     ),
   ]
   const mainCategory = postPayload.mainCategory || null
@@ -333,10 +338,10 @@ export async function getPosts(payload: QueryFind): Promise<QueryResult> {
 
 export const getSlimPostsForPostListAction = async ({
   payload,
-  lang = 'fa',
+  locale = 'fa',
 }: {
   payload: QueryFind
-  lang?: 'fa'
+  locale?: 'fa'
 }): Promise<QueryResult> => {
   const cacheKey = ['posts', JSON.stringify(payload)]
 
@@ -376,7 +381,7 @@ export const getSlimPostsForPostListAction = async ({
             id: post.id,
             translations: [
               {
-                lang,
+                locale,
                 title: postTranslation?.title,
                 excerpt: postTranslation?.excerpt,
                 metaDescription: postTranslation?.metaDescription,
@@ -424,6 +429,35 @@ export const getSlimPostsForPostListAction = async ({
     cacheKey,
     {
       tags: ['posts'],
-    }
+    },
   )()
+}
+
+type getPostActionProp = {
+  slug: string
+  locale: string
+}
+export async function getPostAction({ locale, slug }: getPostActionProp) {
+  slug = decodeURIComponent(slug)
+  const postResult = await postCtrl.find({
+    filters: { slug, 'translations.locale': locale },
+    projection: {
+      slug: 1,
+      status: 1,
+      type: 1,
+      publishedAt: 1,
+      createdAt: 1,
+      updatedAt: 1,
+      translations: {
+        $filter: {
+          input: '$translations',
+          as: 't',
+          cond: { $eq: ['$$t.locale', locale] },
+        },
+      },
+    },
+  })
+  console.log('#2349 locale: ', locale, ' # slug: ', slug)
+  console.log('#23498734 postResult:', postResult)
+  return postResult?.data[0] || null
 }

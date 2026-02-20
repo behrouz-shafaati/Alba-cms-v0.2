@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import { Reply, CheckCircle, XCircle, Trash } from 'lucide-react'
 import { useActionState, useEffect, useState, useTransition } from 'react'
 import { PostComment } from '../../interface'
-import { getTranslation, timeAgo } from '@/lib/utils'
 import { usePostCommentStore } from '../store/usePostCommentStore'
 import CommentForm from '../comment-form'
 import { deletePostCommentAction, updateStatusPostComment } from '../../actions'
@@ -14,7 +13,9 @@ import { mutate } from 'swr'
 import { useUpdatedUrl } from '@/hooks/use-updated-url'
 import { commentsUrl } from '../../utils'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
+import getTranslation from '@/lib/utils/getTranslation'
+import timeAgo from '@/lib/utils/timeAgo'
+import authorize from '@/lib/utils/authorize'
 
 interface CommentItemProps {
   postComment: PostComment
@@ -26,7 +27,7 @@ export function PostCommentItemManage({
 }: CommentItemProps) {
   const { user } = useSession()
 
-  const canModerate = can(user?.roles || [], 'postComment.moderate.any')
+  const canModerate = authorize(user?.roles || [], 'postComment.moderate.any')
   const { buildUrlWithParams } = useUpdatedUrl()
   const [showReplayForm, setShowReplayForm] = useState(false)
   const [showReplies, setShowReplies] = useState(true)
@@ -43,7 +44,7 @@ export function PostCommentItemManage({
   const [isPending, startTransition] = useTransition()
   const [state, dispatch] = useActionState(
     updateStatusPostComment.bind(null, String(postComment.id)) as any,
-    initialState
+    initialState,
   )
 
   useEffect(() => {

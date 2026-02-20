@@ -4,12 +4,14 @@ import { useDebouncedCallback } from 'use-debounce'
 import ComboboxInput from '@/components/ui/combobox-input'
 import CheckboxInput from '@/components/input/checkbox'
 import { useUrlFilter } from '@/hooks/use-url-filter'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
 interface FiltersProps<T> {
   table: Table<T>
+  dictianory: DashboardLocaleSchema
 }
 
-export function Filters<T>({ table }: FiltersProps<T>) {
+export function Filters<T>({ table, dictianory }: FiltersProps<T>) {
   const { setFilter, searchParams, isPending } = useUrlFilter()
 
   const handleChange = useDebouncedCallback((name: string, value: string) => {
@@ -30,7 +32,7 @@ export function Filters<T>({ table }: FiltersProps<T>) {
             return (
               <Input
                 key={column.id}
-                placeholder={`فیلتر ${title}...`}
+                placeholder={`${dictianory.shared.filter} ${title}...`}
                 value={filterValue ?? ''}
                 onChange={(e) => handleChange(key, e.target.value)}
                 className="w-40"
@@ -46,7 +48,7 @@ export function Filters<T>({ table }: FiltersProps<T>) {
                 {...(config.fetchOptions
                   ? { fetchOptions: config.fetchOptions }
                   : {})}
-                placeholder={`فیلتر ${title}`}
+                placeholder={`${dictianory.shared.filter} ${title}`}
                 onChange={({ target }) => handleChange(key, target.value)}
                 showClean={true}
               />

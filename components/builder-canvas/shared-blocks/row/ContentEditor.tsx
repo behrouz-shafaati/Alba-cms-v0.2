@@ -15,13 +15,13 @@ const ContentEditor = ({ savePage }: Props) => {
 
   const debouncedUpdate = useDebouncedCallback(
     (id, key, form) => update(id, key, form),
-    400
+    400,
   )
   const defaultValu =
     selectedBlock?.content?.srcMedium !== null ? selectedBlock?.content : null
   console.log(
     '#345 selectedBlock?.settings?.responsiveDesign:',
-    selectedBlock?.settings?.responsiveDesign
+    selectedBlock?.settings?.responsiveDesign,
   )
   return (
     <>
@@ -72,13 +72,26 @@ const ContentEditor = ({ savePage }: Props) => {
         name="image"
         title="پس زمینه"
         maxFiles={1}
-        defaultValues={defaultValu}
+        defaultValues={
+          selectedBlock?.settings?.bgMedia
+            ? [selectedBlock?.settings?.bgMedia]
+            : null
+        }
         updateFileDetailsHandler={(files) => {
-          // console.log('#88237 updaTED DATA: ', files)
-          update(selectedBlock?.id as string, 'bgMedia', { id: files[0].id })
+          console.log('#88237 updaTED DATA: ', files)
+          update(selectedBlock?.id as string, 'settings', {
+            bgMedia: {
+              id: files[0].id,
+              srcMedium: files[0].srcMedium,
+              srcSmall: files[0].srcSmall,
+            },
+          })
         }}
         deleteFileHnadler={(fileId) => {
-          update(selectedBlock?.id as string, 'bgMedia', {})
+          update(selectedBlock?.id as string, 'settings', {
+            ...selectedBlock?.settings,
+            bgMedia: null,
+          })
           requestAnimationFrame(() => {
             savePage?.()
           })

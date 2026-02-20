@@ -1,22 +1,22 @@
 'use server'
 
 import { z } from 'zod'
-import postCommentCtrl from '@/features/post-comment/controller'
+import postCommentCtrl from '@/lib/features/post-comment/controller'
 import { createPostHref } from '../post/utils'
 import { getSession } from '@/lib/auth/get-session'
-import { Session, State } from '@/types'
-import { QueryFind, QueryResponse } from '@/lib/entity/core/interface'
+import { Session } from '@/lib/types'
+import { State } from 'swr'
+import { QueryFind, QueryResponse } from '@/lib/features/core/interface'
 import { PostComment, PostCommentTranslationSchema } from './interface'
-import categoryCtrl from '../category/controller'
 import revalidatePathCtrl from '@/lib/revalidatePathCtrl'
 import { revalidatePath } from 'next/cache'
 import postCtrl from '../post/controller'
 import { Post } from '../post/interface'
 import { getSettings } from '../settings/controller'
 import { User } from '../user/interface'
-import { can } from '@/lib/utils/can.server'
-import { ValidationSettings } from '../settings/validation/interface'
 import extractExcerptFromContentJson from '@/lib/utils/extractExcerptFromContentJson'
+import authorize from '@/lib/utils/authorize'
+import { validationSettings } from '../settings/validation/interface'
 
 const FormSchema = z.object({
   contentJson: z.string({}),
@@ -38,7 +38,7 @@ const updateStatusPostCommentSchema = z.object({
 export async function createPostComment(
   id: string,
   prevState: State,
-  formData: FormData
+  formData: FormData,
 ) {
   // Validate form fields
   let newPostComment = null
@@ -53,7 +53,7 @@ export async function createPostComment(
     },
   }
   const validatedFields = FormSchema.safeParse(
-    Object.fromEntries(formData.entries())
+    Object.fromEntries(formData.entries()),
   )
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
@@ -67,7 +67,7 @@ export async function createPostComment(
 
   try {
     const user = (await getSession())?.user as User
-    await can(user?.roles, 'postComment.create')
+    authorize(user?.roles, 'postComment.create')
     const post = await postCtrl.findById({
       id,
     })
@@ -122,7 +122,7 @@ export async function createPostComment(
 export async function updatePostComment(
   id: string,
   prevState: State,
-  formData: FormData
+  formData: FormData,
 ) {
   const user = (await getSession())?.user as User
   let updatedPostComment = {}
@@ -136,7 +136,7 @@ export async function updatePostComment(
     },
   }
   const validatedFields = FormSchema.safeParse(
-    Object.fromEntries(formData.entries())
+    Object.fromEntries(formData.entries()),
   )
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
@@ -154,11 +154,11 @@ export async function updatePostComment(
 
     // if user loged in and send comment
     if (prevPostComment?.author)
-      await can(
+      authorize(
         user.roles,
         prevPostComment?.author?.id !== user.id
           ? 'post.edit.any'
-          : 'post.edit.own'
+          : 'post.edit.own',
       )
     // user send comment as guest
     else await can(user.roles, 'post.edit.any')
@@ -204,7 +204,7 @@ export async function updatePostComment(
 export async function updateStatusPostComment(
   id: string,
   prevState: State,
-  formData: FormData | Record<string, any> | null | undefined
+  formData: FormData | Record<string, any> | null | undefined,
 ) {
   const user = (await getSession())?.user as User
   let raw: Record<string, any> = {}
@@ -268,20 +268,20 @@ export async function deletePostCommentAction(ids: string[]) {
     })
     for (const prevPost of postCommentsResult.data) {
       if (prevPost.author)
-        await can(
+        authorize(
           user.roles,
           prevPost?.author?.id !== user.id
             ? 'postComment.delete.any'
-            : 'postComment.delete.own'
+            : 'postComment.delete.own',
         )
-      else await can(user.roles, 'postComment.delete.any')
+      else authorize(user.roles, 'postComment.delete.any')
     }
     await postCommentCtrl.delete({ filters: ids }) // Revalidate the path
     const pathes = await revalidatePathCtrl.getAllPathesNeedRevalidate({
       feature: 'postComment',
       slug: [
         ...postCommentsResult.data.map((ac) =>
-          createPostHref(ac?.post as Post)
+          createPostHref(ac?.post as Post),
         ),
         `/dashboard/postComments`,
       ],
@@ -313,7 +313,7 @@ export async function deletePostCommentAction(ids: string[]) {
 
 async function sanitizePostCommentData(
   validatedFields: any,
-  id?: string | undefined
+  id?: string | undefined,
 ) {
   let prevState = { translations: [] }
   const session = (await getSession()) as Session
@@ -321,7 +321,7 @@ async function sanitizePostCommentData(
   const postCommentPayload = validatedFields.data
   const excerpt = extractExcerptFromContentJson(
     postCommentPayload.contentJson,
-    50
+    50,
   )
   const createdBy = session?.user.id || null
   const author = session?.user.id || null
@@ -334,14 +334,14 @@ async function sanitizePostCommentData(
       readingTime: postCommentPayload.readingTime,
     },
     ...prevState.translations.filter(
-      (t: PostCommentTranslationSchema) => t.lang != postCommentPayload.lang
+      (t: PostCommentTranslationSchema) => t.lang != postCommentPayload.lang,
     ),
   ]
-  const status = (await can(
+  const status = authorize(
     session?.user.roles,
     'postComment.moderate.any',
-    false
-  ))
+    false,
+  )
     ? 'approved'
     : 'pending'
   const parent =
@@ -360,7 +360,7 @@ async function sanitizePostCommentData(
 }
 
 export async function getPostComments(
-  payload: QueryFind
+  payload: QueryFind,
 ): Promise<QueryResponse<PostComment>> {
   const filters: Record<string, any> = { ...(payload.filters ?? {}) }
 
@@ -371,7 +371,7 @@ export async function getPostComments(
 }
 
 export async function getPostCommentsForClient(payload: QueryFind) {
-  const validation: ValidationSettings = await getSettings('validation')
+  const validation: validationSettings = await getSettings('validation')
   if (validation?.commentApprovalRequired) payload.filters.status = 'approved'
   const commentsResult = await getPostComments(payload)
   return commentsResult

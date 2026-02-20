@@ -17,25 +17,28 @@ export function SliderWidget({ value, onChange, schema }: any) {
         {schema.title} ({current}%)
       </Label>
 
-      <Slider
-        min={min}
-        max={max}
-        step={step}
-        value={[current]}
-        onValueChange={([val]) => onChange(val)}
-      />
+      <div className="flex gap-2">
+        <Slider
+          min={min}
+          max={max}
+          step={step}
+          value={[current]}
+          onValueChange={([val]) => onChange(val)}
+        />
 
-      <Input
-        type="number"
-        value={current}
-        onChange={(e) => {
-          const val = Number(e.target.value)
-          if (val >= min && val <= max) onChange(val)
-        }}
-        min={min}
-        max={max}
-        step={step}
-      />
+        <Input
+          type="number"
+          value={current}
+          onChange={(e) => {
+            const val = Number(e.target.value)
+            if (val >= min && val <= max) onChange(val)
+          }}
+          min={min}
+          max={max}
+          step={step}
+          className="w-20"
+        />
+      </div>
     </div>
   )
 }

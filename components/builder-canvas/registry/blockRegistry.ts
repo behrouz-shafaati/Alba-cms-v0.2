@@ -20,6 +20,7 @@ import { SubmitButtonBlockDef } from '../shared-blocks/submitButton'
 // import { FormBlockDef } from '../shared-blocks/form'
 import { SearchBlockDef } from '../shared-blocks/search'
 import { InternalSectionWrapperBlockDef } from '../shared-blocks/internalSectionWrapper'
+import { InternalSectionBlockDef } from '../shared-blocks/internalSection'
 export const blockRegistry = {
   row: RowBlockDef,
   column: columnBlockDef,
@@ -41,6 +42,7 @@ export const blockRegistry = {
   internalSectionWrapper: InternalSectionWrapperBlockDef,
   // form: FormBlockDef,
   search: SearchBlockDef,
+  internalSection: InternalSectionBlockDef,
 }
 
 // registerBlock(blockRegistry)

@@ -1,8 +1,8 @@
 'use client'
 import { ColumnDef } from '@tanstack/react-table'
 import { CellAction } from './cell-action'
-import { CheckboxInput as Checkbox } from '@/components/ui/checkbox-input'
-import { User } from '@/features/user/interface'
+import { Checkbox } from '@/components/ui/checkbox'
+import { User } from '@/lib/features/user/interface'
 
 export const columns: ColumnDef<User>[] = [
   {

@@ -1,15 +1,15 @@
-import { DataTable } from '@/components/ui/data-table'
-import { Heading } from '@/components/ui/heading'
-import { LinkButton } from '@/components/ui/link-button'
+import { DataTable } from '@/components/other/ui/data-table'
+import { Heading } from '@/components/other/ui/heading'
+import { LinkButton } from '@/components/other/ui/link-button'
 import CampaignCtrl from '../../controller'
 import { Campaign } from '../../interface'
 import { Plus } from 'lucide-react'
 import { columns } from './columns'
-import { QueryResponse } from '@/lib/entity/core/interface'
+import { QueryResponse } from '@/lib/features/core/interface'
 import GroupAction from './group-action'
 import { getSession } from '@/lib/auth/get-session'
-import { User } from '@/features/user/interface'
-import { can } from '@/lib/utils/can.server'
+import { User } from '@/lib/features/user/interface'
+import authorize from '@/lib/utils/authorize'
 
 interface CategoriesTableProps {
   query: string
@@ -22,11 +22,11 @@ export default async function CampaignTable({
 }: CategoriesTableProps) {
   let filters = { query }
   const user = (await getSession())?.user as User
-  if (!(await can(user.roles, 'campaign.view.any', false))) {
+  if (!authorize(user.roles, 'campaign.view.any', false)) {
     filters = { ...filters, user: user.id }
   }
 
-  const canCreate = await can(user.roles, 'campaign.create', false)
+  const canCreate = authorize(user.roles, 'campaign.create', false)
 
   const findResult: QueryResponse<Campaign> = await CampaignCtrl.find({
     filters,
@@ -42,7 +42,7 @@ export default async function CampaignTable({
         {canCreate && (
           <LinkButton
             className="text-xs md:text-sm"
-            href="/dashboard/campaigns/create"
+            href="/dashboard/ad-campaigns/create"
           >
             <Plus className="ml-2 h-4 w-4" /> افزودن کمپین‌ تبلیغاتی
           </LinkButton>

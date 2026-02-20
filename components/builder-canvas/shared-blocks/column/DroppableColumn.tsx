@@ -25,12 +25,11 @@ export default function DroppableColumn({
     },
   })
 
-  const { deleteItem, selectBlock, activeElement, selectedBlock } =
-    useBuilderStore()
+  const { selectBlock, activeElement, selectedBlock } = useBuilderStore()
 
   let activeClass = ''
   if (selectedBlock?.id == col.id)
-    activeClass = ' border-2 border-fuchsia-500 border-opacity-30'
+    activeClass = 'border-2 border-fuchsia-500 border-opacity-30'
   return (
     <div
       ref={setNodeRef}

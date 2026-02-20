@@ -1,20 +1,22 @@
 'use client'
 import { useActionState, useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import roleCtrl from '@/lib/features/role/controller'
 import {
   createTemplate,
   deleteTemplatesAction,
   updateTemplate,
 } from '../actions'
-import { AlertModal } from '@/components/modal/alert-modal'
+import { AlertModal } from '@/components/other/modal/alert-modal'
 import BuilderTemplate from '@/components/builder-template'
 import { Template } from '../interface'
-import { Category } from '@/features/category/interface'
+import { Category } from '@/lib/features/category/interface'
 import CreateTemplateModal from './modal'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
-import AccessDenied from '@/components/access-denied'
+import AccessDenied from '@/components/other/access-denied'
+import authorize from '@/lib/utils/authorize'
+import { toast } from 'sonner'
+import { Option } from '@/lib/types'
 
 export const IMG_MAX_LIMIT = 3 //MB
 
@@ -22,6 +24,7 @@ interface TemplateFormProps {
   allCategories: Category[]
   allTemplates: Template[]
   initialData: Template | null
+  settings: any
 }
 
 const defaultInitialValue = {
@@ -35,15 +38,16 @@ export const Form: React.FC<TemplateFormProps> = ({
   allTemplates,
   allCategories,
   initialData: Template,
+  settings,
 }) => {
-  const locale = 'fa'
+  const searchParams = useSearchParams()
   const { user } = useSession()
   const userRoles = user?.roles || []
 
-  const canCreate = can(userRoles, 'template.create')
-  const canEdit = can(
+  const canCreate = authorize(userRoles, 'template.create')
+  const canEdit = authorize(
     userRoles,
-    Template?.user !== user?.id ? 'template.edit.any' : 'template.edit.own'
+    Template?.user !== user?.id ? 'template.edit.any' : 'template.edit.own',
   )
   const [defaultValue, setDefaultValue] = useState(defaultInitialValue)
   const [templateFor, setTemplateFor] = useState<string | null>(null)
@@ -58,9 +62,12 @@ export const Form: React.FC<TemplateFormProps> = ({
     value: role.slug,
   }))
 
+  const localedFallback = settings.language?.siteDefault
+
+  const locale = searchParams.get('locale') ?? localedFallback
+
   const params = useParams()
   const router = useRouter()
-  const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [imgLoading, setImgLoading] = useState(false)
@@ -87,11 +94,8 @@ export const Form: React.FC<TemplateFormProps> = ({
 
   useEffect(() => {
     if (state?.message && state.message !== null)
-      toast({
-        variant: state?.success ? 'default' : 'destructive',
-        title: '',
-        description: state.message,
-      })
+      if (state?.success) toast.success(state.message)
+      else toast.error(state.message)
     if (state?.success && state?.isCreatedJustNow) {
       router.replace(`/dashboard/templates/${state?.values?.id}`)
     }
@@ -140,6 +144,7 @@ export const Form: React.FC<TemplateFormProps> = ({
                 },
               }
             : { initialContent: defaultValue })}
+          locale={locale}
         />
       )}
     </>
