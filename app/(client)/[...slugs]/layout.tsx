@@ -31,14 +31,15 @@ type Props = {
 export default async function Layout({ children, params }: Props) {
   const resolvedParams = await params
   const locale = resolvedParams?.slugs?.[0] || ''
-  const resolvedLocale = resolveLocale({ locale })
-  const dictionary = getInstallDictionary(resolvedLocale)
+  const resolvedLocale = resolveLocale({ locale }) as SupportedLanguage
+  // const dictionary = getInstallDictionary(resolvedLocale)
   const dir = getDirection(resolvedLocale)
 
   return (
     <html lang={resolvedLocale} dir={dir}>
       <body>
-        <ServerProviders dictionary={dictionary}>{children}</ServerProviders>
+        {/* <ServerProviders dictionary={dictionary}>{children}</ServerProviders> */}
+        <ServerProviders>{children}</ServerProviders>
         <Toaster />
       </body>
     </html>

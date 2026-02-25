@@ -98,28 +98,30 @@ export default function Builder({
 
     // اگر جابجایی مربوط به ردیف بود
     if (content.rows.find((r) => r.id === activeId)) {
-      reorderRows(activeId, overId)
+      reorderRows(String(activeId), String(overId))
       return
     }
 
-    const sourceContainer = findElementContainer(content, activeId)
-    const goalContainer = findElementContainer(content, overId)
+    const sourceContainer = findElementContainer(content, String(activeId))
+    const goalContainer = findElementContainer(content, String(overId))
     const oldIndex = sourceContainer?.blocks?.findIndex(
-      (el) => el.id === activeId
+      (el: any) => el.id === activeId,
     )
-    const newIndex = goalContainer.blocks.findIndex((el) => el.id === overId)
+    const newIndex = goalContainer.blocks.findIndex(
+      (el: any) => el.id === overId,
+    )
 
     console.log('@94 oldIndex:', oldIndex, ' | newIndex:', newIndex)
     console.log('@94 sourceCol:', sourceContainer, ' | over:', over)
 
     // حالت 1: کشیدن آیتم جدید از نوار ابزار (text-block)
-    if (activeId?.endsWith('-block')) {
+    if (String(activeId)?.endsWith('-block')) {
       const block = allBlocks[activeData.type]
       const defaultSettings =
         typeof block.defaultSettings === 'function'
           ? block.defaultSettings()
           : block.defaultSettings
-      const targetContainer = findElementContainer(content, overId)
+      const targetContainer = findElementContainer(content, String(overId))
       const newContent = addBlockToContainer(
         content,
         targetContainer.id,
@@ -128,7 +130,7 @@ export default function Builder({
           type: activeData.type,
           ...defaultSettings,
         },
-        newIndex
+        newIndex,
       )
       setContent(newContent)
       return

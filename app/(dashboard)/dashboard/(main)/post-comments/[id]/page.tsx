@@ -13,13 +13,12 @@ export default async function Page({ params }: PageProps) {
   const locale = 'fa' //  from formData
   const resolvedParams = await params
   const { id } = resolvedParams
-  let post = null,
-    allCategories = {}
+  let post = null
   let pageBreadCrumb = {
     title: 'افزودن',
     link: '/dashboard/posts/create',
   }
-  ;[allCategories] = await Promise.all([categoryCtrl.findAll({})])
+  const [allCategories] = await Promise.all([categoryCtrl.findAll({})])
   if (id !== 'create') {
     ;[post] = await Promise.all([postCtrl.findById({ id })])
 
@@ -52,7 +51,7 @@ export default async function Page({ params }: PageProps) {
     <>
       <div className="flex-1 space-y-4 p-5">
         <BreadCrumb items={breadcrumbItems} />
-        <Form initialData={post} allCategories={allCategories.data} />
+        <Form initialData={post} allCategories={allCategories?.data} />
       </div>
     </>
   )

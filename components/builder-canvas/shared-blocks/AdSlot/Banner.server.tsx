@@ -53,8 +53,8 @@ export const BannerServer = ({
 
   const linkClickHandler = async () => {
     try {
-      if (banner !== 'loading' && banner?.campaignId)
-        console.log(' فراخوانی متریک کلیک (سمت API)')
+      // if (banner !== 'loading' && banner?.campaignId)
+      if (banner?.campaignId) console.log(' فراخوانی متریک کلیک (سمت API)')
       // فراخوانی متریک کلیک (سمت API)
       fetch('/api/banners/click', {
         method: 'POST',
@@ -76,9 +76,7 @@ export const BannerServer = ({
     // no banner available
     return (
       <div
-        className={` rounded bg-gray-100 dark:bg-gray-800 border border-dashed border-gray-200 dark:border-gray-700 flex items-center justify-center text-xs text-gray-500 ${
-          blockData?.classNames?.manualInputs || ''
-        }`}
+        className={` rounded bg-gray-100 dark:bg-gray-800 border border-dashed border-gray-200 dark:border-gray-700 flex items-center justify-center text-xs text-gray-500 `}
         style={{ aspectRatio: settings?.aspect || defaultAspect, flex: 1 }}
         aria-hidden="true"
       >
@@ -90,7 +88,6 @@ export const BannerServer = ({
   if (banner.html) {
     return (
       <div
-        className={blockData?.classNames?.manualInputs || ''}
         style={{ aspectRatio: settings?.aspect || defaultAspect, flex: 1 }}
         dangerouslySetInnerHTML={{ __html: banner.html }}
         aria-label={`banner-${id}`}
@@ -111,7 +108,7 @@ export const BannerServer = ({
     if (banner?.targetUrl)
       return (
         <div
-          className={`relative ${blockData?.classNames?.manualInputs || ''}`}
+          className={`relative `}
           style={{ aspectRatio: settings?.aspect || defaultAspect, flex: 1 }}
           aria-label={`banner-${id}`}
         >
@@ -126,7 +123,7 @@ export const BannerServer = ({
       )
     return (
       <div
-        className={`relative ${blockData?.classNames?.manualInputs || ''}`}
+        className={`relative `}
         style={{ aspectRatio: settings?.aspect || defaultAspect, flex: 1 }}
         aria-label={`banner-${id}`}
       >

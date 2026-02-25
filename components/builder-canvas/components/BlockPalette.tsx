@@ -3,13 +3,22 @@ import { blockRegistry } from '../registry/blockRegistry'
 import { useBuilderStore } from '../store/useBuilderStore'
 import DraggableWrapper from './DraggableWrapper'
 
+type BlockDefinition = {
+  label: string
+  showInBlocksList?: boolean
+  inTemplateFor?: string[]
+  notTemplateFor?: string[]
+}
+
+type BlockRegistry = Record<string, BlockDefinition>
+
 type BlockPaletteProp = {
-  newBlocks: any
+  newBlocks: BlockRegistry
 }
 export const BlockPalette = ({ newBlocks }: BlockPaletteProp) => {
   const { getJson } = useBuilderStore()
   const documnet = JSON.parse(getJson())
-  const allBlocks = { ...blockRegistry, ...newBlocks }
+  const allBlocks: BlockRegistry = { ...blockRegistry, ...newBlocks }
   return (
     <div className="flex flex-col gap-2 p-2 max-w-80 ">
       {Object.entries(allBlocks).map(([key, block]) => {
@@ -20,11 +29,11 @@ export const BlockPalette = ({ newBlocks }: BlockPaletteProp) => {
         if (!exist_InTemplateFor && !exist_NotTemplateFor) visibleBlock = true
         if (exist_InTemplateFor) {
           const prefix = templateFor.split('-')[0]
-          if (block.inTemplateFor.includes(prefix)) visibleBlock = true
+          if (block.inTemplateFor!.includes(prefix)) visibleBlock = true
         }
         if (exist_NotTemplateFor) {
           const prefix = templateFor.split('-')[0]
-          if (!block.notTemplateFor.includes(prefix)) visibleBlock = true
+          if (!block.notTemplateFor!.includes(prefix)) visibleBlock = true
         }
 
         if (block.showInBlocksList && visibleBlock)

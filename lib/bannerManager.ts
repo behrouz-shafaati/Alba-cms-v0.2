@@ -2,6 +2,7 @@
 // Client-side only. Uses an in-memory window variable so it's cleared on refresh/navigation.
 
 import { FallbackBehaviorType } from '@/lib/features/campaign/interface'
+import { File } from './features/file/interface'
 
 type AdSlotCallback = (data: BannerData | null) => void
 type AdSlotData = {

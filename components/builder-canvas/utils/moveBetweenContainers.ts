@@ -6,9 +6,9 @@ import removeBlockFromContainer from './removeBlockFromContainer'
 
 const moveBetweenContainers = (
   content: any,
-  active: DndSortable,
-  over: DndSortable,
-  position: 'start' | 'end' | number = 'end'
+  active: any, //DndSortable
+  over: any, //DndSortable
+  position: 'start' | 'end' | number = 'end',
 ) => {
   let goalContainerId
   const movedBlockId = active.id
@@ -38,7 +38,7 @@ const moveBetweenContainers = (
     newContent,
     goalContainerId,
     movedBlock,
-    position
+    position,
   )
   return newContent
 }

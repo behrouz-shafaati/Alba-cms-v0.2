@@ -8,15 +8,15 @@ import {
   getVisibilityClass,
 } from '../utils/styleUtils'
 import RenderBlock from './RenderBlock'
-import { Settings } from '@/features/settings/interface'
+import { Settings } from '@/lib/features/settings/interface'
 import Image from 'next/image'
 
 type Props = {
   siteSettings: Settings
   editroMode: boolean
   rows: Row[]
-  pageSlug: string | null
-  categorySlug: string | null
+  pageSlug?: string | null
+  categorySlug?: string | null
   searchParams?: any
   [key: string]: any // اجازه props داینامیک مثل content_1, content_2
 }
@@ -25,8 +25,8 @@ const RendererRows = async ({
   siteSettings,
   editroMode = false,
   rows,
-  pageSlug,
-  categorySlug,
+  pageSlug = null,
+  categorySlug = null,
   searchParams = {},
   ...rest
 }: Props) => {
@@ -46,8 +46,8 @@ const RendererRows = async ({
   )
   return (
     <>
-      {rows?.map((row) => {
-        const visibility = row.styles?.visibility
+      {rows?.map((row: any) => {
+        const visibility: any = row.styles?.visibility
         const className = getVisibilityClass(visibility, { display: 'grid' })
         let stickyClass = ''
         // این نوع چسبان فقط مخصوص ردیف است صله ی آن تا بالای ویو پورت همیشه صفر است. تنها یک ردیف این قابلیت را باید داشته باشد
@@ -71,7 +71,7 @@ const RendererRows = async ({
                 className="object-cover"
               />
             )}
-            {row.columns.map((col) => {
+            {row.columns.map((col: any) => {
               const visibilityClassName = getVisibilityClass(
                 col.styles?.visibility,
                 { display: col.settings?.display },

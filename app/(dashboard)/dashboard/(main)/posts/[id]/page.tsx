@@ -16,14 +16,12 @@ export default async function Page({ params }: PageProps) {
   const locale = 'fa' //  from formData
   const resolvedParams = await params
   const { id } = resolvedParams
-  let post = null,
-    settings,
-    allCategories = {}
+  let post = null
   let pageBreadCrumb = {
     title: 'افزودن',
     link: '/dashboard/posts/create',
   }
-  ;[settings, allCategories] = await Promise.all([
+  const [settings, allCategories] = await Promise.all([
     getSettingsAction(),
     categoryCtrl.findAll({}),
   ])

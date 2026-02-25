@@ -1,21 +1,22 @@
-import { FallbackBehaviorType } from '@/features/campaign/interface'
+import { FallbackBehaviorType } from '@/lib/features/campaign/interface'
 
 export type AdSlotWidgetProps = {
-  pageSlug: string | null
-  categorySlug: string | null
-  widgetName: string
+  pageSlug?: string | null
+  categorySlug?: string | null
+  widgetName?: string
   blockData: {
-    id: string
-    type: 'adSlot'
-    content: {
+    id?: string
+    type?: 'adSlot'
+    content?: {
       title: string
       linkedCampaign: string | null
+      isLCP?: boolean
     }
     settings: {
-      countOfBanners: number
-      direction: 'column' | 'row'
+      countOfBanners?: number
+      direction?: 'column' | 'row'
       aspect: '1/1' | '4/1' | '10/1' | '20/1' | '30/1'
-      placement:
+      placement?:
         | 'all'
         | 'header'
         | 'sidebar'
@@ -23,7 +24,8 @@ export type AdSlotWidgetProps = {
         | 'home-hero'
         | 'content'
         | 'custom'
-      fallbackBehavior: FallbackBehaviorType
+      fallbackBehavior?: FallbackBehaviorType
     }
+    styles?: any
   }
 }

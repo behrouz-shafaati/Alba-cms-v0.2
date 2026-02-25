@@ -1,15 +1,15 @@
 // app/api/file/[...path]/route.ts
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createReadStream, existsSync, statSync } from 'fs'
 import { join } from 'path'
 import mime from 'mime'
 
 export async function GET(
-  req: Request,
-  { params }: { params: { path: string[] } }
+  request: NextRequest,
+  context: { params: Promise<{ path: string[] }> },
 ) {
   try {
-    const { path } = await params // <<— درباره این خط پایین‌تر توضیح دادم
+    const { path } = await context.params // <<— درباره این خط پایین‌تر توضیح دادم
     const filePath = join(process.cwd(), 'uploads', ...path)
 
     if (!existsSync(filePath)) {

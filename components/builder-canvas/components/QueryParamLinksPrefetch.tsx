@@ -1,15 +1,15 @@
 'use client'
-import { MenuItem } from '@/features/menu/interface'
+import { MenuItem as MenuItemType } from '@/lib/features/menu/interface'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
-export default function MenuPrefetch({ items }: { items: MenuItem[] }) {
+export default function MenuPrefetch({ items }: { items: MenuItemType[] }) {
   return (items || []).map((item, index) => (
     <MenuItem key={index} item={item} />
   ))
 }
 
-function MenuItem({ item }: { item: MenuItem }) {
+function MenuItem({ item }: { item: MenuItemType }) {
   const router = useRouter()
   const hasSubMenu = item.subMenu && item.subMenu.length > 0
 

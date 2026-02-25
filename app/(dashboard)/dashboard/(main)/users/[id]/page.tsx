@@ -10,7 +10,7 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const resolvedParams = await params
   const { id } = resolvedParams
-  const lodginedUser = await getSession()
+  const loginedUser = await getSession()
   let user = null
   let pageBreadCrumb = { title: 'افزودن', link: '/dashboard/users/create' }
   if (id !== 'create') {
@@ -32,7 +32,7 @@ export default async function Page({ params }: PageProps) {
     <>
       <div className="flex-1 space-y-4 p-5">
         <BreadCrumb items={breadcrumbItems} />
-        <UserForm initialData={user} lodginedUser={lodginedUser.user} />
+        <UserForm initialData={user} lodginedUser={loginedUser?.user} />
       </div>
     </>
   )

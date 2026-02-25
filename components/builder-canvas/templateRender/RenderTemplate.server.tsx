@@ -11,7 +11,7 @@ type Props = {
   editroMode: boolean
   [key: string]: any // اجازه props داینامیک مثل content_1, content_2
   pageSlug: string | null
-  categorySlug: string | null
+  categorySlug?: string | null
   searchParams?: any
 }
 

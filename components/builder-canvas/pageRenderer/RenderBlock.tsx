@@ -29,7 +29,7 @@ const RenderBlock = async ({
 }: RenderBlockProp) => {
   const blocks = getBlocksSafe() // برای محتوا دار بودن این برای رسیدن به این کامپوننت هیچ کامپوننتی نباید از use client‌ استفاده کرده باشد
 
-  const visibility = item.styles?.visibility
+  const visibility: any = item.styles?.visibility
   const className = getVisibilityClass(visibility)
 
   const block = blocks[item.type]

@@ -7,7 +7,7 @@ import { ThemeProvider } from '@/components/context/theme-provider'
 import { DashboardLocaleProvider } from '@/components/context/dashboard-locale-provider'
 import { getDashboardDictionary } from '@/lib/i18n/dashboard'
 import { getSession } from '@/lib/auth/get-session'
-import { Session } from '@/lib/types'
+import { Session, SupportedLanguage } from '@/lib/types'
 import authorize from '@/lib/utils/authorize'
 import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 import { SessionProvider } from '@/components/context/SessionContext'
@@ -31,13 +31,13 @@ export default async function RootLayout({
   const haveDashboardAccess = await authorize(
     user.roles,
     'dashboard.view.any',
-    false
+    false,
   )
   if (!haveDashboardAccess) {
-    redirect('/login')
+    redirect('/en/login')
   }
   const locale = user?.locale || siteSettings?.language?.dashboardDefault || ''
-  const resolvedLocale = resolveLocale({ locale })
+  const resolvedLocale = resolveLocale({ locale }) as SupportedLanguage
   const dictionary = getDashboardDictionary(resolvedLocale)
   const dir = dictionary.dir
   return (

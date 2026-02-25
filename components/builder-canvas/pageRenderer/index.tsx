@@ -5,6 +5,7 @@ import RendererRows from './RenderRows'
 import templateCtrl from '@/lib/features/template/controller'
 import { getSettings } from '@/lib/features/settings/controller'
 import RendererTemplate from '../templateRender/RenderTemplate.server'
+import { Settings } from '@/lib/features/settings/interface'
 
 type Props = {
   locale: string
@@ -23,7 +24,7 @@ export const PageRenderer = async ({
     {}
   const { template: templateId } = translation.content
 
-  const [siteSettings] = await Promise.all([getSettings()])
+  const siteSettings = (await getSettings()) as Settings
 
   if (templateId && templateId !== 'none') {
     const [template] = await Promise.all([

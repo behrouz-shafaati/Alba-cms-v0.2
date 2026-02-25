@@ -1,8 +1,8 @@
 // کامپوننت نمایشی بلاک
 import React from 'react'
 import { Block } from '../../types'
-import { Post } from '@/features/post/interface'
-import { Option } from '@/types'
+import { Post } from '@/lib/features/post/interface'
+import { Option } from '@/lib/types'
 
 import { EmblaOptionsType } from 'embla-carousel'
 import BlogPostSliderParallaxLazy from './designs/BlogPostSliderParallaxLazy'

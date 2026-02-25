@@ -6,8 +6,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 type BannerGroupProps = AdSlotWidgetProps &
   Block & {
-    pageSlug: string | null
-    categorySlug: string | null
+    pageSlug?: string | null
+    categorySlug?: string | null
   } & React.HTMLAttributes<HTMLParagraphElement> // ✅ اجازه‌ی دادن onclick, className و ...
 
 const defaultAspect = '4/1'
@@ -32,9 +32,7 @@ export const BannerGroupFallback = ({
           return (
             <Skeleton
               key={i}
-              className={` bg-gray-200 dark:bg-gray-800 animate-pulse ${
-                blockData?.classNames?.manualInputs || ''
-              }`}
+              className={` bg-gray-200 dark:bg-gray-800 animate-pulse `}
               style={{
                 aspectRatio: settings?.aspect || defaultAspect,
                 flex: 1,

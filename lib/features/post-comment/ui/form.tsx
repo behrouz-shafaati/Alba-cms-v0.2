@@ -8,31 +8,30 @@ import {
   Trash,
 } from 'lucide-react'
 // import { Separator } from "@/components/ui/separator";
-import { Heading } from '@/components/ui/heading'
+import { Heading } from '@/components/other/ui/heading'
 // import FileUpload from "@/components/FileUpload";
-import { useToast } from '../../../hooks/use-toast'
 import {
   createPostComment,
   deletePostCommentAction,
   updatePostComment,
-} from '@/features/post-comment/actions'
-import { AlertModal } from '../../../components/modal/alert-modal'
-import FileUpload from '../../../components/form-fields/file-upload'
-import Select from '../../../components/form-fields/select'
-import Combobox from '@/components/form-fields/combobox'
+} from '@/lib/features/post-comment/actions'
+import { AlertModal } from '@/components/other/modal/alert-modal'
+import FileUpload from '@/components/input/file-upload'
+import Select from '@/components/input/select'
+import Combobox from '@/components/input/combobox'
 import {
   Category,
   CategoryTranslationSchema,
-} from '@/features/category/interface'
-import { Option } from '@/types'
-import { createCatrgoryBreadcrumb } from '@/lib/utils'
+} from '@/lib/features/category/interface'
+import { Option } from '@/lib/types'
+import createCatrgoryBreadcrumb from '@/lib/utils/createCatrgoryBreadcrumb'
 import { Braces as CategoryIcon } from 'lucide-react'
-import TagInput from '@/components/form-fields/TagInput'
-import { searchTags } from '@/features/tag/actions'
-import { Tag, TagTranslationSchema } from '@/features/tag/interface'
-import MultipleSelec from '@/components/form-fields/multiple-selector'
+import TagInput from '@/components/input/TagInput'
+import { searchTags } from '@/lib/features/tag/actions'
+import { Tag, TagTranslationSchema } from '@/lib/features/tag/interface'
+import MultipleSelect from '@/components/input/multiple-select'
 import Link from 'next/link'
-import { createPostHref } from '@/features/post/utils'
+import { createPostHref } from '../../post/utils'
 import TiptapEditorLazy from '@/components/tiptap-editor/TiptapEditorLazy'
 
 interface PostCommentFormProps {
@@ -181,14 +180,14 @@ export const Form: React.FC<PostCommentFormProps> = ({
           </div>
 
           {/* categories */}
-          <MultipleSelec
+          <MultipleSelect
             title="سایر دسته‌ها"
             name="categories"
             defaultValues={
               categoriesArray.map((category: Category) => {
                 const translation: CategoryTranslationSchema =
                   category?.translations?.find(
-                    (t: CategoryTranslationSchema) => t.lang === locale
+                    (t: CategoryTranslationSchema) => t.lang === locale,
                   ) ||
                   category?.translations[0] ||
                   {}
@@ -210,7 +209,7 @@ export const Form: React.FC<PostCommentFormProps> = ({
                 tagsArray.map((tag: Tag) => {
                   const translation: TagTranslationSchema =
                     tag?.translations?.find(
-                      (t: CategoryTranslationSchema) => t.lang === locale
+                      (t: CategoryTranslationSchema) => t.lang === locale,
                     ) ||
                     tag?.translations[0] ||
                     {}

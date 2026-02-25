@@ -19,11 +19,17 @@ type General = {
     srcMedium: string
   }
 }
+type Appearance = {
+  desktopHeaderHeight: number
+  tabletHeaderHeight: number
+  mobileHeaderHeight: number
+}
 
 export interface Settings {
   appInstalled?: boolean
   general?: General
   language?: Language
+  appearance?: Appearance
 }
 
 export type SettingsKey =

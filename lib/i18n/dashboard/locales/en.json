@@ -42,7 +42,46 @@
       "draft": "Draft"
     },
     "postComment": { "title": "Comments" },
-    "user": { "title": "Users", "create": "Add user" },
+    "user": {
+      "title": "Users",
+      "create": "Add user",
+      "fName": {
+        "title": "First Name",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "lName": {
+        "title": "Last Name",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "email": {
+        "title": "Email",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "mobile": {
+        "title": "Mobile",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "password": {
+        "title": "Password",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "confirmPassword": {
+        "title": "Confirm Password",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      }
+    },
     "category": { "title": "Categories", "create": "Add category" },
     "tag": { "title": "Tags", "create": "Add tag" },
     "menu": { "title": "Menus", "create": "Add menu" },
@@ -198,5 +237,27 @@
       }
     },
     "logout": { "title": "Logout" }
+  },
+  "installer": {
+    "title": "Installation",
+    "chooseLanguage": "Choose language",
+    "steps": {
+      "dashboard_lang": {
+        "title": "Your language"
+      },
+      "db": {
+        "title": "Database"
+      },
+      "admin": {
+        "title": "Create admin"
+      },
+      "suported_lang": {
+        "title": "Site Languages"
+      },
+      "finish": {
+        "title": "Finish",
+        "description": "Configuration completed successfully 🥳"
+      }
+    }
   }
 }

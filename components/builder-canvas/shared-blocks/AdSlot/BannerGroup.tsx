@@ -139,7 +139,7 @@ export default function BannerGroup({
               key={i}
               banerSlotId={slotId}
               blockData={blockData}
-              banner={banners[slotId]}
+              banner={banners[slotId] as BannerData}
               {...props}
             />
           )

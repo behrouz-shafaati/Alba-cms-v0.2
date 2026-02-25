@@ -9,6 +9,12 @@ import { Campaign } from '@/lib/features/campaign/interface'
 import Switch from '@/components/input/switch'
 import { Option } from '@/lib/types'
 
+type AdSlotContent = {
+  title?: string
+  linkedCampaign?: string
+  isLCP?: boolean
+}
+
 type Props = {
   initialData: any
   savePage: () => void
@@ -27,7 +33,7 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
             value: String(campaign.id),
             label: campaign.title,
           }
-        }
+        },
       )
       setCampaignOptions([
         { label: 'هیچکدام', value: 'none' },
@@ -38,12 +44,14 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
     fetchData()
   }, [])
 
+  const content = selectedBlock?.content as AdSlotContent
+
   return (
     <div key={campaignOptions?.length}>
       <Switch
         name="isLCP"
         title="علامت‌گذاری به‌عنوان LCP"
-        defaultChecked={selectedBlock?.content?.isLCP ?? false}
+        defaultChecked={content?.isLCP ?? false}
         onChange={(values) => {
           update(selectedBlock?.id as string, 'content', {
             ...selectedBlock?.content,
@@ -54,7 +62,7 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
       <Text
         title="عنوان جایگاه"
         name="title"
-        defaultValue={selectedBlock?.content?.title || ''}
+        defaultValue={content?.title || ''}
         onChange={(e) => {
           update(selectedBlock?.id as string, 'content', {
             ...selectedBlock?.content,
@@ -65,13 +73,13 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
       <Combobox
         title="کمپین متصل"
         name="linkedCampaign"
-        defaultValue={selectedBlock?.content?.linkedCampaign ?? 'none'}
+        defaultValue={content?.linkedCampaign ?? 'none'}
         placeholder={`کمپین متصل`}
         options={campaignOptions}
         onChange={(e) => {
           update(selectedBlock?.id as string, 'content', {
             ...selectedBlock?.content,
-            linkedCampaign: e.target.value,
+            linkedCampaign: e.value,
           })
         }}
       />

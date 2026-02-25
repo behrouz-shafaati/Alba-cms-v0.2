@@ -1,6 +1,7 @@
 import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 import getSlugsWithoutLocale from '@/lib/utils/getSlugsWithoutLocale'
-import PageResolver from '@/pages/resolver'
+import PageResolver from '@/app/(client)/[...slugs]/resolver'
+import { SupportedLanguage } from '@/lib/types'
 
 type Props = {
   params: Promise<{ slugs: string[] }>
@@ -11,7 +12,7 @@ export default async function Page({ params }: Props) {
   const { slugs } = resolvedParams
   const firstSlug = slugs?.[0] || null
   const locale = firstSlug || ''
-  const resolvedLocale = resolveLocale({ locale })
+  const resolvedLocale = resolveLocale({ locale }) as SupportedLanguage
   const slugsWithoutLocale = getSlugsWithoutLocale(slugs)
   // console.log('#234987 slugs:', slugs)
   // console.log('#234987 resolvedLocale:', resolvedLocale)

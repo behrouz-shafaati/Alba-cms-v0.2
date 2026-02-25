@@ -8,7 +8,7 @@ import Image from 'next/image'
 // import Link from 'next/link'
 
 type BannerProps = {
-  banner: BannerData
+  banner: BannerData | 'loading'
   banerSlotId: string
 } & AdSlotWidgetProps &
   React.HTMLAttributes<HTMLParagraphElement> // ✅ اجازه‌ی دادن onclick, className و ...
@@ -24,8 +24,9 @@ export const Banner = ({
   const { content, settings } = blockData
   const linkClickHandler = async () => {
     try {
-      if (banner !== 'loading' && banner?.campaignId)
-        console.log(' فراخوانی متریک کلیک (سمت API)')
+      if (typeof banner == 'string') return
+      // if (banner !== 'loading' && banner?.campaignId)
+      if (banner?.campaignId) console.log(' فراخوانی متریک کلیک (سمت API)')
       // فراخوانی متریک کلیک (سمت API)
       fetch('/api/banners/click', {
         method: 'POST',
@@ -46,9 +47,7 @@ export const Banner = ({
     console.log(`banner ${id} is loading.`)
     return (
       <Skeleton
-        className={` bg-gray-200 dark:bg-gray-800 animate-pulse ${
-          blockData?.classNames?.manualInputs || ''
-        }`}
+        className={` bg-gray-200 dark:bg-gray-800 animate-pulse `}
         style={{ aspectRatio: settings?.aspect || defaultAspect, flex: 1 }}
         aria-busy="true"
         aria-label={`banner-${id}-loading`}
@@ -60,9 +59,7 @@ export const Banner = ({
     // no banner available
     return (
       <div
-        className={` rounded bg-gray-100 dark:bg-gray-800 border border-dashed border-gray-200 dark:border-gray-700 flex items-center justify-center text-xs text-gray-500 ${
-          blockData?.classNames?.manualInputs || ''
-        }`}
+        className={` rounded bg-gray-100 dark:bg-gray-800 border border-dashed border-gray-200 dark:border-gray-700 flex items-center justify-center text-xs text-gray-500 `}
         style={{ aspectRatio: settings?.aspect || defaultAspect, flex: 1 }}
         aria-hidden="true"
       >
@@ -74,7 +71,6 @@ export const Banner = ({
   if (banner.html) {
     return (
       <div
-        className={blockData?.classNames?.manualInputs || ''}
         style={{ aspectRatio: settings?.aspect || defaultAspect, flex: 1 }}
         dangerouslySetInnerHTML={{ __html: banner.html }}
         aria-label={`banner-${id}`}
@@ -98,7 +94,7 @@ export const Banner = ({
     if (banner?.targetUrl)
       return (
         <div
-          className={`relative ${blockData?.classNames?.manualInputs || ''}`}
+          className={`relative`}
           style={{ aspectRatio: settings?.aspect || defaultAspect, flex: 1 }}
           aria-label={`banner-${id}`}
         >
@@ -113,7 +109,7 @@ export const Banner = ({
       )
     return (
       <div
-        className={`relative ${blockData?.classNames?.manualInputs || ''}`}
+        className={`relative`}
         style={{ aspectRatio: settings?.aspect || defaultAspect, flex: 1 }}
         aria-label={`banner-${id}`}
       >

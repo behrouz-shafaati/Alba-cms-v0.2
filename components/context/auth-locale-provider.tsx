@@ -1,7 +1,7 @@
 'use client'
 // providers/locale-provider.tsx
 import { LocaleSchema } from '@/lib/i18n/auth'
-import { LocaleContext } from './install-locale-context'
+import { LocaleContext } from './locale-context'
 
 export function InstallLocaleProvider({
   dictionary,

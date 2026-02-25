@@ -1,6 +1,6 @@
 'use client'
 import { LocaleSchema } from '@/lib/i18n/dashboard'
-import { LocaleContext } from './install-locale-context'
+import { LocaleContext } from './locale-context'
 
 export function DashboardLocaleProvider({
   dictionary,

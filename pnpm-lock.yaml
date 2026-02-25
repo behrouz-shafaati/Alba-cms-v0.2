@@ -209,6 +209,9 @@ importers:
       react-dropzone:
         specifier: ^14.3.8
         version: 14.3.8(react@19.2.0)
+      react-easy-sort:
+        specifier: ^1.8.0
+        version: 1.8.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react-multi-date-picker:
         specifier: ^4.5.2
         version: 4.5.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -3985,6 +3988,13 @@ packages:
     engines: {node: '>= 10.13'}
     peerDependencies:
       react: '>= 16.8 || 18.0.0'
+
+  react-easy-sort@1.8.0:
+    resolution: {integrity: sha512-6CUvG0rPyO8H9MTel38r/gmPemIKcOSkvgZQtrxILYFPfGZnmkLVU3YSVHEg22D+pJMoeVRdJpuF2kD2dqeIEw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: '>=16.4.0'
+      react-dom: '>=16.4.0'
 
   react-element-popper@2.1.7:
     resolution: {integrity: sha512-tuM2OxKlW32h+6uFSK6EENHPeZ2OGgOipHfOAl+VLWEv9/j3QkSGbD+ADX3A9uJlmq24i37n28RjJmAbGTfpEg==}
@@ -8537,6 +8547,12 @@ snapshots:
       file-selector: 2.1.2
       prop-types: 15.8.1
       react: 19.2.0
+
+  react-easy-sort@1.8.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+    dependencies:
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
+      tslib: 2.8.1
 
   react-element-popper@2.1.7(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:

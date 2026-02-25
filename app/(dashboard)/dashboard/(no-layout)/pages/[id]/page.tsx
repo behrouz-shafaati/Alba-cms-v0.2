@@ -2,7 +2,6 @@ import pageCtrl from '@/lib/features/page/controller'
 import { notFound } from 'next/navigation'
 import { PageForm } from '@/lib/features/page/ui/page-form'
 import categoryCtrl from '@/lib/features/category/controller'
-import headerCtrl from '@/lib/features/template/controller'
 import templateCtrl from '@/lib/features/template/controller'
 import { getSettingsAction } from '@/lib/features/settings/actions'
 
@@ -20,21 +19,18 @@ export default async function Page({ params, searchParams }: PageProps) {
   let page = null,
     allTemplates,
     allCategories,
-    allHeaders,
     settings
   let pageBreadCrumb = {
     title: 'افزودن',
     link: '/dashboard/pages/create',
   }
   if (id !== 'create') {
-    ;[settings, page, allTemplates, allCategories, allHeaders] =
-      await Promise.all([
-        getSettingsAction(),
-        pageCtrl.findById({ id }),
-        templateCtrl.findAll({}),
-        categoryCtrl.findAll({}),
-        headerCtrl.findAll({}),
-      ])
+    ;[settings, page, allTemplates, allCategories] = await Promise.all([
+      getSettingsAction(),
+      pageCtrl.findById({ id }),
+      templateCtrl.findAll({}),
+      categoryCtrl.findAll({}),
+    ])
 
     if (!page) {
       notFound()
@@ -44,11 +40,10 @@ export default async function Page({ params, searchParams }: PageProps) {
       link: `/dashboard/pages/${id}`,
     }
   } else {
-    ;[settings, allTemplates, allCategories, allHeaders] = await Promise.all([
+    ;[settings, allTemplates, allCategories] = await Promise.all([
       getSettingsAction(),
       pageCtrl.findAll({ filters: { type: 'template' } }),
       categoryCtrl.findAll({}),
-      headerCtrl.findAll({}),
     ])
   }
 
@@ -64,7 +59,6 @@ export default async function Page({ params, searchParams }: PageProps) {
         initialData={page}
         allTemplates={allTemplates.data}
         allCategories={allCategories.data}
-        allHeaders={allHeaders.data}
       />
     </>
   )

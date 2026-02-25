@@ -4,8 +4,10 @@ import React from 'react'
 import { Block } from '../../types'
 import { AdSlotWidgetProps } from './type'
 import { X } from 'lucide-react'
-import campaignCtrl from '@/features/campaign/controller'
+import campaignCtrl from '@/lib/features/campaign/controller'
 import { BannerServer } from './Banner.server'
+import { BannerData } from '@/lib/bannerManager'
+import { AdSlotProps } from '@/lib/features/campaign/interface'
 // import { RequestStorage } from '@/lib/requestStorage.server'
 
 type BannerGroupProps = AdSlotWidgetProps &
@@ -38,7 +40,7 @@ export default async function BannerGroupServer({
   let show = true
   let countDontHaveBanner = 0
 
-  let slots: any[] = []
+  const slots: Record<string, any> = {}
   for (let i = 0; i < count; i++) {
     const bannerSlotId = `${id}${i}`
     slots[bannerSlotId] = {
@@ -50,8 +52,8 @@ export default async function BannerGroupServer({
   }
 
   const results = await campaignCtrl.getBanners({
-    adSlots: slots,
-    originPostSlug: pageSlug,
+    adSlots: slots as AdSlotProps[],
+    originPostSlug: pageSlug as string,
     sendedAlready: [], // RequestStorage.getDisplayedCampaigns(),
     locale: 'fa',
   })
@@ -85,7 +87,7 @@ export default async function BannerGroupServer({
               key={i}
               banerSlotId={slotId}
               blockData={blockData}
-              banner={map.get(slotId)}
+              banner={map.get(slotId) as BannerData}
               {...props}
             />
           )

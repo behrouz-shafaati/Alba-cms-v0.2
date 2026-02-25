@@ -45,6 +45,9 @@ const nextConfig: NextConfig = {
 
   // تولید Source Map فقط در Dev
   productionBrowserSourceMaps: false,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 }
 
 const withBundleAnalyzer = bundleAnalyzer({

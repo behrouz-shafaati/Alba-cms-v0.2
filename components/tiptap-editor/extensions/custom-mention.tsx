@@ -36,6 +36,7 @@ export const CustomMention = Mention.extend({
         startOfLine: false,
         items: async ({ query }) => {
           const userResult = await searchUser(query) // ✅ سرور اکشن
+          // const userResult = await fetch(`/api/users/search?q=${query}`)
 
           console.log('#2345987 userResult:', userResult)
           return userResult?.data ?? []

@@ -7,12 +7,12 @@ export type Content = {
 export type Row = {
   id: string // UUID
   type: 'row'
-  classNames?: // tailwind classess
-  {
+  classNames?: {
+    // tailwind classess
     manualInputs: string
   }
   styles: { [key: string]: string }
-  settings: { rowColumns: string }
+  settings: { rowColumns: string; sticky?: boolean }
   columns: Column[]
 }
 
@@ -20,8 +20,8 @@ export type Column = {
   id: string // UUID
   width: number // مثلاً 6 یعنی 6 از 12 (مثل Bootstrap)
   type: 'column'
-  classNames?: // tailwind classess
-  {
+  classNames?: {
+    // tailwind classess
     manualInputs: string
   }
   styles: { [key: string]: string }
@@ -30,7 +30,7 @@ export type Column = {
 }
 
 export type Block = {
-  widgetName: string
+  widgetName?: string
   id: string // UUID
   title?: string // Optional title for the block
   slug?: string // Optional slug for the block, useful for custom blocks
@@ -48,12 +48,14 @@ export type Block = {
     | 'custom'
     | 'templatePart'
     | 'button'
+    | 'adSlot'
+    | 'internalSection'
   content?: object
-  classNames?: // tailwind classess
-  {
+  classNames?: {
+    // tailwind classess
     manualInputs: string
   }
-  styles: {
+  styles?: {
     padding?: string
     margin?: string
     backgroundColor?: string
@@ -69,6 +71,7 @@ export type Block = {
     [key: string]: any
   }
   children?: Block[]
+  data?: any
 }
 
 export type DndSortable = {

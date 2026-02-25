@@ -72,7 +72,7 @@ export const layoutSchema = {
   additionalProperties: true,
 }
 
-export const publicStylesSchema = {
+export const publicStylesSchema: any = {
   type: 'object',
   title: '',
   properties: {
