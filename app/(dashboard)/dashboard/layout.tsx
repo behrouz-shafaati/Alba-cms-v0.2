@@ -24,15 +24,11 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const siteSettings: Settings = (await getSettings()) as Settings
-  if (siteSettings?.appInstalled == false) redirect('/install/language')
+  if (siteSettings?.appInstalled == false) redirect('/install/en/language')
 
   const session = (await getSession()) as Session
   const user = session?.user
-  const haveDashboardAccess = await authorize(
-    user.roles,
-    'dashboard.view.any',
-    false,
-  )
+  const haveDashboardAccess = authorize(user.roles, 'dashboard.view.any', false)
   if (!haveDashboardAccess) {
     redirect('/en/login')
   }

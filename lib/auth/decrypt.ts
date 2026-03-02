@@ -1,11 +1,11 @@
 import 'server-only'
 import { jwtVerify, errors } from 'jose'
-import { getJwtSecret } from '../config/get-jwt-secret'
+import { env } from 'node:process'
 import { Session } from '../types'
 
 export async function decrypt(token: string): Promise<Session | null> {
   try {
-    const secret = await getJwtSecret()
+    const secret = env?.JWT_SECRET
     const encodedSecret = new TextEncoder().encode(secret)
     const { payload } = await jwtVerify<Session>(token, encodedSecret, {
       algorithms: ['HS256'],

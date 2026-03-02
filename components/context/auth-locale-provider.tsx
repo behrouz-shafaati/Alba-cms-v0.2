@@ -3,7 +3,7 @@
 import { LocaleSchema } from '@/lib/i18n/auth'
 import { LocaleContext } from './locale-context'
 
-export function InstallLocaleProvider({
+export function AuthLocaleProvider({
   dictionary,
   children,
 }: {

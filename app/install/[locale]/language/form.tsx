@@ -2,14 +2,13 @@
 import Combobox from '@/components/input/combobox'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/hooks/useLocale'
-import { writeConfigAction } from '@/lib/config/action'
 import { Option } from '@/lib/types'
 import Link from 'next/link'
 import { useState } from 'react'
 
 export default function SelectLanguageForm() {
   const t = useLocale()
-  const [nextHref, seNextHref] = useState('/install/en/db')
+  const [nextHref, seNextHref] = useState('/install/en/variables')
 
   const options: Option[] = [
     { label: 'English', value: 'en' },
@@ -17,10 +16,11 @@ export default function SelectLanguageForm() {
   ]
 
   const handleSelectLanguage = async (locale: string) => {
-    await writeConfigAction({
-      language: { dashboardDefault: locale },
-    })
-    seNextHref(`/install/${locale}/db`)
+    // ⛔️ Cannot create files in the cloud
+    // await writeConfigAction({
+    //   language: { dashboardDefault: locale },
+    // })
+    seNextHref(`/install/${locale}/variables`)
     localStorage.setItem('locale', locale)
   }
 

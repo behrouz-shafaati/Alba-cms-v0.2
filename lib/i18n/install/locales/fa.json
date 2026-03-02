@@ -23,7 +23,16 @@
         "description": "پیکربندی با موفقیت انجام شد 🥳"
       },
       "dashboard_lang": { "title": "زبان شما" },
-      "db": { "title": "پایگاه داده" },
+      "variables": {
+        "title": "متغییرها",
+        "check_variables": "بررسی متغییرها",
+        "db_uri": {
+          "title": "DB_URI",
+          "await_description": "در حال بررسی متغییر DB_URI.",
+          "fail_description": "متغییر DB_URI نامعتبر بوده و ارتباط با پایگاه داده ناموفق بود. متغییر را ایجاد و برنامه را مجدد راه اندازی کنید.",
+          "success_description": "متغییر DB_URI معتبربوده و ارتباط با پایگاه داده موفق بود."
+        }
+      },
       "suported_lang": { "title": "زبان‌های سایت" }
     }
   },

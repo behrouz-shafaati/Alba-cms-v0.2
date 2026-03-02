@@ -1,9 +1,9 @@
 import 'server-only'
 import { SignJWT } from 'jose'
-import { getJwtSecret } from '../config/get-jwt-secret'
+import { env } from 'node:process'
 
 export async function encrypt(payload: any) {
-  const secret = await getJwtSecret()
+  const secret = env?.JWT_SECRET
   const encodedSecret = new TextEncoder().encode(secret)
 
   return new SignJWT(payload)

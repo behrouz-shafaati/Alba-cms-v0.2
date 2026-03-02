@@ -22,6 +22,7 @@ function UserAuthFormComponent() {
   const [state, dispatch] = useActionState(loginAction as any, initialState)
 
   useEffect(() => {
+    console.log('#234 state:', state)
     if (state?.message && state?.message !== null)
       if (state.success) {
         toast.success(state.message)

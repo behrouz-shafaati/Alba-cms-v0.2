@@ -1,5 +1,5 @@
 import mongoose, { type Mongoose } from 'mongoose'
-import { readConfig } from '@/lib/config/config'
+import { env } from 'node:process'
 
 type MongooseCache = {
   conn: Mongoose | null
@@ -23,7 +23,7 @@ export default async function dbConnect(): Promise<Mongoose> {
   }
 
   console.log('☢️ MongoDB connection MONGO_URI')
-  const MONGO_URI = readConfig()?.db?.uri
+  const MONGO_URI = env?.DB_URI
   if (!MONGO_URI) {
     console.log('🟥 MongoDB connection string is missing')
     throw new Error('MongoDB connection string is missing')

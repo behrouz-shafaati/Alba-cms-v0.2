@@ -2,18 +2,33 @@
 
 import mongoose from 'mongoose'
 import { AppConfig, writeConfig } from './config'
-import z from 'zod'
+import { env } from 'node:process'
 
-export async function checkConnectionAction(uri: string): Promise<boolean> {
-  if (!uri || typeof uri !== 'string') return false
+type checkVariablesResult = {
+  dbConnection: boolean
+  jwtSecret: boolean
+}
 
+export async function checkVariablesAction(): Promise<checkVariablesResult> {
+  const dbConnection = await ckechDbConnection()
+  const jwtSecret =
+    env?.JWT_SECRET != '' &&
+    env?.JWT_SECRET != null &&
+    env?.JWT_SECRET != undefined
+  return {
+    dbConnection,
+    jwtSecret,
+  }
+}
+
+async function ckechDbConnection() {
   try {
     // جلوگیری از reuse کانکشن‌های قبلی
     if (mongoose.connection.readyState !== 0) {
       await mongoose.disconnect()
     }
 
-    await mongoose.connect(uri, {
+    await mongoose.connect(env.DB_URI, {
       serverSelectionTimeoutMS: 3000, // fail fast
       connectTimeoutMS: 3000,
     })
@@ -34,5 +49,6 @@ export async function checkConnectionAction(uri: string): Promise<boolean> {
 }
 
 export async function writeConfigAction(config: Partial<AppConfig>) {
+  // ⛔️ Cannot create files in the cloud
   writeConfig(config)
 }

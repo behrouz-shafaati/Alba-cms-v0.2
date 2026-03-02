@@ -43,12 +43,28 @@
               },
               "required": ["title"]
             },
-            "db": {
+            "variables": {
               "type": "object",
               "properties": {
-                "title": { "type": "string" }
+                "title": { "type": "string" },
+                "check_variables": { "type": "string" },
+                "db_uri": {
+                  "type": "object",
+                  "properties": {
+                    "title": { "type": "string" },
+                    "await_description": { "type": "string" },
+                    "fail_description": { "type": "string" },
+                    "success_description": { "type": "string" }
+                  },
+                  "required": [
+                    "title",
+                    "await_description",
+                    "fail_description",
+                    "success_description"
+                  ]
+                }
               },
-              "required": ["title"]
+              "required": ["title", "check_variables", "db_uri"]
             },
             "admin": {
               "type": "object",
@@ -75,7 +91,7 @@
           },
           "required": [
             "dashboard_lang",
-            "db",
+            "variables",
             "admin",
             "suported_lang",
             "finish"
@@ -187,7 +203,30 @@
         "success": { "type": "string" }
       },
       "required": ["locales", "siteDefault", "success"]
+    },
+    "variables": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "check_variables": { "type": "string" },
+        "jwt_secret": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "await_description": { "type": "string" },
+            "fail_description": { "type": "string" },
+            "success_description": { "type": "string" }
+          },
+          "required": [
+            "title",
+            "await_description",
+            "fail_description",
+            "success_description"
+          ]
+        }
+      },
+      "required": ["title", "check_variables", "jwt_secret"]
     }
   },
-  "required": ["installer", "input", "user"]
+  "required": ["installer", "input", "user", "variables"]
 }

@@ -20,8 +20,15 @@
       "dashboard_lang": {
         "title": "Your language"
       },
-      "db": {
-        "title": "Database"
+      "variables": {
+        "title": "Variables",
+        "check_variables": "Check Variables",
+        "db_uri": {
+          "title": "DB_URI",
+          "await_description": "Checking the DB_URI variable.",
+          "fail_description": "The DB_URI variable was invalid and the connection to the database failed. Create the variable and restart the application.",
+          "success_description": "The DB_URI variable was valid and the connection to the database was successful."
+        }
       },
       "admin": {
         "title": "Create admin"
@@ -82,5 +89,15 @@
       "required_error": "Please select your default site language."
     },
     "success": "Languages ​​were successfully set."
+  },
+  "variables": {
+    "title": "Variables",
+    "check_variables": "Check Variables",
+    "jwt_secret": {
+      "title": "JWT_SECRET",
+      "await_description": "Checking the JWT_SECRET variable.",
+      "fail_description": "The JWT_SECRET variable was invalid. Create the variable and restart the application.",
+      "success_description": "The JWT_SECRET variable was valid."
+    }
   }
 }

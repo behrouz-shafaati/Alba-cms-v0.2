@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import LoginForm from '@/lib/features/user/ui/login-form'
 import { getSettingsAction } from '@/lib/features/settings/actions'
 import getTranslation from '@/lib/utils/getTranslation'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Login',
@@ -10,6 +11,8 @@ export const metadata: Metadata = {
 
 export default async function AuthenticationPage() {
   const siteSettings = await getSettingsAction()
+  console.log('#234 siteSettings:', siteSettings)
+  if (siteSettings?.appInstalled == false) redirect('/install/en/language')
   const defaultLang = siteSettings.language?.siteDefault
   const infoTranslation = getTranslation({
     translations: siteSettings?.general?.translations || [],
