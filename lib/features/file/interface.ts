@@ -4,7 +4,7 @@ export type FileTranslationSchema = {
   /**
    * زبان مطلب
    */
-  lang: string // "fa", "en", "de", ...
+  locale: string // "fa", "en", "de", ...
   /**
    * عنوان دسته بندی
    */

@@ -9,6 +9,7 @@ export const buttonBlockSchema = {
     href: {
       type: 'string',
       title: 'لینک',
+      default: '#',
     },
     textColor: {
       type: 'string',

@@ -11,7 +11,7 @@ import { FormActionState } from '@/lib/types'
 import authorize from '@/lib/utils/authorize'
 
 const FormSchema = z.object({
-  lang: z.string(),
+  locale: z.string(),
   title: z.string().min(1, { message: 'لطفا عنوان را وارد کنید.' }),
   startAt: z.string().nullable(),
   endAt: z.string().nullable(),
@@ -31,7 +31,7 @@ const FormSchema = z.object({
       z.object({
         aspect: z.string(),
         file: z.string().nullable(), // یا z.string().uuid() یا z.string().regex(...) اگه نیاز داری
-      })
+      }),
     )
     .optional(),
 })
@@ -48,11 +48,11 @@ async function sanitizeData(validatedFields: any, id?: string | undefined) {
   const user = session.user.id
   const translations = [
     {
-      lang: payload.lang,
+      locale: payload.locale,
       banners: payload.banners,
     },
     ...prevState.translations.filter(
-      (t: CampaignTranslationSchema) => t.lang != payload.lang
+      (t: CampaignTranslationSchema) => t.locale != payload.locale,
     ),
   ]
   const params = {
@@ -77,7 +77,7 @@ async function sanitizeData(validatedFields: any, id?: string | undefined) {
  */
 export async function createCampaign(
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   // Validate form fields
 
@@ -97,7 +97,7 @@ export async function createCampaign(
   const values = {
     ...rawValues,
     translation: {
-      lang: rawValues.lang,
+      locale: rawValues.locale,
       banners: banners,
     },
   }
@@ -164,7 +164,7 @@ export async function createCampaign(
 export async function updateCampaign(
   id: string,
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   const user = (await getSession())?.user as User
 
@@ -184,7 +184,7 @@ export async function updateCampaign(
   const values = {
     ...rawValues,
     translation: {
-      lang: rawValues.lang,
+      locale: rawValues.locale,
       banners: rawValues.banners,
     },
   }
@@ -202,7 +202,7 @@ export async function updateCampaign(
     const prevCampaign = await campaignCtrl.findById({ id })
     authorize(
       user.roles,
-      prevCampaign.user !== user.id ? 'campaign.edit.any' : 'campaign.edit.own'
+      prevCampaign.user !== user.id ? 'campaign.edit.any' : 'campaign.edit.own',
     )
     const params = await sanitizeData(validatedFields, id)
     await campaignCtrl.findOneAndUpdate({
@@ -250,7 +250,7 @@ export async function deleteCampaignsAction(ids: string[]) {
         user.roles,
         prevCampaign.user !== user.id
           ? 'campaign.delete.any'
-          : 'campaign.delete.own'
+          : 'campaign.delete.own',
       )
     }
     await campaignCtrl.delete({ filters: ids })

@@ -75,8 +75,29 @@ const nodes = {
   paragraph: {
     content: 'inline*',
     group: 'block',
-    parseDOM: [{ tag: 'p' }],
-    toDOM: () => ['p', 0],
+    attrs: {
+      dir: { default: null },
+      textAlign: { default: null },
+      cite: { default: null },
+    },
+    parseDOM: [
+      {
+        tag: 'p',
+        getAttrs: (el: any) => ({
+          dir: el.getAttribute('dir'),
+          textAlign: el.style.textAlign || null,
+          cite: el.getAttribute('cite'),
+        }),
+      },
+    ],
+    toDOM: (node: any) => {
+      const attrs: Record<string, string> = {}
+      if (node.attrs.dir) attrs.dir = node.attrs.dir
+      if (node.attrs.textAlign)
+        attrs.style = `text-align: ${node.attrs.textAlign};`
+      if (node.attrs.cite) attrs.cite = node.attrs.cite
+      return ['p', { ...attrs }, 0]
+    },
   },
 
   text: {
@@ -193,7 +214,7 @@ const nodes = {
       {
         tag: 'img[src]',
         getAttrs: (dom: any) => ({
-          src: '/image-placeholder-Medium.webp',
+          src: '/assets/placeholder.jpg',
         }),
       },
     ],
@@ -208,8 +229,7 @@ const nodes = {
         height,
         blurDataURL,
       } = node.attrs
-      const src =
-        srcMedium || srcSmall || srcLarge || '/image-placeholder-Medium.webp'
+      const src = srcMedium || srcSmall || srcLarge || '/assets/placeholder.jpg'
       return [
         'img',
         {
@@ -493,6 +513,10 @@ const marks = {
     parseDOM: [{ tag: 'em' }, { tag: 'i' }],
     toDOM: () => ['em', 0],
   },
+  underline: {
+    parseDOM: [{ tag: 's' }, { tag: 's' }],
+    toDOM: () => ['s', 0],
+  },
   link: {
     attrs: {
       href: {},
@@ -511,6 +535,64 @@ const marks = {
       },
     ],
     toDOM: (mark) => ['a', mark.attrs, 0],
+  },
+  textStyle: {
+    attrs: {
+      color: { default: null },
+      fontSize: { default: null },
+      lineHeight: { default: null },
+      textAlign: { default: null },
+    },
+    inclusive: true,
+    group: 'inline',
+    parseDOM: [
+      {
+        tag: 'span[style]',
+        getAttrs(dom: any) {
+          const style = dom.getAttribute('style') || ''
+
+          const color = /color:\s*([^;]+)/i.exec(style)?.[1] || null
+          const fontSize = /font-size:\s*([^;]+)/i.exec(style)?.[1] || null
+          const lineHeight = /line-height:\s*([^;]+)/i.exec(style)?.[1] || null
+          const textAlign = /text-align:\s*([^;]+)/i.exec(style)?.[1] || null
+
+          if ([color, fontSize, lineHeight, textAlign].every((v) => !v)) {
+            return false
+          }
+
+          return { color, fontSize, lineHeight, textAlign }
+        },
+      },
+    ],
+    toDOM(mark) {
+      const style = []
+      const _class = []
+
+      if (mark.attrs.color?.light) {
+        style.push(`--color-default:${mark.attrs.color.light.default}`)
+        style.push(`--color-default-dark:${mark.attrs.color.dark.default}`)
+        _class.push(`text-(--color-default) dark:text-(--color-default-dark)`)
+        if (mark.attrs.color.light?.hover) {
+          style.push(`--color-hover:${mark.attrs.color.light.hover}`)
+          style.push(`--color-hover-dark:${mark.attrs.color.dark.hover}`)
+          _class.push(
+            `hover:text-(--color-hover) dark:hover:text-(--color-hover-dark)`,
+          )
+        }
+        if (mark.attrs.color.light?.active) {
+          style.push(`--color-active:${mark.attrs.color.light.active}`)
+          style.push(`--color-active-dark:${mark.attrs.color.dark.active}`)
+          _class.push(
+            `active:text-(--color-active) dark:active:text-(--color-active-dark)`,
+          )
+        }
+      }
+      if (mark.attrs.fontSize) style.push(`font-size:${mark.attrs.fontSize}`)
+      if (mark.attrs.lineHeight)
+        style.push(`line-height:${mark.attrs.lineHeight}`)
+
+      return ['span', { style: style.join(';'), class: _class.join(' ') }, 0]
+    },
   },
   strike: {
     parseDOM: [

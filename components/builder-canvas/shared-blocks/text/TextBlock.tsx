@@ -2,22 +2,23 @@
 
 import React, { ElementType } from 'react'
 import { Block } from '../../types'
-import { computedStyles } from '../../utils/styleUtils'
+import computedStyles from '../../utils/computedStyles'
 
 type TextBlockProps = {
   widgetName: string
   blockData: {
     content: {
       text: string
-    }
-    type: 'text'
-    settings: {
-      fontSize?: string
+      fontSize?: {
+        sm?: string
+        md?: string
+        lg?: string
+      }
       fontWeight?: string
       textAlign?: 'left' | 'right' | 'center' | 'justify'
       color?: string
-      text?: string
     }
+    type: 'text'
   } & Block
 } & React.HTMLAttributes<HTMLParagraphElement> // ✅ اجازه‌ی دادن onclick, className و ...
 
@@ -26,7 +27,7 @@ export const TextBlock = ({
   blockData,
   ...props
 }: TextBlockProps) => {
-  const { content, settings, id } = blockData
+  const { content, id } = blockData
 
   const tagMap: Record<string, ElementType> = {
     h1: 'h1',
@@ -41,14 +42,13 @@ export const TextBlock = ({
     // هر تگ دیگه‌ای که بخوای اضافه کن
   }
 
-  const Tag: ElementType = tagMap[settings.tag] || 'div'
+  const Tag: ElementType = tagMap[content.tag] || 'div'
   return (
     <Tag
-      id={id}
       style={{
-        fontSize: `${settings.fontSize || '16'}px `,
-        fontWeight: settings.fontWeight || 'normal',
-        textAlign: settings.textAlign || 'left',
+        fontSize: `${content?.fontSize?.lg || '16'}px `,
+        fontWeight: content.fontWeight || 'normal',
+        textAlign: content.textAlign || 'left',
         ...computedStyles(blockData.styles),
       }}
       {...props}

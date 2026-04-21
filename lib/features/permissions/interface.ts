@@ -117,3 +117,24 @@ export type Permission =
   | 'formSubmission.publish.any'
   | 'formSubmission.delete.any'
   | 'formSubmission.delete.own'
+
+  // ===== PRODUCT CATEGORY =====
+  | 'productCategory.view.any'
+  | 'productCategory.view.own'
+  | 'productCategory.create'
+  | 'productCategory.edit.any'
+  | 'productCategory.edit.own'
+  | 'productCategory.publish.any'
+  | 'productCategory.delete.any'
+  | 'productCategory.delete.own'
+
+  // ===== PRODUCT TAG =====
+  | 'productTag.view.any'
+  | 'productTag.view.own'
+  | 'productTag.create'
+  | 'productTag.edit.any'
+  | 'productTag.edit.own'
+  | 'productTag.publish.any'
+  | 'productTag.publish.own'
+  | 'productTag.delete.any'
+  | 'productTag.delete.own'

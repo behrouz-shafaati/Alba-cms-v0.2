@@ -4,6 +4,9 @@ import {
 } from '@/features/menu/interface'
 import HorizontalMenu from './designs/Horizontal'
 import VerticalMenu from './designs/Vertical'
+import computedStyles from '../../utils/computedStyles'
+import { cn } from '@/lib/utils'
+import { combineClassNames } from '../../utils/styleUtils'
 // import MenuPrefetch from './MenuPrefetch'
 
 interface MainMenuProps {
@@ -14,25 +17,58 @@ interface MainMenuProps {
   }
   widgetName: string
   menu: MenuType
+  locale: string
 }
 
-function Menu({ blockData, widgetName, menu, ...props }: MainMenuProps) {
+function Menu({
+  blockData,
+  widgetName,
+  menu,
+  locale,
+  ...props
+}: MainMenuProps) {
   menu.translations = menu?.translations || []
 
-  const locale = 'fa'
   const translation: MenuTranslationSchema =
-    menu?.translations?.find((t: MenuTranslationSchema) => t.lang === locale) ||
+    menu?.translations?.find(
+      (t: MenuTranslationSchema) => t.locale === locale,
+    ) ||
     menu?.translations[0] ||
     {}
   const items = translation.items
   const { settings } = blockData
+  const { className = '', ...resProps } = props
   let selectedMenu
   switch (settings?.design) {
     case 'vertical':
-      selectedMenu = <VerticalMenu items={items} {...props} />
+      selectedMenu = (
+        <VerticalMenu
+          items={items}
+          className={cn(
+            className,
+            combineClassNames(computedStyles(blockData.styles)),
+          )}
+          style={{
+            ...computedStyles(blockData.styles),
+          }}
+          {...resProps}
+        />
+      )
       break
     default:
-      selectedMenu = <HorizontalMenu items={items} {...props} />
+      selectedMenu = (
+        <HorizontalMenu
+          items={items}
+          className={cn(
+            className,
+            combineClassNames(computedStyles(blockData.styles)),
+          )}
+          style={{
+            ...computedStyles(blockData.styles),
+          }}
+          {...resProps}
+        />
+      )
       break
   }
 

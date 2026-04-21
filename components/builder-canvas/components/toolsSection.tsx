@@ -3,18 +3,22 @@ import CanvasTools from './CanvasTools'
 import ToolsSectionBlock from './toolsSectionBlock'
 
 type ToolsSectionProp = {
-  settingsPanel: React.ReactNode
+  SettingsPanel: React.ReactNode
   savePage: () => void
   newBlocks?: any
 }
 
 export default function ToolsSection({
-  settingsPanel,
+  SettingsPanel,
   savePage,
   newBlocks = [],
 }: ToolsSectionProp) {
   const selectedBlock = useBuilderStore((s) => s.selectedBlock)
   if (selectedBlock == null)
-    return <CanvasTools settingsPanel={settingsPanel} newBlocks={newBlocks} />
+    // Dragable blocks list
+    return <CanvasTools newBlocks={newBlocks} />
+  if (selectedBlock == 'settings-panel')
+    return <div className="min-h-[calc(100vh-104px)] p-4">{SettingsPanel}</div>
+  // Settings blocks
   return <ToolsSectionBlock savePage={savePage} newBlocks={newBlocks} />
 }

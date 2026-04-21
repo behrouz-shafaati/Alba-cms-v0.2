@@ -22,10 +22,10 @@ type FormProps = {
     | 'users'
     | 'wp-emigration'
     | 'locales'
-  lang?: string
+  locale?: string
 }
 
-export default async function Form({ tab, lang }: FormProps) {
+export default async function Form({ tab, locale }: FormProps) {
   const [settings, allPages] = await Promise.all([
     getSettingsAction(),
     pageCtrl.findAll({}),

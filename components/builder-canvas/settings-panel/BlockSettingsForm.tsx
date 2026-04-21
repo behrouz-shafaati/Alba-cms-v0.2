@@ -1,18 +1,18 @@
 import validator from '@rjsf/validator-ajv8'
 import { useBuilderStore } from '../store/useBuilderStore'
-import { blockRegistry } from '../registry/blockRegistry'
 import { useDebouncedCallback } from 'use-debounce'
 import { TailwindForm } from '../../rjsf/shadcn-theme'
-import { uiSchema } from '../../rjsf/uiSchema'
+import CustomFieldTemplate from '@/components/rjsf/templates/CustomFieldTemplate'
+import { buildUiSchemaFromX } from '@/components/rjsf/utils/buildUiSchemaFromX'
 
 type BlockSettingsFormProps = {
   savePage: () => void
-  newBlocks: any
+  blockDef: any
 }
 
 export const BlockSettingsForm = ({
   savePage,
-  newBlocks,
+  blockDef,
 }: BlockSettingsFormProps) => {
   const { selectedBlock, update } = useBuilderStore()
 
@@ -22,9 +22,8 @@ export const BlockSettingsForm = ({
   )
 
   if (!selectedBlock) return null
-  const allBlocks = { ...blockRegistry, ...newBlocks }
-  const schema = allBlocks[selectedBlock.type]?.settingsSchema
-  const ContentEditor = allBlocks[selectedBlock.type]?.ContentEditor
+  const schema = blockDef?.settingsSchema
+  const ContentEditor = blockDef?.ContentEditor
 
   if (!schema && !ContentEditor)
     return <div>تنظیماتی برای این بلاک وجود ندارد.</div>
@@ -38,13 +37,15 @@ export const BlockSettingsForm = ({
         />
       )}
       <TailwindForm
-        key={`settings-${selectedBlock.id}`} //  باعث میشه فرم کاملاً ری‌ست و رندر بشه
+        key={`content-${selectedBlock.id}`} //  باعث میشه فرم کاملاً ری‌ست و رندر بشه
         schema={schema}
-        uiSchema={uiSchema}
-        formData={selectedBlock.settings}
+        // uiSchema={uiSchema}
+        uiSchema={buildUiSchemaFromX(schema)}
+        formData={selectedBlock.content}
         validator={validator}
-        onChange={(e) =>
-          debouncedUpdate(selectedBlock.id, 'settings', e.formData)
+        onChange={
+          (e) => debouncedUpdate(selectedBlock.id, 'content', e.formData)
+          // debouncedUpdate(selectedBlock.id, 'settings', e.formData)
         }
         showErrorList={false}
         omitExtraData
@@ -52,6 +53,7 @@ export const BlockSettingsForm = ({
         liveValidate
         widgets={{}} // می‌تونی در آینده کاستوم‌سازی کنی
         templates={{
+          FieldTemplate: CustomFieldTemplate,
           //  حذف دکمه Submit
           ButtonTemplates: {
             SubmitButton: () => null,

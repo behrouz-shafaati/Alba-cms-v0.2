@@ -1,6 +1,6 @@
 'use client'
 import { useActionState, useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import {
   Braces as CategoryIcon,
@@ -35,19 +35,28 @@ import TiptapEditorLazy from '@/components/tiptap-editor/TiptapEditorLazy'
 import IconPicker from '@/components/input/IconPicker'
 import authorize from '@/lib/utils/authorize'
 import { toast } from 'sonner'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import { ContentLanguageTabs } from '@/components/input/ContentLanguageTabs'
 
 export const IMG_MAX_LIMIT = 1
 
 interface CategoryFormProps {
-  initialData: any | null
+  initialState: any | null
   allCategories: Category[]
+  category: Category
+  settings: Settings
+  dictionary: DashboardLocaleSchema
 }
 
-export const CategoryForm: React.FC<CategoryFormProps> = ({
-  initialData: category,
+export const PostCategoryForm: React.FC<CategoryFormProps> = ({
+  category,
+  initialState,
   allCategories,
+  settings,
+  dictionary,
 }) => {
-  const locale = 'fa' //  from formData
+  const searchParams = useSearchParams()
+  const locale = searchParams.get('locale') ?? settings.language?.siteDefault
   const router = useRouter()
   const { user } = useSession()
   const userRoles = user?.roles || []
@@ -63,18 +72,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       ? 'category.delete.any'
       : 'category.delete.own',
   )
-  const translation: CategoryTranslationSchema =
-    category?.translations?.find(
-      (t: CategoryTranslationSchema) => t.lang === locale,
-    ) ||
-    category?.translations[0] ||
-    {}
   const formRef = useRef<HTMLFormElement>(null)
-  const initialState = {
-    message: null,
-    errors: {},
-    values: { ...category, translation },
-  }
   const actionHandler = category
     ? updateCategory.bind(null, String(category.id))
     : createCategory
@@ -82,12 +80,16 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-  const title = category ? 'ویرایش دسته بندی' : 'افزودن دسته بندی'
-  const description = category ? 'ویرایش دسته بندی' : 'افزودن دسته بندی'
+  const title = category
+    ? dictionary.feature.category.edit
+    : dictionary.feature.category.create
+  const description = category
+    ? dictionary.feature.category.editDescription
+    : dictionary.feature.category.createDescription
 
   const parentOptions: Option[] = allCategories.map((category: Category) => {
     const translation: any =
-      category?.translations?.find((t: any) => t.lang === locale) ||
+      category?.translations?.find((t: any) => t.locale === locale) ||
       category?.translations[0] ||
       {}
 
@@ -99,11 +101,11 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
   const statusOptions = [
     {
-      label: 'فعال',
+      label: dictionary.feature.category.active,
       value: 'active',
     },
     {
-      label: 'غیر فعال',
+      label: dictionary.feature.category.deactive,
       value: 'inactive',
     },
   ]
@@ -122,7 +124,6 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   }
 
   useEffect(() => {
-    console.log('#234kuiyh state:', state)
     if (state.message && state.message !== null)
       if (state.success) toast.success(state.message)
       else toast.error(state.message)
@@ -161,38 +162,30 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       {/* <Separator /> */}
       <form action={dispatch} className="grid grid-cols-12 gap-8" ref={formRef}>
         <div className="col-span-12 md:col-span-9">
-          <input
-            type="text"
-            name="lang"
-            className="hidden"
-            value="fa"
-            readOnly
-          />
-
           {/* Title */}
           <Text
-            title="عنوان"
+            title={dictionary.feature.category.form.title}
             name="title"
             defaultValue={state?.values?.translation?.title || ''}
-            placeholder="عنوان"
+            placeholder={dictionary.feature.category.form.titlePlaceholder}
             state={state}
             icon={<CategoryIcon className="w-4 h-4" />}
           />
           <Text
-            title="نامک"
+            title={dictionary.feature.category.form.slug}
             name="slug"
             defaultValue={state?.values?.slug || ''}
-            placeholder="نامک"
+            placeholder={dictionary.feature.category.form.slugPlaceholder}
             state={state}
             icon={<Tag className="w-4 h-4" />}
           />
           {/* Parent */}
           <Combobox
-            title="دسته والد"
+            title={dictionary.feature.category.form.parent}
             name="parent"
             defaultValue={state?.values?.parent?.id}
             options={parentOptions}
-            placeholder="دسته والد"
+            placeholder={dictionary.feature.category.form.parentPlaceholder}
             state={state}
             icon={<ListTree className="w-4 h-4" />}
           />
@@ -202,7 +195,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
             htmlFor="description"
             className="mb-2 block text-sm font-medium"
           >
-            توضیحات
+            {dictionary.feature.category.form.description}
           </Label>
           <TiptapEditorLazy
             attachedFilesTo={[
@@ -221,24 +214,24 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         </div>
         <div className="relative col-span-12 md:col-span-3 gap-2">
           <StickyBox offsetBottom={0}>
-            <SubmitButton loading={loading} className="my-4 w-full" />
+            <ContentLanguageTabs settings={settings} />
             {/* status */}
             <Select
-              title="وضعیت"
+              title={dictionary.feature.category.form.status}
               name="status"
               defaultValue={state?.values?.status}
               options={statusOptions}
-              placeholder="وضعیت"
+              placeholder={dictionary.feature.category.form.statusPlaceholder}
               state={state}
               icon={<ToggleLeft className="w-4 h-4" />}
             />
             <IconPicker
-              title="آیکون"
+              title={dictionary.feature.category.form.icon}
               name="icon"
               defaultValue={state?.values?.icon}
             />
             <FileUpload
-              title="تصویر شاخص دسته بندی"
+              title={dictionary.feature.category.form.image}
               name="image"
               state={state}
               maxFiles={1}
@@ -246,6 +239,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
               defaultValues={state?.values?.image}
               onLoading={setLoading}
             />
+            <SubmitButton loading={loading} className="my-4 w-full" />
           </StickyBox>
         </div>
       </form>

@@ -2,17 +2,17 @@ export const uiSchema = {
   color: {
     'ui:widget': 'ColorWidget',
   },
+  textColor: {
+    'ui:field': 'TextColorField',
+  },
   backgroundColor: {
     'ui:field': 'BackgroundColorField',
   },
+  iconColor: {
+    'ui:field': 'iconColorField',
+  },
   layout: {
     'ui:field': 'LayoutField',
-  },
-  textColor: {
-    'ui:widget': 'TailwindTextColorPickerWidget',
-  },
-  iconColor: {
-    'ui:widget': 'TailwindTextColorPickerWidget',
   },
   isPublished: {
     'ui:widget': 'CheckboxWidget',
@@ -39,16 +39,18 @@ export const uiSchema = {
     'ui:field': 'ShadowField',
   },
   icon: {
-    'ui:widget': 'IconPickerWidget',
+    'ui:field': 'IconPickerField',
   },
-  className: {
-    'ui:widget': 'textarea',
-    'ui:options': {
-      rows: 5,
-      placeholder: 'مثلاً: flex gap-4 justify-center items-center',
-    },
+  tailwindClasses: {
+    'ui:widget': 'TailwindClassInput',
+  },
+  css: {
+    'ui:widget': 'CssEditor',
   },
   visibility: {
     'ui:field': 'ResponsiveVisibilityField',
+  },
+  border: {
+    'ui:field': 'BorderField',
   },
 }

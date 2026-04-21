@@ -9,13 +9,14 @@ type Props = {
 
 export default async function Page({ params }: Props) {
   const resolvedParams = await params
-  const { slugs } = resolvedParams
+  let { slugs } = resolvedParams
+  slugs = slugs.map((slug) => decodeURI(slug))
   const firstSlug = slugs?.[0] || null
   const locale = firstSlug || ''
-  const resolvedLocale = resolveLocale({ locale }) as SupportedLanguage
+  const resolvedLocale = (await resolveLocale({ locale })) as SupportedLanguage
   const slugsWithoutLocale = getSlugsWithoutLocale(slugs)
   // console.log('#234987 slugs:', slugs)
-  // console.log('#234987 resolvedLocale:', resolvedLocale)
+  console.log('#234987 resolvedLocale:', resolvedLocale)
   // console.log('#234987 slugsWithoutLocale:', slugsWithoutLocale)
   return <PageResolver locale={resolvedLocale} slugs={slugsWithoutLocale} />
 }

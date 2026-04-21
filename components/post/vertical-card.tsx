@@ -27,7 +27,7 @@ export default function VerticalPostCard({
 
   const translationImage: FileTranslationSchema =
     post.image?.translations?.find(
-      (t: FileTranslationSchema) => t.lang === locale
+      (t: FileTranslationSchema) => t.lang === locale,
     ) ||
     post.image?.translations?.[0] ||
     {}
@@ -39,14 +39,14 @@ export default function VerticalPostCard({
         >
           <div className="relative w-full" style={{ aspectRatio: 1.5 }}>
             <Image
-              src={post?.image?.srcMedium || '/image-placeholder-Medium.webp'}
+              src={post?.image?.srcMedium || '/assets/placeholder.jpg'}
               sizes="(max-width: 640px) 640px, (max-width: 768px) 768px, 1280px"
               alt={translationImage?.alt || translationImage?.title}
               layout="fill"
               objectFit="cover"
               placeholder="blur" //  فعال کردن حالت بلور
               blurDataURL={
-                post?.image?.blurDataURL || '/image-placeholder-Small.webp'
+                post?.image?.blurDataURL || '/assets/placeholder.jpg'
               } //  مسیر عکس خیلی کم‌کیفیت (LQIP یا base64)
               priority={isLCP} // برای تصویر LCP
               loading={isLCP ? 'eager' : 'lazy'}

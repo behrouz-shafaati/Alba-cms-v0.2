@@ -17,11 +17,11 @@ MenuItemSchema.add({
 
 const MenuTranslationSchema = new Schema(
   {
-    lang: { type: String, required: true }, // "fa", "en", "de", ...
+    locale: { type: String, required: true }, // "fa", "en", "de", ...
     title: { type: String, required: true },
     items: [MenuItemSchema],
   },
-  { _id: false }
+  { _id: false },
 )
 
 const menuSchema = new Schema<MenuSchema>(
@@ -35,7 +35,7 @@ const menuSchema = new Schema<MenuSchema>(
     },
     deleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 )
 
 function transformMenuItem(item: any): any {

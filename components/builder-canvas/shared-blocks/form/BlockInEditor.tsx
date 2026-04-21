@@ -4,10 +4,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Block } from '../../../builder-canvas/types'
 import Form from './Form'
 import EmptyBlock from '../../../builder-canvas/components/EmptyBlock'
-import { getForms } from '@/features/form/actions'
+import { getForms } from '@/lib/features/form/actions'
 import { useSession } from '@/components/context/SessionContext'
-import { FormTranslationSchema } from '@/features/form/interface'
-import RendererRows from '../../../builder-canvas/pageRenderer/RenderRows'
+import { FormTranslationSchema } from '@/lib/features/form/interface'
 
 type FormBlockProps = {
   widgetName: string

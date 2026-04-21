@@ -5,7 +5,7 @@ import ContentEditor from './ContentEditor'
 
 export const RowBlockDef = {
   type: 'row',
-  label: 'ردیف',
+  label: 'سطر',
   showInBlocksList: false,
   // Renderer: TextBlock,
   settingsSchema: blockSchema,

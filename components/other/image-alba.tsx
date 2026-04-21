@@ -37,14 +37,14 @@ export function ImageAlba({
   const aspectRatio = inputAspectRatio
     ? inputAspectRatio
     : width && height
-    ? width / height
-    : 16 / 9
+      ? width / height
+      : 16 / 9
   const imageElement = (
     <>
       {/* normal inline image with aspect ratio */}
       <figure
         style={{ aspectRatio }}
-        className="relative rounded-xl overflow-hidden my-4"
+        className="relative rounded-xl overflow-hidden"
       >
         <Image
           src={displaySrc}

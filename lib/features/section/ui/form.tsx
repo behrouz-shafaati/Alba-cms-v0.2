@@ -74,7 +74,7 @@ export const Form: React.FC<SectionFormProps> = ({
     try {
       setLoading(true)
       deleteSectionAction([String(Section?.id)])
-      router.replace('/dashboard/template-parts')
+      router.replace('/dashboard/sections')
     } catch (error: any) {}
   }
 
@@ -83,7 +83,7 @@ export const Form: React.FC<SectionFormProps> = ({
       if (state?.success) toast.success(state.message)
       else toast.error(state.message)
     if (state?.success && state?.isCreatedJustNow) {
-      router.replace(`/dashboard/template-parts/${state?.values?.id}`)
+      router.replace(`/dashboard/sections/${state?.values?.id}`)
     }
   }, [state])
   if (!canCreate && !canEdit) return <AccessDenied />

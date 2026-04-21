@@ -1,10 +1,13 @@
 import { Block } from '../../types'
-import { combineClassNames, computedStyles } from '../../utils/styleUtils'
+import { combineClassNames } from '../../utils/styleUtils'
 import RenderBlock from '../../pageRenderer/RenderBlock'
 import { Settings } from '@/lib/features/settings/interface'
 import Image from 'next/image'
+import ResponsiveStyle from '@/components/other/ResponsiveStyle'
+import computedStyles from '../../utils/computedStyles'
 
 type BlockProps = {
+  responsiveDesign: boolean
   widgetName: string
   siteSettings: Settings
   blockData: {
@@ -21,20 +24,26 @@ type BlockProps = {
 } & React.HTMLAttributes<HTMLParagraphElement> // ✅ اجازه‌ی دادن onclick, className و ...
 
 export default function InternalSection({
+  responsiveDesign,
   widgetName,
   siteSettings,
   blockData,
   ...props
 }: BlockProps) {
   const { sections, settings, styles } = blockData
-
+  const classBaseOnResponsiveDesign = responsiveDesign
+    ? `col-span-12 md:col-span-${blockData.width}`
+    : `col-span-${blockData.width}`
   return (
     <div
-      className={`relative flex flex-col relative col-span-${
-        blockData?.width || 1
-      }   ${combineClassNames(props?.className || {}, computedStyles(styles))}`}
-      style={{ ...computedStyles(styles) }}
+      data-InternalSection
+      className={`section_${blockData.id} relative flex flex-col ${classBaseOnResponsiveDesign}   ${combineClassNames(styles?.tailwindClasses || {})}`}
+      style={{ ...computedStyles(styles), ...computedStyles(settings) }}
     >
+      <ResponsiveStyle
+        selector={`section_${blockData.id}`}
+        styles={blockData.styles?.css}
+      />
       {settings?.bgMedia && (
         <Image
           src={settings?.bgMedia?.srcMedium}

@@ -1,5 +1,6 @@
 import { SupportedLanguage } from '@/lib/types'
 import PageOrPost from './PostOrPage'
+import HomePage from '@/components/HomePage'
 
 type Props = {
   slugs: string[]
@@ -17,7 +18,7 @@ const PageResolver = ({ locale, slugs }: Props) => {
 
   switch (firstSlug) {
     case null:
-      return <h1>Home page</h1>
+      return <HomePage locale={locale} />
     case 'install':
       return <h1>Install page</h1>
     default:

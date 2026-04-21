@@ -37,7 +37,7 @@ export const PageForm: React.FC<PageFormProps> = ({
   const canCreate = authorize(userRoles, 'page.create')
   const canEdit = authorize(
     userRoles,
-    page?.user !== user?.id ? 'page.edit.any' : 'page.edit.own'
+    page?.user !== user?.id ? 'page.edit.any' : 'page.edit.own',
   )
 
   const localedFallback = settings.language?.siteDefault
@@ -59,12 +59,8 @@ export const PageForm: React.FC<PageFormProps> = ({
     : createPage
   const [state, dispatch] = useActionState(
     actionHandler as any,
-    initialActionState
+    initialActionState,
   )
-  const roleOptions: Option[] = roleCtrl.getRoles().map((role) => ({
-    label: role.title,
-    value: role.slug,
-  }))
 
   const router = useRouter()
   const [open, setOpen] = useState(false)

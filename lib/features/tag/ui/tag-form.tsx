@@ -12,7 +12,7 @@ import { AlertModal } from '@/components/other/modal/alert-modal'
 import { Tag } from '../interface'
 import FileUpload from '@/components/input/file-upload'
 import Select from '@/components/input/select'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from '@/components/context/SessionContext'
 import AccessDenied from '@/components/other/access-denied'
 import { Label } from '@/components/ui/label'
@@ -21,16 +21,28 @@ import TiptapEditorLazy from '@/components/tiptap-editor/TiptapEditorLazy'
 import IconPicker from '@/components/input/IconPicker'
 import authorize from '@/lib/utils/authorize'
 import { toast } from 'sonner'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import { ContentLanguageTabs } from '@/components/input/ContentLanguageTabs'
+import { Settings } from '../../settings/interface'
 
 export const IMG_MAX_LIMIT = 1
 
 interface TagFormProps {
-  initialData: any | null
+  tag: Tag
+  initialState: any | null
   allTags: Tag[]
+  settings: Settings
+  dictionary: DashboardLocaleSchema
 }
 
-export const TagForm: React.FC<TagFormProps> = ({ initialData: tag }) => {
-  const locale = 'fa'
+export const TagForm: React.FC<TagFormProps> = ({
+  tag,
+  initialState,
+  settings,
+  dictionary,
+}) => {
+  const searchParams = useSearchParams()
+  const locale = searchParams.get('locale') ?? settings.language?.siteDefault
   const router = useRouter()
   const { user } = useSession()
   const userRoles = user?.roles || []
@@ -44,15 +56,7 @@ export const TagForm: React.FC<TagFormProps> = ({ initialData: tag }) => {
     userRoles,
     tag?.user.id !== user?.id ? 'tag.delete.any' : 'tag.delete.own',
   )
-  const translation: any =
-    tag?.translations?.find((t: any) => t.lang === locale) ||
-    tag?.translations[0] ||
-    {}
-  const initialState = {
-    message: null,
-    errors: {},
-    values: { ...tag, translation },
-  }
+
   const formRef = useRef<HTMLFormElement>(null)
   const actionHandler = tag ? updateTag.bind(null, String(tag.id)) : createTag
   const [state, dispatch] = useActionState(actionHandler as any, initialState)
@@ -65,16 +69,20 @@ export const TagForm: React.FC<TagFormProps> = ({ initialData: tag }) => {
       else toast.error(state.message)
   }, [state])
   if ((tag && !canEdit) || !canCreate) return <AccessDenied />
-  const title = tag ? 'ویرایش برچسب' : 'افزودن برچسب'
-  const description = tag ? 'ویرایش برچسب' : 'افزودن برچسب'
+  const title = tag
+    ? dictionary.feature.tag.edit
+    : dictionary.feature.tag.create
+  const description = tag
+    ? dictionary.feature.tag.editDescription
+    : dictionary.feature.tag.createDescription
 
   const statusOptions = [
     {
-      label: 'فعال',
+      label: dictionary.feature.tag.active,
       value: 'active',
     },
     {
-      label: 'غیر فعال',
+      label: dictionary.feature.tag.deactive,
       value: 'inactive',
     },
   ]
@@ -87,8 +95,8 @@ export const TagForm: React.FC<TagFormProps> = ({ initialData: tag }) => {
       else {
         setOpen(false)
         setLoading(false)
-        if (deleteResult.success) toast.success(deleteResult.message)
-        else toast.error(deleteResult.message)
+        if (deleteResult?.success) toast.success(deleteResult?.message)
+        else toast.error(deleteResult?.message)
       }
     } catch (error: any) {}
   }
@@ -129,27 +137,20 @@ export const TagForm: React.FC<TagFormProps> = ({ initialData: tag }) => {
         ref={formRef}
       >
         <div className="col-span-12 md:col-span-9">
-          <input
-            type="text"
-            name="lang"
-            className="hidden"
-            value="fa"
-            readOnly
-          />
           {/* Title */}
           <Text
-            title="عنوان"
+            title={dictionary.feature.tag.form.title}
             name="title"
             defaultValue={state?.values?.translation?.title || ''}
-            placeholder="عنوان"
+            placeholder={dictionary.feature.tag.form.titlePlaceholder}
             state={state}
             icon={<TagIcon className="w-4 h-4" />}
           />
           <Text
-            title="نامک"
+            title={dictionary.feature.tag.form.slug}
             name="slug"
             defaultValue={state?.values?.slug || ''}
-            placeholder="نامک"
+            placeholder={dictionary.feature.tag.form.slugPlaceholder}
             state={state}
             icon={<TagIcon className="w-4 h-4" />}
           />
@@ -159,7 +160,7 @@ export const TagForm: React.FC<TagFormProps> = ({ initialData: tag }) => {
             htmlFor="description"
             className="mb-2 block text-sm font-medium"
           >
-            توضیحات
+            {dictionary.feature.tag.form.description}
           </Label>
           <TiptapEditorLazy
             attachedFilesTo={[{ feature: 'tag', id: tag?.id || null }]}
@@ -174,31 +175,32 @@ export const TagForm: React.FC<TagFormProps> = ({ initialData: tag }) => {
         </div>
         <div className="relative col-span-12 md:col-span-3 gap-2">
           <StickyBox offsetBottom={0}>
-            <SubmitButton loading={loading} className="my-4 w-full" />
+            <ContentLanguageTabs settings={settings} />
             {/* status */}
             <Select
-              title="وضعیت"
+              title={dictionary.feature.tag.form.status}
               name="status"
               defaultValue={state?.values?.translation?.status || 'active'}
               options={statusOptions}
-              placeholder="وضعیت"
+              placeholder={dictionary.feature.tag.form.slugPlaceholder}
               state={state}
               icon={<MailIcon className="w-4 h-4" />}
             />
             <IconPicker
-              title="آیکون"
+              title={dictionary.feature.tag.form.icon}
               name="icon"
               defaultValue={state?.values?.icon}
             />
             <FileUpload
-              title="تصویر شاخص برچسب"
+              title={dictionary.feature.tag.form.image}
               name="image"
               state={state}
               maxFiles={1}
               allowedFileTypes={['image']}
-              defaultValues={tag?.image}
+              defaultValues={state?.values?.image}
               onLoading={setLoading}
             />
+            <SubmitButton loading={loading} className="my-4 w-full" />
           </StickyBox>
         </div>
       </form>

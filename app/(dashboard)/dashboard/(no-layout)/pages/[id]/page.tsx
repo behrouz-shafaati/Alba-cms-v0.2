@@ -31,6 +31,7 @@ export default async function Page({ params, searchParams }: PageProps) {
       templateCtrl.findAll({}),
       categoryCtrl.findAll({}),
     ])
+    console.log('#239845766 allCategories:', allCategories)
 
     if (!page) {
       notFound()
@@ -49,7 +50,6 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   const localedFallback = settings.language?.siteDefault
   const locale = resolvedSearchParams.locale ?? localedFallback
-  console.log('#239845766 searchParams in server page:', resolvedSearchParams)
   console.log('#239845766 locale in server page:', locale)
   return (
     <>
@@ -58,7 +58,7 @@ export default async function Page({ params, searchParams }: PageProps) {
         settings={settings}
         initialData={page}
         allTemplates={allTemplates.data}
-        allCategories={allCategories.data}
+        allCategories={allCategories?.data}
       />
     </>
   )

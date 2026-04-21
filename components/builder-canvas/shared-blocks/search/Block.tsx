@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { Block } from '../../types'
 import { Button } from '@/components/ui/button'
 import { MoveLeft, Search as SearchIcon, X } from 'lucide-react'
-import { computedStyles } from '../../utils/styleUtils'
 import Link from 'next/link'
 import PostHorizontalCard from '../postList/designs/card/ArticalHorizontalCard'
 import { getPosts } from '@/lib/features/post/actions'
@@ -12,6 +11,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import Text from '@/components/input/text'
 import { useDebouncedCallback } from 'use-debounce'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
+import computedStyles from '../../utils/computedStyles'
 
 type Props = {
   blockData: {

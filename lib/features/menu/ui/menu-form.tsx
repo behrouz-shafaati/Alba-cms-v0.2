@@ -2,53 +2,52 @@
 import { useActionState, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Heading as HeadingIcon, Trash } from 'lucide-react'
-import { Heading } from '@/components/ui/heading'
-import { useToast } from '@/hooks/use-toast'
+import { Heading } from '@/components/other/ui/heading'
 import { createMenu, deleteMenusAction, updateMenu } from '../actions'
-import Text from '@/components/form-fields/text'
-import SubmitButton from '@/components/form-fields/submit-button'
-import { AlertModal } from '@/components/modal/alert-modal'
+import Text from '@/components/input/text'
+import SubmitButton from '@/components/input/submit-button'
+import { AlertModal } from '@/components/other/modal/alert-modal'
 import MenuBuilder from '@/components/menu-builder'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from '@/components/context/SessionContext'
-import { can } from '@/lib/utils/can.client'
-import AccessDenied from '@/components/access-denied'
+import AccessDenied from '@/components/other/access-denied'
+import { toast } from 'sonner'
+import authorize from '@/lib/utils/authorize'
 
 interface MenuFormProps {
-  initialData: any | null
+  initialState: any | null
+  settings: any
+  menu: any
 }
 
-export const MenuForm: React.FC<MenuFormProps> = ({ initialData: menu }) => {
-  const locale = 'fa'
+export const MenuForm: React.FC<MenuFormProps> = ({
+  menu,
+  initialState,
+  settings,
+}) => {
+  const searchParams = useSearchParams()
+  const localedFallback = settings.language?.siteDefault
+
+  const locale = searchParams.get('locale') ?? localedFallback
   const router = useRouter()
   const { user } = useSession()
   const userRoles = user?.roles || []
 
-  const canCreate = can(userRoles, 'menu.create')
-  const canEdit = can(
+  const canCreate = authorize(userRoles, 'menu.create')
+  const canEdit = authorize(
     userRoles,
-    menu?.user !== user?.id ? 'menu.edit.any' : 'menu.edit.own'
+    menu?.user !== user?.id ? 'menu.edit.any' : 'menu.edit.own',
   )
-  const canDelete = can(
+  const canDelete = authorize(
     userRoles,
-    menu?.user !== user?.id ? 'menu.delete.any' : 'menu.delete.own'
+    menu?.user !== user?.id ? 'menu.delete.any' : 'menu.delete.own',
   )
-  const translation: any =
-    menu?.translations?.find((t: any) => t.lang === locale) ||
-    menu?.translations[0] ||
-    {}
-  const initialState = {
-    message: null,
-    errors: {},
-    values: { ...menu, translation },
-  }
 
   const isUpdate = menu ? true : false
   const actionHandler = isUpdate
     ? updateMenu.bind(null, String(menu.id))
     : createMenu
   const [state, dispatch] = useActionState(actionHandler as any, initialState)
-  const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const title = isUpdate ? 'ویرایش فهرست' : 'افزودن فهرست'
@@ -64,17 +63,13 @@ export const MenuForm: React.FC<MenuFormProps> = ({ initialData: menu }) => {
 
   useEffect(() => {
     if (state.message && state.message !== null)
-      toast({
-        variant: 'destructive',
-        title: '',
-        description: state.message,
-      })
-
-    console.log('#s665 state: ', state)
+      if (state?.success) toast.success(state.message)
+      else toast.error(state.message)
   }, [state, toast])
 
   if ((menu && !canEdit) || !canCreate) return <AccessDenied />
 
+  console.log('#234 state in form:', state)
   return (
     <>
       <div className="flex items-center justify-between">
@@ -125,7 +120,8 @@ export const MenuForm: React.FC<MenuFormProps> = ({ initialData: menu }) => {
             name="itemsJson"
             initialMenu={state?.values?.translation?.items || []}
             maxDepth={1}
-            className="col-span-2"
+            className="col-span-3"
+            settings={settings}
           />
         </div>
       </form>

@@ -15,7 +15,7 @@ type Props = {
 
 export default async function Layout({ children, params }: Props) {
   const { locale = '' } = await params
-  const resolvedLocale = resolveLocale({ locale }) as SupportedLanguage
+  const resolvedLocale = (await resolveLocale({ locale })) as SupportedLanguage
   const dictionary = getAuthDictionary(resolvedLocale)
   const dir = getDirection(resolvedLocale)
   return (

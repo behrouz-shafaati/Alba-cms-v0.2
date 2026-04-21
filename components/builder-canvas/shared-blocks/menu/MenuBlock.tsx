@@ -6,6 +6,7 @@ import Menu from './Menu'
 import { getMenus } from '@/lib/features/menu/actions'
 
 type MenuBlockProps = {
+  locale: string
   widgetName: string
   blockData: {
     content: { menuId: string }
@@ -15,6 +16,7 @@ type MenuBlockProps = {
 } & React.HTMLAttributes<HTMLParagraphElement> // ✅ اجازه‌ی دادن onclick, className و ...
 
 export default async function MenuBlock({
+  locale,
   widgetName,
   blockData,
   ...props
@@ -34,6 +36,7 @@ export default async function MenuBlock({
       {...props}
       blockData={blockData}
       widgetName={widgetName}
+      locale={locale}
     />
   ) : null
 }

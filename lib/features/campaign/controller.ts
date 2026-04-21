@@ -250,7 +250,7 @@ class controller extends baseController {
 
     // ۳. پیدا کردن ترجمه مورد نظر بر اساس locale
     const translation = randomCampaign.translations.find(
-      (t) => t.lang === locale
+      (t) => t.locale === locale,
     )
     if (!translation) return { campaign: null, bannerFile: null }
 

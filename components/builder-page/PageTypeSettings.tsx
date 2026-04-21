@@ -17,7 +17,7 @@ const PageTypeSettings = ({
   const parsedJson = JSON.parse(getJson())
   const debouncedUpdate = useDebouncedCallback(
     (id, key, form) => update(id, key, form),
-    400
+    400,
   )
   const templatesOptions: Option[] = [
     {
@@ -30,10 +30,6 @@ const PageTypeSettings = ({
       label: String(t.title),
     })),
   ]
-
-  const pageHref = locale
-    ? `/${locale}/${parsedJson.slug}`
-    : `/${parsedJson.slug}`
   return (
     <>
       <Text
@@ -45,21 +41,13 @@ const PageTypeSettings = ({
         className=""
         onChange={(e) => debouncedUpdate(null, 'slug', e.target.value)}
       />
-
-      {parsedJson.slug && (
-        <Link
-          className="block w-full p-2 ltr text-left"
-          href={pageHref}
-          target="_blank"
-        >{`/${parsedJson.slug}`}</Link>
-      )}
       <Combobox
         title="قالب"
         name="template"
         defaultValue={parsedJson.template || 'none'}
         options={templatesOptions}
         placeholder="قالب"
-        onChange={(e) => debouncedUpdate(null, 'template', e.target.value)}
+        onChange={(e) => debouncedUpdate(null, 'template', e.value)}
       />
     </>
   )

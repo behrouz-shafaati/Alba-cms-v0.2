@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import Modal from './modal'
+import { useLocale } from '@/hooks/useLocale'
 
 interface AlertModalProps {
   title?: any
@@ -21,7 +22,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   loading,
 }) => {
   const [isMounted, setIsMounted] = useState(false)
-
+  const dictionary = useLocale()
   useEffect(() => {
     setIsMounted(true)
   }, [])
@@ -31,18 +32,18 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   }
 
   const ModalContent = () => (
-    <div className="pt-6 space-x-reverse space-x-2 flex items-center justify-end w-full">
+    <div className="pt-6 space-x-2 flex items-center justify-end w-full">
       <Button disabled={loading} variant="outline" onClick={onClose}>
-        لغو
+        {dictionary.shared.cancel}
       </Button>
       <Button disabled={loading} variant="destructive" onClick={onConfirm}>
-        ادامه
+        {dictionary.shared.continue}
       </Button>
     </div>
   )
   return (
     <Modal
-      title={title ? title : 'مطمئن هستید؟'}
+      title={title ? title : dictionary.shared.warning}
       description={description ? description : 'این عمل غیر قابل بازگشت است'}
       isOpen={isOpen}
       onCloseModal={onClose}

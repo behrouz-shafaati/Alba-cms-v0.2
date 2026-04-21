@@ -1,8 +1,8 @@
-'use client'
-import { LocaleSchema } from '@/lib/i18n/install'
-import { LocaleSchema as DashboardLocaleSchema } from '@/lib/i18n/install'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import { InstallLocaleSchema } from '@/lib/i18n/install'
 import { createContext } from 'react'
+import { ClientLocaleSchema } from './client-locale-provider'
 
 export const LocaleContext = createContext<
-  DashboardLocaleSchema | LocaleSchema | null
+  DashboardLocaleSchema | InstallLocaleSchema | ClientLocaleSchema | null
 >(null)

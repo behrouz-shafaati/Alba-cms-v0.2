@@ -7,7 +7,7 @@ import sectionWrapper from './sectionWrapper'
 
 export const InternalSectionWrapperBlockDef = {
   type: 'internalSectionWrapper',
-  label: 'بخش داخلی',
+  label: 'سطر داخلی',
   showInBlocksList: true,
   Renderer: sectionWrapper,
   RendererInEditor: sectionWrapperEditor,

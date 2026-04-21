@@ -33,11 +33,10 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
   allPages,
 }) => {
   const searchParams = useSearchParams()
-  const lang = searchParams?.get('lang')
 
   const t = useLocale()
   const { user } = useSession()
-  const locale = user?.locale
+  const locale = searchParams?.get('locale') || user?.locale
   const userRoles = user?.roles || []
 
   const canModerate = authorize(userRoles, 'settings.moderate.any')
@@ -50,7 +49,7 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
   }
   const [state, dispatch] = useActionState(
     updateGeneralSettings as any,
-    initialState
+    initialState,
   )
   const [imgLoading, setImgLoading] = useState(false)
 
@@ -66,12 +65,12 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
   })
   const siteInfo = getTranslation({
     translations: settings.general?.translations || [],
-    lang: lang || settings.language?.siteDefault,
+    locale: locale || settings.language?.siteDefault,
   })
 
   console.log(
     '#24098 settings.general?.translations:',
-    settings.general?.translations
+    settings.general?.translations,
   )
   console.log('#24098 siteInfo:', siteInfo)
   useEffect(() => {
@@ -108,9 +107,14 @@ export const FormGeneral: React.FC<FormGeneralProps> = ({
           action={dispatch}
           ref={formRef}
           className="space-y-8 w-full"
-          key={`form_${siteInfo.lang}`}
+          key={`form_${locale}`}
         >
-          <input type="hidden" name="locale" value={t?.lang || 'en'} readOnly />
+          <input
+            type="hidden"
+            name="locale"
+            value={t?.locale || 'en'}
+            readOnly
+          />
           <ContentLanguageTabs settings={settings} />
           <div className="md:grid md:grid-cols-3 gap-8">
             {/* Site title */}

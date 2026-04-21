@@ -49,6 +49,8 @@ import { toast } from 'sonner'
 import { ContentLanguageTabs } from '@/components/input/ContentLanguageTabs'
 import { getEmbedUrl } from '@/components/tiptap-editor/utils'
 import TiptapEditorLazy from '@/components/tiptap-editor/TiptapEditorLazy'
+import { useLocale } from '@/hooks/useLocale'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
 interface PostFormProps {
   post: any | null
@@ -65,11 +67,12 @@ export const PostForm: React.FC<PostFormProps> = ({
 }) => {
   const searchParams = useSearchParams()
   const { user } = useSession()
+  const dictionary = useLocale() as DashboardLocaleSchema
 
   const userRoles = user?.roles || []
   const localedFallback = settings.language?.siteDefault
 
-  const locale = searchParams.get('locale') ?? localedFallback
+  const locale = searchParams?.get('locale') ?? localedFallback
 
   const canCreate = authorize(userRoles, 'post.create')
   const canEdit = authorize(
@@ -91,7 +94,6 @@ export const PostForm: React.FC<PostFormProps> = ({
     ? updatePost.bind(null, String(post.id))
     : createPost
   const [state, dispatch] = useActionState(actionHandler as any, initialState)
-  const params = useParams()
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -108,30 +110,35 @@ export const PostForm: React.FC<PostFormProps> = ({
 
   if ((post && !canEdit) || !canCreate) return <AccessDenied />
 
-  const title = post ? 'ویرایش  مطلب' : 'افزودن مطلب'
+  const title = post
+    ? dictionary.feature.post.edit
+    : dictionary.feature.post.create
   const description = post ? (
     <Link target="_blank" href={createPostHref(post)}>
-      مشاهده مطلب
+      {dictionary.feature.post.view}
     </Link>
   ) : (
-    'افزودن مطلب'
+    dictionary.feature.post.create
   )
 
   const categoryOptions: Option[] = allCategories.map((category: Category) => {
     const translation: any =
-      category?.translations?.find((t: any) => t.lang === locale) ||
+      category?.translations?.find((t: any) => t.locale === locale) ||
       category?.translations[0] ||
       {}
+
     return {
       value: String(category.id),
-      label: createCatrgoryBreadcrumb(category, translation?.title),
+      label: createCatrgoryBreadcrumb(category, translation?.title, locale),
     }
   })
 
   const statusOptions = [
-    ...(canPublish ? [{ label: 'منتشر شود', value: 'published' }] : []),
+    ...(canPublish
+      ? [{ label: dictionary.shared.published, value: 'published' }]
+      : []),
     {
-      label: 'پیش نویس',
+      label: dictionary.shared.draft,
       value: 'draft',
     },
   ]
@@ -209,10 +216,10 @@ export const PostForm: React.FC<PostFormProps> = ({
           <div className="col-span-12 md:col-span-9">
             {/* Title */}
             <Text
-              title="عنوان"
+              title={dictionary.feature.post.form.title}
               name="title"
               defaultValue={state?.values?.translation?.title || ''}
-              placeholder="عنوان"
+              placeholder={dictionary.feature.post.form.titlePlaceholder}
               state={state}
               icon={<PostIcon className="w-4 h-4" />}
             />
@@ -230,10 +237,13 @@ export const PostForm: React.FC<PostFormProps> = ({
             <SeoSnippetForm
               defaultValues={state?.values || {}}
               className="mt-6"
+              locale={locale}
             />
             {/* Meta Description */}
             <div className="space-y-1 mt-6">
-              <Label htmlFor="metaDescription">اسکیما JSON</Label>
+              <Label htmlFor="metaDescription">
+                {dictionary.feature.post.form.schema}
+              </Label>
               <Textarea
                 id="jsonLd"
                 name="jsonLd"
@@ -255,47 +265,49 @@ export const PostForm: React.FC<PostFormProps> = ({
             <StickyBox offsetBottom={0}>
               <SubmitButton
                 loading={loading}
-                text="ذخیره مطلب"
+                text={dictionary.feature.post.form.submit}
                 className="my-4 w-full"
               />
               <ContentLanguageTabs settings={settings} />
               {/* status */}
               <Select
-                title="وضعیت"
+                title={dictionary.shared.status}
                 name="status"
                 defaultValue={state?.values?.status || 'draft'}
                 options={statusOptions}
-                placeholder="وضعیت"
+                placeholder={dictionary.shared.status}
                 state={state}
                 icon={<MailIcon className="w-4 h-4" />}
               />
               {/* category */}
               <Combobox
-                title="دسته اصلی"
+                title={dictionary.feature.post.form.mainCategory}
                 name="mainCategory"
                 defaultValue={state.values?.mainCategory?.id || null}
                 options={categoryOptions}
-                placeholder="دسته اصلی"
+                placeholder={dictionary.feature.post.form.mainCategory}
                 state={state}
                 icon={<CategoryIcon className="w-4 h-4" />}
                 fetchOptions={searchCategories}
               />
               {/* categories */}
               <MultipleSelect
-                title="سایر دسته‌ها"
+                title={dictionary.feature.post.form.otherCategory}
                 name="categories"
                 defaultValues={
                   categoriesArray.map((category: Category) => {
                     const translation: CategoryTranslationSchema =
                       category?.translations?.find(
-                        (t: CategoryTranslationSchema) => t.lang === locale,
+                        (t: CategoryTranslationSchema) => t.locale === locale,
                       ) ||
                       category?.translations[0] ||
                       {}
                     return { label: translation?.title, value: category.id }
                   }) || []
                 }
-                placeholder="دسته‌ها را وارد کنید..."
+                placeholder={
+                  dictionary.feature.post.form.otherCategoryPlaceholder
+                }
                 state={state}
                 defaultSuggestions={categoryOptions}
                 onSearch={searchCategories}
@@ -304,20 +316,20 @@ export const PostForm: React.FC<PostFormProps> = ({
               />
               {/* tags */}
               <MultipleSelect
-                title="برچسب ها"
+                title={dictionary.feature.post.form.tags}
                 name="tags"
                 defaultValues={
                   tagsArray.map((tag: Tag) => {
                     const translation: TagTranslationSchema =
                       tag?.translations?.find(
-                        (t: CategoryTranslationSchema) => t.lang === locale,
+                        (t: CategoryTranslationSchema) => t.locale === locale,
                       ) ||
                       tag?.translations[0] ||
                       {}
                     return { label: translation?.title, value: tag.id }
                   }) || []
                 }
-                placeholder="برچسب ها را وارد کنید..."
+                placeholder={dictionary.feature.post.form.tagsPlaceholder}
                 state={state}
                 onSearch={searchTags}
 
@@ -342,7 +354,7 @@ export const PostForm: React.FC<PostFormProps> = ({
               /> */}
               <FileUpload
                 name="image"
-                title="پوستر مطلب"
+                title={dictionary.feature.post.form.featuredImage}
                 maxFiles={1}
                 defaultValues={state.values?.image || null}
                 onChange={submitManually}
@@ -351,8 +363,10 @@ export const PostForm: React.FC<PostFormProps> = ({
               />
               <Text
                 name="primaryVideo"
-                title="فیلم اصلی مطلب"
-                description="لینک صفحه ی آپارات یا یوتیوب"
+                title={dictionary.feature.post.form.featuredMovie}
+                description={
+                  dictionary.feature.post.form.featuredMovieDescription
+                }
                 defaultValue={state.values?.primaryVideo || ''}
                 icon={<VideoIcon className="w-4 h-4" />}
                 className="mt-8"
@@ -371,7 +385,11 @@ export const PostForm: React.FC<PostFormProps> = ({
                   title={state?.values?.translation?.title || ''}
                 />
               )}
-              <RelatedPostsDashboard post={post} className="my-4" />
+              <RelatedPostsDashboard
+                post={post}
+                className="my-4"
+                locale={locale}
+              />
               <div className="h-2"></div>
             </StickyBox>
           </div>

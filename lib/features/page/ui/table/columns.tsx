@@ -29,7 +29,7 @@ export const columns: ColumnDef<Page>[] = [
     header: 'عنوان',
     accessorFn: (row) => {
       const locale = 'fa' // یا از context/state
-      return row.translations?.find((t) => t.lang === locale)?.title ?? ''
+      return row.translations?.find((t) => t.locale === locale)?.title ?? ''
     },
   },
   {

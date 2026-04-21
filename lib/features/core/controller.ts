@@ -50,7 +50,6 @@ export default class controller {
    */
   async find(payload: QueryFind): Promise<QueryResult> {
     payload = { saveLog: false, filters: {}, ...payload }
-    console.log('#7777 find payload values: ', payload)
     if (payload.filters?.orderBy) {
       payload.sort = {}
       const order = payload.filters?.order === 'asc' ? 1 : -1
@@ -71,7 +70,7 @@ export default class controller {
         payload.filters,
         payload.pagination,
         payload.sort,
-        { projection: payload.projection ?? {} }
+        { projection: payload.projection ?? {} },
       )
       // if (payload.saveLog) {
       //   if (result) {
@@ -107,8 +106,9 @@ export default class controller {
         payload.filters,
         payload.sort,
         payload.populate,
-        { projection: payload.projection ?? {} }
+        { projection: payload.projection ?? {} },
       )
+
       // if (payload.saveLog) {
       //   if (result) {
       //     log.setTarget(result.id);
@@ -130,6 +130,7 @@ export default class controller {
             totalPages: 0,
           }
       }
+      console.log('#324 ================> error:', error)
     }
     return result
   }
@@ -262,7 +263,7 @@ export default class controller {
       result = await this.service.findOneAndUpdate(
         payload.filters,
         payload.params,
-        payload.options
+        payload.options,
       )
       // if (payload.saveLog) {
       //   if (result) log.setResultStatus(true);
@@ -366,7 +367,7 @@ export default class controller {
 
   async bulkWrite(
     operations: any,
-    { ordered }: { ordered: boolean } = { ordered: false }
+    { ordered }: { ordered: boolean } = { ordered: false },
   ): Promise<MongooseBulkWriteResult> {
     return this.service.bulkWrite(operations, { ordered })
   }

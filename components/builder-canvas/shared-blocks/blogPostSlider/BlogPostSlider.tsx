@@ -32,7 +32,6 @@ export const BlogPostSlider = ({
   blockData,
   ...props
 }: BlogPostSliderProps) => {
-  const locale = 'fa'
   const { content, settings } = blockData
   const OPTIONS: EmblaOptionsType = {
     dragFree: settings?.dragFree == false ? false : true,

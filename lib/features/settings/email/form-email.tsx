@@ -32,7 +32,7 @@ export const FormEmail: React.FC<SettingsFormProps> = ({ settings }) => {
   }
   const [state, dispatch] = useActionState(
     updateEmailSettings as any,
-    initialState
+    initialState,
   )
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export const FormEmail: React.FC<SettingsFormProps> = ({ settings }) => {
         </div>
         {/* <Separator /> */}
         <form action={dispatch} ref={formRef} className="space-y-8 w-full">
-          <input type="hidden" name="locale" value={_t.lang} readOnly />
+          <input type="hidden" name="locale" value={_t.locale} readOnly />
           <div className="md:grid md:grid-cols-3 gap-8">
             {/* mail_host */}
             <Text

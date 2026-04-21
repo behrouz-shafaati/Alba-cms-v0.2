@@ -192,7 +192,7 @@ const nodes = {
       {
         tag: 'img[src]',
         getAttrs: (dom: any) => ({
-          src: '/image-placeholder-Medium.webp',
+          src: '/assets/placeholder.jpg',
         }),
       },
     ],
@@ -207,8 +207,7 @@ const nodes = {
         height,
         blurDataURL,
       } = node.attrs
-      const src =
-        srcMedium || srcSmall || srcLarge || '/image-placeholder-Medium.webp'
+      const src = srcMedium || srcSmall || srcLarge || '/assets/placeholder.jpg'
       return [
         'img',
         {

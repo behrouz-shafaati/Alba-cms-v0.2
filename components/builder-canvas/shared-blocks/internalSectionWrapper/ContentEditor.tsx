@@ -4,14 +4,14 @@ import { useBuilderStore } from '../../store/useBuilderStore'
 import { useDebouncedCallback } from 'use-debounce'
 import { Label } from '@radix-ui/react-dropdown-menu'
 import ColumnLayoutCombobox from '../row/ui/ColumnLayoutCombobox'
-import { Checkbox } from '@radix-ui/react-checkbox'
+import CheckboxInput from '@/components/input/checkbox'
 
 const ContentEditor = () => {
   const { updateRowColumns, update, selectedBlock } = useBuilderStore()
 
   const debouncedUpdate = useDebouncedCallback(
     (id, key, form) => update(id, key, form),
-    400
+    400,
   )
 
   return (
@@ -30,10 +30,9 @@ const ContentEditor = () => {
           }}
         />
       </div>
-
       {/* responsive design  */}
 
-      <Checkbox
+      <CheckboxInput
         name="responsiveDesign"
         title="طراحی ریسپانسیو"
         defaultChecked={selectedBlock?.settings?.responsiveDesign ?? true}

@@ -1,17 +1,46 @@
 import '@/app/globals.css'
-import { getSettings } from '@/lib/features/settings/controller'
-import { Settings } from '@/lib/features/settings/interface'
-import AlbaFallback from '@/pages/AlbaFallback'
+import { ClientProviders } from '@/components/context/ClientProviders'
+import HomePage from '@/components/HomePage'
+import { getDashboardDictionary } from '@/lib/i18n/dashboard'
+import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
+import { SupportedLanguage } from '@/lib/types'
 
 export const dynamic = 'force-static'
+import localFont from 'next/font/local'
 
+const iransans = localFont({
+  src: [
+    {
+      path: '../public/fonts/IRANSansX-Light.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/IRANSansX-Medium.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/IRANSansX-DemiBold.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-iransans',
+})
 export default async function Home() {
-  const siteSettings: Settings = (await getSettings()) as Settings
+  const resolvedLocale = (await resolveLocale({
+    locale: '',
+  })) as SupportedLanguage
+  const dictionary = getDashboardDictionary(resolvedLocale)
+  const dir = dictionary.dir
 
   return (
-    <html lang="en">
-      <body className={`antialiased`}>
-        <AlbaFallback siteSettings={siteSettings} />
+    <html lang={resolvedLocale} dir={dir}>
+      <body className={`antialiased ${iransans.className}`}>
+        <ClientProviders>
+          <HomePage locale={resolvedLocale} />
+        </ClientProviders>
       </body>
     </html>
   )

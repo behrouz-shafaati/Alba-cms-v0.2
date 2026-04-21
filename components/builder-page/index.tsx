@@ -4,6 +4,7 @@ import BuilderCanvas from '../builder-canvas'
 import SettingsPanel from './SettingsPanel'
 import { Category } from '@/lib/features/category/interface'
 import { blockRegistry } from './registry/blockRegistry'
+import Header from './Header'
 // import { blockRegistry as templatePartBlockregistry } from '../builder-template-part/registry/blockRegistry'
 
 type BuilderPageProp = {
@@ -38,9 +39,10 @@ export default function BuilderPage({
     <BuilderCanvas
       title={title}
       name={name}
-      settingsPanel={
+      Header={<Header locale={locale} />}
+      SettingsPanel={
         <SettingsPanel
-          settings={settings}
+          siteSettings={settings}
           allCategories={allCategories}
           allTemplates={allTemplates}
           locale={locale}

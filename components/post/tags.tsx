@@ -1,7 +1,7 @@
 import React from 'react'
 import { Tag } from '@/lib/features/tag/interface'
 import { Button } from '../ui/button'
-import IconRenderer from '../builder-canvas/components/IconRenderer'
+import IconRenderer from '../builder-canvas/components/DynamicLucideIcon'
 import getTranslation from '@/lib/utils/getTranslation'
 import { LinkAlba } from '../other/link-alba'
 

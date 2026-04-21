@@ -12,10 +12,14 @@ import { SliderWidget } from './widgets/SliderWidget'
 import { FourSideBoxWidget } from './fields/FourSideBoxWidget'
 import { ShadowWidget } from './widgets/ShadowWidget'
 import { TailwindTextColorPickerWidget } from './widgets/TailwindTextColorPickerWidget'
-import IconPickerWidget from './widgets/IconPickerWidget'
 import LayoutField from './fields/Layout'
 import CornersRoundField from './fields/CornersRound'
 import ResponsiveVisibilityField from './fields/ResponsiveVisibility'
+import BorderField from './fields/Border'
+import CssEditor from '../ui/css-editor'
+import IconPickerWidget from './fields/IconPickerField'
+import IconPickerField from './fields/IconPickerField'
+import ResponsiveNumberField from './fields/ResponsiveNumberField'
 
 const CustomFieldTemplate = ({
   id,
@@ -58,15 +62,18 @@ export const CustomTheme = {
     TextareaWidget,
     NumberWidget,
     SliderWidget,
-    IconPickerWidget,
+    CssEditor,
   },
   fields: {
-    PaddingField: (props: FieldProps) => (
-      <FourSideBoxWidget
-        value={props.formData}
-        onChange={(val) => props.onChange(val, ['padding'])}
-      />
-    ),
+    ResponsiveNumber: ResponsiveNumberField,
+    PaddingField: (props: FieldProps) => {
+      return (
+        <FourSideBoxWidget
+          value={props.formData}
+          onChange={(val) => props.onChange(val, ['padding'])}
+        />
+      )
+    },
     MarginField: (props: FieldProps) => (
       <FourSideBoxWidget
         value={props.formData}
@@ -85,10 +92,11 @@ export const CustomTheme = {
         onChange={(val) => props.onChange(val, ['boxShadow'])}
       />
     ),
-    LayoutField: (props: FieldProps) => (
-      <LayoutField
+    LayoutField: LayoutField,
+    BorderField: (props: FieldProps) => (
+      <BorderField
         value={props.formData}
-        onChange={(val) => props.onChange(val, ['layout'])}
+        onChange={(val) => props.onChange(val, ['border'])}
       />
     ),
     ResponsiveVisibilityField: (props: FieldProps) => (
@@ -97,10 +105,17 @@ export const CustomTheme = {
         onChange={(val) => props.onChange(val, ['visibility'])}
       />
     ),
+    TextColorField: (props: FieldProps) => {
+      const current = props.formData ?? {}
+      // وقتی کاربر رنگ انتخاب میکنه
+      const handleChange = (val: { light: any; dark: any }) => {
+        props.onChange(val, ['textColor'])
+      }
+
+      return <ColorWidget value={current} onChange={handleChange} />
+    },
     BackgroundColorField: (props: FieldProps) => {
       const current = props.formData ?? {}
-      console.log('#2885  current backgroundColor:', current)
-      console.log('#2885  current formContext?.allFormData:', props.formContext)
       // وقتی کاربر رنگ انتخاب میکنه
       const handleChange = (val: { light: any; dark: any }) => {
         props.onChange(val, ['backgroundColor'])
@@ -108,6 +123,21 @@ export const CustomTheme = {
 
       return <ColorWidget value={current} onChange={handleChange} />
     },
+    iconColorField: (props: FieldProps) => {
+      const current = props.formData ?? {}
+      // وقتی کاربر رنگ انتخاب میکنه
+      const handleChange = (val: { light: any; dark: any }) => {
+        props.onChange(val, ['iconColor'])
+      }
+
+      return <ColorWidget value={current} onChange={handleChange} />
+    },
+    IconPickerField: (props: FieldProps) => (
+      <IconPickerField
+        value={props.formData}
+        onChange={(val) => props.onChange(val, ['icon'])}
+      />
+    ),
   },
   templates: {
     FieldTemplate: CustomFieldTemplate,

@@ -1,31 +1,35 @@
 import { BreadCrumb } from '@/components/other/breadcrumb'
 import tagCtrl from '@/lib/features/tag/controller'
 import { notFound } from 'next/navigation'
-import { TagForm } from '@/lib/features/tag/ui/tag-form'
 import { TagTranslationSchema } from '@/lib/features/tag/interface'
+import { User } from '@/lib/features/user/interface'
+import { getSession } from '@/lib/auth/get-session'
+import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
+import { getDashboardDictionary } from '@/lib/i18n/dashboard'
+import { getSettingsAction } from '@/lib/features/settings/actions'
+import { TagFormTranslation } from '@/lib/features/tag/ui/tag-form-translation'
 
 interface PageProps {
   params: Promise<{ id: string }>
 }
 export default async function Page({ params }: PageProps) {
-  const locale = 'fa' //  from formData
+  const user = (await getSession())?.user as User
   const resolvedParams = await params
   const { id } = resolvedParams
   let tag = null,
-    allTags
-  let pageBreadCrumb = {
-    title: 'افزودن',
-    link: '/dashboard/tags/create',
-  }
+    settings
+  let pageBreadCrumb = null
   if (id !== 'create') {
-    ;[tag, allTags] = await Promise.all([
+    ;[tag, settings] = await Promise.all([
       tagCtrl.findById({ id }),
-      tagCtrl.findAll({}),
+      getSettingsAction(),
     ])
 
     if (!tag) {
       notFound()
     }
+
+    const locale = user?.locale || settings?.language?.dashboardDefault || ''
 
     const translation: TagTranslationSchema =
       tag?.translations?.find((t: TagTranslationSchema) => t.lang === locale) ||
@@ -37,18 +41,32 @@ export default async function Page({ params }: PageProps) {
       link: `/dashboard/tags/${id}`,
     }
   } else {
-    ;[allTags] = await Promise.all([tagCtrl.findAll({})])
+    ;[settings] = await Promise.all([getSettingsAction()])
   }
 
+  const locale = user?.locale || settings?.language?.dashboardDefault || ''
+  const resolvedLocale = await resolveLocale({ locale })
+  const dictionary = getDashboardDictionary(resolvedLocale)
+
+  if (!pageBreadCrumb)
+    pageBreadCrumb = {
+      title: dictionary.feature.tag.create,
+      link: '/dashboard/tags/create',
+    }
+
   const breadcrumbItems = [
-    { title: 'برچسب ها', link: '/dashboard/tags' },
+    { title: dictionary.feature.tag.title, link: '/dashboard/tags' },
     pageBreadCrumb,
   ]
   return (
     <>
       <div className="flex-1 space-y-4 p-5">
         <BreadCrumb items={breadcrumbItems} />
-        <TagForm initialData={tag} allTags={allTags.data} />
+        <TagFormTranslation
+          initialData={tag}
+          settings={settings}
+          dictionary={dictionary}
+        />
       </div>
     </>
   )

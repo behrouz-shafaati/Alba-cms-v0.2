@@ -4,6 +4,8 @@ import { useBuilderStore } from '../store/useBuilderStore'
 import { useDebouncedCallback } from 'use-debounce'
 import { TailwindForm } from '../../rjsf/shadcn-theme'
 import { uiSchema } from '../../rjsf/uiSchema'
+import { buildUiSchemaFromX } from '@/components/rjsf/utils/buildUiSchemaFromX'
+import CustomFieldTemplate from '@/components/rjsf/templates/CustomFieldTemplate'
 
 export const publicStylesSchema0 = {
   type: 'object',
@@ -61,6 +63,11 @@ export const publicStylesSchema0 = {
     },
   },
 }
+export const textColorSchema = {
+  type: 'object',
+  title: 'Text color',
+  additionalProperties: true,
+}
 export const backgroundColorSchema = {
   type: 'object',
   title: 'Background color',
@@ -70,12 +77,20 @@ export const layoutSchema = {
   type: 'object',
   title: 'Layout',
   additionalProperties: true,
+  'x-responsive': true,
+  'x-field': 'LayoutField',
+}
+export const borderSchema = {
+  type: 'object',
+  title: 'Border',
+  additionalProperties: true,
 }
 
 export const publicStylesSchema: any = {
   type: 'object',
   title: '',
   properties: {
+    textColor: textColorSchema,
     backgroundColor: backgroundColorSchema,
     layout: layoutSchema,
     padding: {
@@ -130,22 +145,7 @@ export const publicStylesSchema: any = {
       },
       required: ['color', 'x', 'y', 'blur', 'spread', 'inset'],
     },
-    border: {
-      type: 'string',
-      title: 'Border',
-      enum: [
-        'none',
-        'solid',
-        'dashed',
-        'dotted',
-        'double',
-        'inset',
-        'groove',
-        'outset',
-        'ridge',
-      ],
-      default: 'none',
-    },
+    border: borderSchema,
     borderRadius: {
       type: 'object',
       title: 'Border radius',
@@ -164,6 +164,10 @@ export const publicStylesSchema: any = {
       maximum: 100,
       multipleOf: 1,
     },
+    // tailwindClasses: {
+    //   type: 'string',
+    //   titile: 'Tailwind classes',
+    // },
     visibility: {
       type: 'object',
       title: 'نمایش در دستگاه‌ها',
@@ -172,6 +176,10 @@ export const publicStylesSchema: any = {
         tablet: { type: 'boolean', title: 'نمایش در تبلت', default: true },
         mobile: { type: 'boolean', title: 'نمایش در موبایل', default: true },
       },
+    },
+    css: {
+      type: 'string',
+      titile: 'Css',
     },
   },
 }
@@ -191,7 +199,7 @@ export const PublicStylesForm = () => {
       <TailwindForm
         key={`shared-styles-block-${selectedBlock.id}`} // باعث میشه فرم کاملاً ری‌ست و رندر بشه
         schema={publicStylesSchema}
-        uiSchema={uiSchema}
+        uiSchema={buildUiSchemaFromX(publicStylesSchema)}
         formData={selectedBlock.styles}
         validator={validator}
         onChange={(e) =>
@@ -203,6 +211,7 @@ export const PublicStylesForm = () => {
         liveValidate
         widgets={{}} // می‌تونی در آینده کاستوم‌سازی کنی
         templates={{
+          FieldTemplate: CustomFieldTemplate,
           //  حذف دکمه Submit
           ButtonTemplates: {
             SubmitButton: () => null,

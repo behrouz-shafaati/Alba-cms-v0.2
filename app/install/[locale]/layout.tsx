@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+// import { Geist, Geist_Mono } from 'next/font/google'
 import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 import '@/app/globals.css'
 import { ServerProviders } from '@/components/context/ServerProviders'
@@ -10,15 +10,15 @@ import { ModeToggle } from '@/components/theme-mode-toggle/ModeToggle'
 import { LocaleProvider } from '@/components/context/locale-provider'
 import { SupportedLanguage } from '@/lib/types'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
+// const geistSans = Geist({
+//   variable: '--font-geist-sans',
+//   subsets: ['latin'],
+// })
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-})
+// const geistMono = Geist_Mono({
+//   variable: '--font-geist-mono',
+//   subsets: ['latin'],
+// })
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -32,7 +32,7 @@ type Props = {
 export default async function Layout({ children, params }: Props) {
   const { locale } = await params
   console.log('#234 locale:', locale)
-  const resolvedLocale = resolveLocale({ locale }) as SupportedLanguage
+  const resolvedLocale = (await resolveLocale({ locale })) as SupportedLanguage
   const dictionary = getInstallDictionary(resolvedLocale)
   const dir = getDirection(resolvedLocale)
   return (

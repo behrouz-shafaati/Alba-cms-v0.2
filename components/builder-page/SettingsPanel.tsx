@@ -9,14 +9,14 @@ import { PageContent } from './types'
 import { ContentLanguageTabs } from '../input/ContentLanguageTabs'
 
 type SettingsPanelProp = {
-  settings: any
+  siteSettings: any
   allTemplates: PageContent[]
   allCategories: Category[]
   locale: string
 }
 
 function SettingsPanel({
-  settings,
+  siteSettings,
   allCategories,
   allTemplates,
   locale,
@@ -25,7 +25,7 @@ function SettingsPanel({
   const document = JSON.parse(getJson())
   const debouncedUpdate = useDebouncedCallback(
     (id, key, form) => update(id, key, form),
-    400
+    400,
   )
 
   const statusOptions = [
@@ -41,7 +41,7 @@ function SettingsPanel({
 
   return (
     <>
-      <ContentLanguageTabs settings={settings} />
+      <ContentLanguageTabs settings={siteSettings} />
       {/* <input type="text" name="lang" className="hidden" value="fa" readOnly /> */}
       <Text
         title="عنوان"

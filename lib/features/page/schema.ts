@@ -11,7 +11,7 @@ const PageTranslationSchema = new Schema(
     },
     description: { type: String, default: '' },
   },
-  { _id: false }
+  { _id: false },
 )
 
 const pageSchema = new Schema<PageSchema>(
@@ -31,7 +31,7 @@ const pageSchema = new Schema<PageSchema>(
     },
     deleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 )
 
 // Partial Unique Index
@@ -40,7 +40,7 @@ pageSchema.index(
   {
     unique: true,
     partialFilterExpression: { deleted: false },
-  }
+  },
 )
 
 const transform = (doc: any, ret: any, options: any) => {

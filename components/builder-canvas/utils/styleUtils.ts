@@ -1,6 +1,17 @@
+import parseCssStringToObject from '@/lib/utils/parseCssStringToObject'
+import clsx from 'clsx'
+
 type ClassNames = Record<string, string | undefined | null>
 
 const STYLE_VAR_CLASS_MAP: Record<string, string> = {
+  '--txt-default': 'text-(--txt-default)',
+  '--txt-hover': 'hover:text-(--txt-hover)',
+  '--txt-active': 'active:text-(--txt-active)',
+
+  '--txt-default-dark': 'dark:text-(--txt-default-dark)',
+  '--txt-hover-dark': 'dark:hover:text-(--txt-hover-dark)',
+  '--txt-active-dark': 'dark:active:text-(--txt-active-dark)',
+
   '--bg-default': 'bg-(--bg-default)',
   '--bg-hover': 'hover:bg-(--bg-hover)',
   '--bg-active': 'active:bg-(--bg-active)',
@@ -8,13 +19,21 @@ const STYLE_VAR_CLASS_MAP: Record<string, string> = {
   '--bg-default-dark': 'dark:bg-(--bg-default-dark)',
   '--bg-hover-dark': 'dark:hover:bg-(--bg-hover-dark)',
   '--bg-active-dark': 'dark:active:bg-(--bg-active-dark)',
+
+  '--borderColor-default': '!border-(--borderColor-default)',
+  '--borderColor-hover': 'hover:border-(--borderColor-hover)',
+  '--borderColor-active': 'active:border-(--borderColor-active)',
+
+  '--borderColor-default-dark': 'dark:border-(--borderColor-default-dark)',
+  '--borderColor-hover-dark': 'dark:hover:border-(--borderColor-hover-dark)',
+  '--borderColor-active-dark': 'dark:active:border-(--borderColor-active-dark)',
 }
 
 /**
  * Combines multiple class names into a single string.
  *
  * This function is highly flexible and supports the following types of input:
- * - Strings: added directly.
+ * - Strings: added directly.1
  * - Arrays: flattened recursively and each element processed.
  * - Objects: keys whose values are truthy will be included; nested objects are supported.
  *
@@ -72,72 +91,7 @@ export function combineClassNames(...args: any[]): string {
 
   args.forEach(process)
 
-  return classes.join(' ')
-}
-
-export const computedStyles = (
-  styles?: Record<string, string>,
-): Record<string, string | number> => {
-  const safeStyles = styles ?? {}
-  const result: Record<string, string | number> = {}
-
-  for (const [key, value] of Object.entries(safeStyles)) {
-    if (value)
-      switch (key) {
-        case 'backgroundColor':
-          const modes = ['light', 'dark'] as const
-          const states = ['default', 'hover', 'active'] as const
-
-          for (const mode of modes) {
-            for (const state of states) {
-              const val = value?.[mode]?.[state]
-              if (!val) continue
-
-              const key =
-                mode === 'light' ? `--bg-${state}` : `--bg-${state}-dark`
-
-              result[key] = val
-            }
-          }
-          break
-        case 'opacity':
-          const num = parseFloat(value)
-          result.opacity = isNaN(num) ? 1 : Math.min(Math.max(num / 100, 0), 1)
-          break
-        case 'padding':
-          result.padding = `${value?.top || 0}px ${value?.right || 0}px ${
-            value?.bottom || 0
-          }px ${value?.left || 0}px`
-          break
-        case 'margin':
-          result.margin = `${value?.top || 0}px ${value?.right || 0}px ${
-            value?.bottom || 0
-          }px ${value?.left || 0}px`
-          break
-        case 'borderRadius':
-          result.borderRadius = `${value?.top || 0}px ${value?.right || 0}px ${
-            value?.bottom || 0
-          }px ${value?.left || 0}px`
-          break
-        case 'boxShadow':
-          result['boxShadow'] = `${value?.inset ? 'inset ' : ''}${
-            value?.x || 0
-          }px ${value?.y || 0}px ${value?.blur || 0}px ${value?.spread || 0}px ${
-            value?.color || ''
-          }`
-          break
-        case 'fontSize':
-          result.fontSize = `${value}px`
-          break
-        case 'layout':
-          result.width = value?.width ? `${value?.width}px` : 'auto'
-          result.height = value?.height ? `${value?.height}px` : 'auto'
-          break
-        default:
-          result[key] = value
-      }
-  }
-  return result
+  return clsx(classes.join(' '))
 }
 
 export const getVisibilityClass = (
@@ -205,4 +159,21 @@ export function extractColorClasses(className: string): string {
       /^(dark:)?(bg-|text-|border-|shadow-|placeholder-|ring-)/.test(cls),
     )
     .join(' ')
+}
+
+function objectToCssString(obj) {
+  let cssString = ''
+  for (const property in obj) {
+    // بررسی می‌کنیم که پراپرتی متعلق به خود آبجکت باشد (نه prototype)
+    if (Object.hasOwnProperty.call(obj, property)) {
+      const value = obj[property]
+      // تبدیل نام property از camelCase به kebab-case (مثلاً boxShadow به box-shadow)
+      const cssProperty = property.replace(
+        /([A-Z])/g,
+        (match) => `-${match.toLowerCase()}`,
+      )
+      cssString += `${cssProperty}: ${value};\n`
+    }
+  }
+  return cssString
 }

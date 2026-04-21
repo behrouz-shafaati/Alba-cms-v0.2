@@ -1,6 +1,10 @@
 import { BreadCrumb } from '@/components/other/breadcrumb'
+import { getSession } from '@/lib/auth/get-session'
+import { getSettings } from '@/lib/features/settings/controller'
 import TagTable from '@/lib/features/tag/ui/table'
-const breadcrumbItems = [{ title: 'برچسب ها', link: '/dashboard/tags' }]
+import { User } from '@/lib/features/user/interface'
+import { getDashboardDictionary } from '@/lib/i18n/dashboard'
+import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 
 interface PageProps {
   searchParams: Promise<{
@@ -10,13 +14,29 @@ interface PageProps {
 }
 
 async function Page({ searchParams }: PageProps) {
+  const user = (await getSession())?.user as User
+  const [siteSettings] = await Promise.all([getSettings()])
+  const locale = user?.locale || siteSettings?.language?.dashboardDefault || ''
+  const resolvedLocale = await resolveLocale({ locale })
+  const dictionary = getDashboardDictionary(resolvedLocale)
+
+  const breadcrumbItems = [
+    { title: dictionary.feature.tag.title, link: '/dashboard/tags' },
+  ]
+
   const resolvedSearchParams = await searchParams
-  const { query = '', page = '1' } = resolvedSearchParams
+  const { query = '', page = '1', ...filters } = resolvedSearchParams
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <BreadCrumb items={breadcrumbItems} />
-      <TagTable query={query} page={Number(page)} />
+      <TagTable
+        locale={resolvedLocale}
+        query={query}
+        page={Number(page)}
+        dictionary={dictionary}
+        filters={filters}
+      />
     </div>
   )
 }

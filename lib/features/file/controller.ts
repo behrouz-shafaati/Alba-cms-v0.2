@@ -37,7 +37,7 @@ class controller extends c_controller {
   }
 
   async generateDirectory(
-    fileType: string
+    fileType: string,
   ): Promise<{ src: string; patch: string }> {
     const yearNumber = new Date().getFullYear()
     const monthNumber = new Date().getMonth()
@@ -88,8 +88,9 @@ class controller extends c_controller {
     const { name: defualtFileName, type: mimeType, size: fileSize } = file
     const fileName = createFileName(
       title,
-      defualtFileName.split('.').pop() as string
+      defualtFileName.split('.').pop() as string,
     )
+    console.log('#290834745 mimeType:', mimeType)
     // for images
     if (mimeType.startsWith('image/')) {
       const directory = await this.generateDirectory('images')
@@ -141,7 +142,7 @@ class controller extends c_controller {
         title = webpFileName
         const sizes = [
           { name: 'Small', width: 60, quality: 80 },
-          { name: 'Medium', width: 840, quality: 90 },
+          { name: 'Medium', width: 940, quality: 95 },
           { name: 'Large', width: 1280, quality: 90 },
         ]
         if (mimeType == 'image/gif') {
@@ -156,13 +157,25 @@ class controller extends c_controller {
           }
           // حالا فایل موقت رو پاک کن
           safeUnlink(tmpFilePath)
+        } else if (mimeType == 'image/svg+xml') {
+          const destinationFilePath = path.join(patch, `${baseName}.svg`)
+
+          // فقط فایل را کپی کن (بدون پردازش توسط sharp)
+          await fs.promises.copyFile(tmpFilePath, destinationFilePath)
+
+          for (const size of sizes) {
+            urls[`src${size.name}`] = `/api/file${src}/${baseName}.svg`
+            patches[`patch${size.name}`] = `${patch}/${baseName}.svg`
+          }
+          // حالا فایل موقت رو پاک کن
+          safeUnlink(tmpFilePath)
         } else {
           sharp.cache(false)
           sharp.concurrency(1)
           for (const size of sizes) {
             const destinationFilePath = path.join(
               patch,
-              `${baseName}-${size.name}.${extension}`
+              `${baseName}-${size.name}.${extension}`,
             )
             const sharpInstance = sharp(buffer)
               .resize({ width: size.width, withoutEnlargement: true })
@@ -175,12 +188,10 @@ class controller extends c_controller {
             await sharpInstance.destroy()
             // ---------------------------------------------
 
-            urls[
-              `src${size.name}`
-            ] = `/api/file${src}/${baseName}-${size.name}.${extension}`
-            patches[
-              `patch${size.name}`
-            ] = `${patch}/${baseName}-${size.name}.${extension}`
+            urls[`src${size.name}`] =
+              `/api/file${src}/${baseName}-${size.name}.${extension}`
+            patches[`patch${size.name}`] =
+              `${patch}/${baseName}-${size.name}.${extension}`
           }
 
           // ======================================================
@@ -255,7 +266,7 @@ class controller extends c_controller {
 
       const cleanParams = await this.sanitizePostData(
         params,
-        String(fileDetails.id)
+        String(fileDetails.id),
       )
 
       const newFile = await this.findOneAndUpdate({
@@ -321,12 +332,12 @@ class controller extends c_controller {
               description: params.description,
             },
             ...prevState?.translations.filter(
-              (t: FileTranslationSchema) => t.lang != params.lang
+              (t: FileTranslationSchema) => t.lang != params.lang,
             ),
           ]
         : [
             ...prevState?.translations.filter(
-              (t: FileTranslationSchema) => t.lang != params.lang
+              (t: FileTranslationSchema) => t.lang != params.lang,
             ),
           ]
     const cleanParams = {
@@ -356,7 +367,7 @@ function createFileName(title: string, fileExtension: string) {
 export async function safeUnlink(
   filePath: string,
   maxRetries = 12,
-  baseDelay = 200
+  baseDelay = 200,
 ) {
   let attempt = 0
 
@@ -398,7 +409,7 @@ export async function safeUnlink(
             console.warn(
               'renamed but could not unlink tmp file, will retry later',
               tmp,
-              e2
+              e2,
             )
             return false
           }

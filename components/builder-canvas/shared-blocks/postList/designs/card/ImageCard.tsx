@@ -22,14 +22,14 @@ const PostImageCard = ({ post, options, isLCP = false }: Props) => {
 
   const translationImage: FileTranslationSchema =
     post.image?.translations?.find(
-      (t: FileTranslationSchema) => t.lang === locale
+      (t: FileTranslationSchema) => t.lang === locale,
     ) ||
     post.image?.translations[0] ||
     {}
 
   const imgHeight = 208
   const imgWidth = Math.round(
-    (imgHeight * post?.image?.width) / post?.image?.height
+    (imgHeight * post?.image?.width) / post?.image?.height,
   )
 
   return (
@@ -43,7 +43,7 @@ const PostImageCard = ({ post, options, isLCP = false }: Props) => {
             {/* <Image
               src={
                 post?.image?.srcMedium ||
-                '/assets/image-placeholder-Medium.webp'
+                '/assets/placeholder.jpg'
               }
               alt={translationImage?.alt || translationImage?.title || 'image'}
               width={imgWidth}
@@ -54,7 +54,7 @@ const PostImageCard = ({ post, options, isLCP = false }: Props) => {
               style={{ objectFit: 'cover' }}
               placeholder="blur"
               blurDataURL={
-                post?.image?.srcSmall || '/assets/image-placeholder-Small.webp'
+                post?.image?.srcSmall || '/assets/placeholder.jpg'
               }
               loading="lazy"
               decoding="async"
@@ -62,10 +62,7 @@ const PostImageCard = ({ post, options, isLCP = false }: Props) => {
             /> */}
             {post?.image && (
               <Image
-                src={
-                  post?.image?.srcMedium ||
-                  '/assets/image-placeholder-Medium.webp'
-                }
+                src={post?.image?.srcMedium || '/assets/placeholder.jpg'}
                 sizes="(max-width: 640px) 640px, (max-width: 768px) 768px, 1280px"
                 alt={translationImage?.alt || translationImage?.title}
                 layout="fill"

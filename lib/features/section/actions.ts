@@ -58,10 +58,7 @@ export async function createSection(
 
     const pathes = await revalidatePathCtrl.getAllPathesNeedRevalidate({
       feature: 'templatePart',
-      slug: [
-        `/${cleanedParams?.slug || params.slug}`,
-        `/dashboard/template-parts`,
-      ],
+      slug: [`/${cleanedParams?.slug || params.slug}`, `/dashboard/sections`],
     })
 
     for (const slug of pathes) {
@@ -94,7 +91,7 @@ export async function createSection(
     }
   }
   if (newSection) {
-    // redirect(`/dashboard/template-parts/${newSection.id}`)
+    // redirect(`/dashboard/sections/${newSection.id}`)
     return {
       message: '',
       success: true,
@@ -102,7 +99,7 @@ export async function createSection(
       values: newSection,
     }
   }
-  redirect('/dashboard/template-parts')
+  redirect('/dashboard/sections')
 }
 
 export async function updateSection(
@@ -146,7 +143,7 @@ export async function updateSection(
     })
     const pathes = await revalidatePathCtrl.getAllPathesNeedRevalidate({
       feature: 'templatePart',
-      slug: [...varRevalidatePath, `/dashboard/template-parts`],
+      slug: [...varRevalidatePath, `/dashboard/sections`],
     })
 
     for (const slug of pathes) {
@@ -198,7 +195,7 @@ export async function deleteSectionAction(ids: string[]) {
   }
   const pathes = await revalidatePathCtrl.getAllPathesNeedRevalidate({
     feature: 'templatePart',
-    slug: [`/dashboard/template-parts`],
+    slug: [`/dashboard/sections`],
   })
 
   for (const slug of pathes) {

@@ -3,7 +3,7 @@ import { CampaignSchema } from './interface'
 
 const CampaignTranslationSchema = new Schema(
   {
-    lang: { type: String, required: true }, // "fa", "en", "de", ...
+    locale: { type: String, required: true }, // "fa", "en", "de", ...
     banners: [
       {
         aspect: String,
@@ -11,12 +11,12 @@ const CampaignTranslationSchema = new Schema(
       },
     ],
   },
-  { _id: false }
+  { _id: false },
 )
 
 const GoalSectionsSchema = new Schema(
   { label: String, value: String },
-  { _id: false }
+  { _id: false },
 )
 
 const campaignSchema = new Schema<CampaignSchema>(
@@ -62,7 +62,7 @@ const campaignSchema = new Schema<CampaignSchema>(
     },
     deleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 )
 
 campaignSchema.pre(['find', 'findOne'], function () {

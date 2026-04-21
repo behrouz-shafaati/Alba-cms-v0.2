@@ -2,9 +2,9 @@
 
 import React from 'react'
 import { Block } from '../../types'
-import { computedStyles } from '../../utils/styleUtils'
 import Image from 'next/image'
 import ImageAlba from '@/components/other/image-alba'
+import computedStyles from '../../utils/computedStyles'
 
 type BlockProps = {
   widgetName: string
@@ -26,6 +26,7 @@ export const ImageBlock = ({ widgetName, blockData, ...props }: BlockProps) => {
   props.className = props?.className
     ? `${props?.className} w-full h-auto max-w-full`
     : 'w-full h-auto max-w-full'
+  const normalizeStyle = { width: '', height: '', ...styles }
   const { width = '', height = '', ...restStyle } = styles || {}
   const { className = '', ...restProps } = props || {}
 
@@ -34,9 +35,9 @@ export const ImageBlock = ({ widgetName, blockData, ...props }: BlockProps) => {
       data-image-wrapper
       className={`relative  ${className} `}
       // className={`relative  ${className} aspect-[3.9/1]`}
-      {...restProps}
+      // {...restProps}
       style={{
-        ...computedStyles({ width, height }),
+        ...computedStyles(normalizeStyle),
       }}
     >
       {content?.srcSmall ? (

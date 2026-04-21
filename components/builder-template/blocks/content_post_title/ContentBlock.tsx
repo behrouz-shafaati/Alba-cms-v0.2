@@ -2,11 +2,8 @@
 
 import React, { ElementType } from 'react'
 import { Block } from '@/components/builder-canvas/types'
-import {
-  combineClassNames,
-  computedStyles,
-} from '@/components/builder-canvas/utils/styleUtils'
 import { PostTitle } from '@/components/post/title'
+import computedStyles from '@/components/builder-canvas/utils/computedStyles'
 
 type ContentBlockProps = {
   content: React.ReactNode

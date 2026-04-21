@@ -1,8 +1,8 @@
 'use client'
 import { ColumnDef } from '@tanstack/react-table'
 import { CellAction } from './cell-action'
-import { CheckboxInput as Checkbox } from '@/components/ui/checkbox-input'
-import { Menu } from '@/features/menu/interface'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Menu } from '@/lib/features/menu/interface'
 
 export const columns: ColumnDef<Menu>[] = [
   {
@@ -28,7 +28,7 @@ export const columns: ColumnDef<Menu>[] = [
     header: 'عنوان',
     accessorFn: (row) => {
       const locale = 'fa' // یا از context/state
-      return row.translations?.find((t) => t.lang === locale)?.title ?? ''
+      return row.translations?.find((t) => t.locale === locale)?.title ?? ''
     },
   },
   {

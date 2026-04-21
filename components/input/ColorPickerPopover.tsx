@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { HexColorPicker } from 'react-colorful'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -18,7 +18,7 @@ type Theme = 'light' | 'dark'
 
 type Props = {
   defaultValue: any
-  onChange: (val: any) => void
+  onChange?: (val: any) => void
 }
 
 export default function ColorPickerPopover({
@@ -29,7 +29,7 @@ export default function ColorPickerPopover({
   const [mode, setMode] = useState<Mode>('default')
   const [theme, setTheme] = useState<Theme | null>(null)
 
-  const getColor = (t: Theme) => value?.[t]?.[mode]
+  const getColor = (t: Theme) => value?.[t]?.[mode] || ''
 
   function updateColor(color: string) {
     const next = structuredClone(value || { light: {}, dark: {} })
@@ -45,10 +45,16 @@ export default function ColorPickerPopover({
     }
 
     setValue(next)
-    onChange(next)
+    onChange?.(next)
   }
 
   const currentColor = theme ? getColor(theme) : ''
+  useEffect(() => {
+    const next = normalizeColorValue(defaultValue)
+    if (JSON.stringify(next) !== JSON.stringify(value)) {
+      setValue(next)
+    }
+  }, [defaultValue])
 
   return (
     <Popover>
@@ -121,6 +127,7 @@ export default function ColorPickerPopover({
                   }
                 }}
               />
+              <Button onClick={() => updateColor('')}>Remove color</Button>
             </div>
           </>
         )}
@@ -130,6 +137,7 @@ export default function ColorPickerPopover({
 }
 
 function normalizeColorValue(value: any) {
+  // console.log('#2 defaultValue in normalizeColorValue:', value)
   if (
     !value ||
     (typeof value === 'object' && Object.keys(value).length === 0)
@@ -141,7 +149,7 @@ function normalizeColorValue(value: any) {
   }
 
   return {
-    light: value.light ?? {},
-    dark: value.dark ?? {},
+    light: value?.light ?? {},
+    dark: value?.dark ?? {},
   }
 }

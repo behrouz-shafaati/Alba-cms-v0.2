@@ -2,14 +2,12 @@
 // RenderRows.tsx
 import React from 'react'
 import type { Row } from '@/components/builder-canvas/types'
-import {
-  combineClassNames,
-  computedStyles,
-  getVisibilityClass,
-} from '../utils/styleUtils'
+import { combineClassNames, getVisibilityClass } from '../utils/styleUtils'
 import RenderBlock from './RenderBlock'
 import { Settings } from '@/lib/features/settings/interface'
 import Image from 'next/image'
+import ResponsiveStyle from '@/components/other/ResponsiveStyle'
+import computedStyles from '../utils/computedStyles'
 
 type Props = {
   siteSettings: Settings
@@ -19,6 +17,7 @@ type Props = {
   categorySlug?: string | null
   searchParams?: any
   [key: string]: any // اجازه props داینامیک مثل content_1, content_2
+  locale: string
 }
 
 const RendererRows = async ({
@@ -28,8 +27,10 @@ const RendererRows = async ({
   pageSlug = null,
   categorySlug = null,
   searchParams = {},
+  locale,
   ...rest
 }: Props) => {
+  console.log('#@#s43 resolvedLocale in render rows:', locale)
   // فیلتر کردن propsهایی که content_ شروع میشن
   const contents = Object.entries(rest)
     .filter(([key]) => key.startsWith('content_'))
@@ -52,16 +53,25 @@ const RendererRows = async ({
         let stickyClass = ''
         // این نوع چسبان فقط مخصوص ردیف است صله ی آن تا بالای ویو پورت همیشه صفر است. تنها یک ردیف این قابلیت را باید داشته باشد
         if (row?.settings?.sticky || false) stickyClass = 'sticky top-0 z-50'
+        console.log(
+          `#${row.id} row.styles:`,
+          row.styles,
+          `\n`,
+          computedStyles(row.styles),
+        )
         return (
           <div
             data-row
             key={row.id}
             style={{ ...computedStyles(row.styles) }}
-            className={`relative grid grid-cols-12 gap-4 ${combineClassNames(
-              row.classNames || {},
+            className={`row_${row.id} relative grid grid-cols-12 gap-4 ${combineClassNames(
               computedStyles(row.styles),
             )} ${className} ${stickyClass} `}
           >
+            <ResponsiveStyle
+              selector={`row_${row.id}`}
+              styles={row.styles?.css}
+            />
             {row?.settings?.bgMedia && (
               <Image
                 src={row?.settings?.bgMedia?.srcMedium}
@@ -82,14 +92,14 @@ const RendererRows = async ({
               const responsiveDesign = row?.settings?.responsiveDesign ?? true
               const classBaseOnResponsiveDesign = responsiveDesign
                 ? `col-span-12 md:col-span-${col.width}`
-                : `col-span-${col.width} md:col-span-${col.width}`
+                : `col-span-${col.width}`
 
               return (
                 <div
                   data-column
                   key={col.id}
-                  className={`relative  ${classBaseOnResponsiveDesign} ${combineClassNames(
-                    col.classNames || {},
+                  className={`col_${col.id} relative  ${classBaseOnResponsiveDesign} ${combineClassNames(
+                    col?.tailwindClasses || {},
                     computedStyles(col.styles),
                   )} ${visibilityClassName}`}
                   style={{
@@ -97,6 +107,10 @@ const RendererRows = async ({
                     ...computedStyles(col.settings),
                   }}
                 >
+                  <ResponsiveStyle
+                    selector={`col_${col.id}`}
+                    styles={col.styles?.css}
+                  />
                   {col?.settings?.bgMedia && (
                     <Image
                       src={col?.settings?.bgMedia?.srcMedium}
@@ -136,6 +150,7 @@ const RendererRows = async ({
                           pageSlug={pageSlug}
                           categorySlug={categorySlug}
                           searchParams={searchParams}
+                          locale={locale}
                           {...contentProps}
                         />
                       )

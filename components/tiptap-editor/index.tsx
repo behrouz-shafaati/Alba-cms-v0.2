@@ -20,7 +20,7 @@ import { AdSlot } from './extensions/adSlot'
 import { VideoEmbed } from './extensions/VideoEmbed'
 
 import styles from './editor.module.css'
-import MenuBar from './menu-bar'
+import MenuBar from './toolbar'
 import { CustomImage } from './extensions/CustomImage'
 import {
   Accordion,
@@ -31,6 +31,7 @@ import {
 import { Faq } from './extensions/Faq'
 import { getFiles } from '@/lib/features/file/actions'
 import FileUploadDialog from './component/FileUploadDialog'
+import { TextStyle } from './extensions/text-style'
 
 interface TiptapEditor {
   name: string
@@ -125,6 +126,7 @@ export default function TiptapEditor({
       AccordionItemTitle,
       Faq,
       VideoEmbed,
+      TextStyle,
     ],
     content: defaultContent,
     onUpdate({ editor }) {
@@ -174,19 +176,17 @@ export default function TiptapEditor({
     onLoading,
   }
 
-  console.log('#234234  in component')
-
   return (
     <div
       className="w-full"
-      onClick={(e) => {
-        const target = e.target as HTMLElement
-        // اگر کلیک روی دکمه یا آیکون یا خود EditorContent بود کاری نکن
-        if (target.closest('button') || target.closest('[data-no-focus]')) {
-          return
-        }
-        editor?.chain().focus().run()
-      }}
+      // onClick={(e) => {
+      //   const target = e.target as HTMLElement
+      //   // اگر کلیک روی دکمه یا آیکون یا خود EditorContent بود کاری نکن
+      //   if (target.closest('button') || target.closest('[data-no-focus]')) {
+      //     return
+      //   }
+      //   editor?.chain().focus().run()
+      // }}
     >
       <textarea
         value={content}

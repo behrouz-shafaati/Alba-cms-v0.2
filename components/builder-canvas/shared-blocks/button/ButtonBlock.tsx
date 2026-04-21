@@ -2,12 +2,12 @@
 
 import React from 'react'
 import { Block } from '../../types'
-import { computedStyles } from '../../utils/styleUtils'
 import { Button } from '@/components/ui/button'
 import { buttonBlockDefaults } from './defaultSettings'
-import IconRenderer from '../../components/IconRenderer'
+import IconRenderer from '../../components/DynamicLucideIcon'
 import { cn } from '@/lib/utils'
 import { LinkAlba } from '@/components/other/link-alba'
+import computedStyles from '../../utils/computedStyles'
 
 type ButtonBlockProps = {
   widgetName: string
@@ -31,6 +31,7 @@ export const ButtonBlock = ({
   ...props
 }: ButtonBlockProps) => {
   const { content, settings } = blockData
+  console.log('#@#432434 settings:', settings)
   const { className, ...resProps } = props
   return (
     <Button
@@ -41,7 +42,7 @@ export const ButtonBlock = ({
         settings?.backgroundColor?.default || '',
         settings?.backgroundColor?.hover || '',
         settings?.backgroundColor?.focus || '',
-        settings?.backgroundColor?.active || ''
+        settings?.backgroundColor?.active || '',
       )}
       style={{
         ...computedStyles(blockData.styles),
@@ -50,7 +51,7 @@ export const ButtonBlock = ({
     >
       <LinkAlba
         href={settings?.href}
-        className="flex flex-row gap-2 !text-inherit !no-underline !hover:no-underline"
+        className="flex flex-row gap-2 text-inherit! no-underline! !hover:no-underline"
       >
         {settings?.icon && settings?.iconPlace == 'before' && (
           <IconRenderer

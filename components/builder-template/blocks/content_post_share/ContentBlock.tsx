@@ -2,8 +2,8 @@
 
 import React from 'react'
 import { Block } from '@/components/builder-canvas/types'
-import { computedStyles } from '@/components/builder-canvas/utils/styleUtils'
 import ShareButtons from '@/components/share/share-buttons'
+import computedStyles from '@/components/builder-canvas/utils/computedStyles'
 
 type ContentBlockProps = {
   content: {

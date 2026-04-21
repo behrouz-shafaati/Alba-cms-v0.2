@@ -18,7 +18,7 @@ export type FormFieldTranslationSchema = {
   /**
    * زبان فرم
    */
-  lang: string // "fa", "en", "de", ...
+  locale: string // "fa", "en", "de", ...
   /**
    * عنوان فیلد
    */
@@ -48,7 +48,7 @@ export type FormTranslationSchema = {
   /**
    * زبان فرم
    */
-  lang: string // "fa", "en", "de", ...
+  locale: string // "fa", "en", "de", ...
   /**
    * پیام ارسال موفق فرم
    */

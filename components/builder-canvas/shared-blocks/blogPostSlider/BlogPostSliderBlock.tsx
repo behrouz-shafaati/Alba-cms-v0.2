@@ -4,10 +4,14 @@ import React from 'react'
 import { Block } from '../../types'
 import { BlogPostSlider } from './BlogPostSlider'
 import { Option } from '@/lib/types'
-import { getPosts } from '@/lib/features/post/actions'
+import {
+  getPosts,
+  getSlimPostsForPostListAction,
+} from '@/lib/features/post/actions'
 import { getCategoryAction } from '@/lib/features/category/actions'
 
 type BlogPostSliderBlockProps = {
+  locale: string
   widgetName: string
   blockData: {
     id: string
@@ -33,6 +37,7 @@ export default async function BlogPostSliderBlock({
   blockData,
   pageSlug,
   categorySlug,
+  locale,
   ...props
 }: BlogPostSliderBlockProps) {
   let filters
@@ -53,8 +58,9 @@ export default async function BlogPostSliderBlock({
       filters = { categories: categoryIds, ...filters }
   }
   const [result] = await Promise.all([
-    getPosts({
-      filters,
+    getSlimPostsForPostListAction({
+      payload: { filters },
+      locale,
     }),
   ])
   const posts = result.data

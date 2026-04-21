@@ -1,7 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import React from 'react'
 import { LinkAlba } from './link-alba'
-import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 import { getDirection } from '@/lib/i18n/utils/getDirection'
 
 export type BreadCrumbType = {
@@ -15,8 +14,7 @@ type BreadCrumbPropsType = {
 }
 
 export function BreadCrumbServer({ items, locale }: BreadCrumbPropsType) {
-  const resolvedLocale = resolveLocale({ locale })
-  const dir = getDirection(resolvedLocale)
+  const dir = getDirection(locale)
   return (
     <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
       {items?.map((item: BreadCrumbType, index: number) => {

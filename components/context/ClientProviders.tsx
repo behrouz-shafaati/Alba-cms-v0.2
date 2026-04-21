@@ -1,5 +1,9 @@
 'use client'
 
+import {
+  ClientLocaleProvider,
+  ClientLocaleSchema,
+} from './client-locale-provider'
 import { ThemeProvider } from './theme-provider'
 
 interface ProvidersProps {
@@ -7,6 +11,15 @@ interface ProvidersProps {
 }
 
 export function ClientProviders({ children }: ProvidersProps) {
+  const dictionary: ClientLocaleSchema = {
+    input: {
+      comboBox: {
+        loading: 'Loading',
+        notFound: 'Not found',
+        placeholder: 'Choose...',
+      },
+    },
+  }
   return (
     <ThemeProvider
       attribute="class"
@@ -14,7 +27,9 @@ export function ClientProviders({ children }: ProvidersProps) {
       enableSystem
       disableTransitionOnChange
     >
-      {children}
+      <ClientLocaleProvider dictionary={dictionary}>
+        {children}
+      </ClientLocaleProvider>
     </ThemeProvider>
   )
 }

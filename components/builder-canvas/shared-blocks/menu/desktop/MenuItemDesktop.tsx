@@ -16,7 +16,7 @@ export default function MenuItemDesktop({
       <Link
         href={item.url}
         // prefetch={true}
-        className="block px-2 py-1 hover:text-blue-600"
+        className="block px-2 py-1"
       >
         {item.label}
       </Link>
@@ -30,7 +30,7 @@ export default function MenuItemDesktop({
       <Link
         href={item.url}
         // prefetch={true}
-        className="flex items-center gap-1 px-2 py-1 hover:text-blue-600"
+        className="flex items-center gap-1 px-2 py-1"
       >
         {item.label}
         <ChevronDown className="w-4 h-4" />
@@ -39,7 +39,7 @@ export default function MenuItemDesktop({
       {/* زیرمنو با hidden و group-hover:block */}
       <div
         className={`absolute right-0 top-full hidden group-hover:block  shadow-md min-w-[180px] z-50 transition-all ${extractColorClasses(
-          className.replace('bg-transparent', '')
+          className.replace('bg-transparent', ''),
         )}`}
       >
         <div className="flex flex-col">
@@ -55,7 +55,7 @@ export default function MenuItemDesktop({
               </Link>
             ) : (
               <></>
-            )
+            ),
           )}
         </div>
       </div>

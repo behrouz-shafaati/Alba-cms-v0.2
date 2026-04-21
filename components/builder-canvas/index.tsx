@@ -12,7 +12,8 @@ type BuilderCanvasProp = {
   name: string
   submitFormHandler: any
   initialContent?: Content
-  settingsPanel: React.ReactNode
+  SettingsPanel: React.ReactNode
+  Header: React.ReactNode
   newBlocks?: any
   locale: string
 }
@@ -22,7 +23,8 @@ export default function BuilderCanvas({
   initialContent,
   name,
   submitFormHandler,
-  settingsPanel,
+  SettingsPanel,
+  Header,
   newBlocks = [],
   locale,
 }: BuilderCanvasProp) {
@@ -31,7 +33,8 @@ export default function BuilderCanvas({
       name={name}
       submitFormHandler={submitFormHandler}
       initialContent={initialContent}
-      settingsPanel={settingsPanel}
+      SettingsPanel={SettingsPanel}
+      Header={Header}
       newBlocks={newBlocks}
       locale={locale}
     />

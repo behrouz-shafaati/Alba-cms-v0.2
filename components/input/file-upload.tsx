@@ -44,6 +44,7 @@ export interface FileUploadRef {
 
 export type AllowedFileCategory =
   | 'image'
+  | 'image_svg'
   | 'video'
   | 'audio'
   | 'pdf'
@@ -64,7 +65,7 @@ interface FileUploadProps {
   responseHnadler?: (FileDetails: FileDetails) => void
   updateFileDetailsHandler?: (FileDetails: FileDetails[]) => void
   deleteFileHnadler?: (fileId: string) => void
-  onChange?: () => void
+  onChange?: (fileDetails: FileDetails) => void
   onLoading?: (loading: boolean) => void
   attachedTo?: { feature: string; id: string }[]
 }
@@ -102,7 +103,6 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [files, setFiles] = useState<any[]>(normalizedDefaultValues)
-    console.log('#88823 defaultValues:', defaultValues)
     const [selectedFileIndex, setSelectedFileIndex] = useState<number>(0)
 
     const accept = buildAccept(allowedFileTypes)
@@ -136,7 +136,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
           responseHnadler?.(fileDetails)
 
           requestAnimationFrame(() => {
-            onChange?.()
+            onChange?.(fileDetails)
           })
         } catch (e) {
           console.error('upload error:', e)
@@ -262,7 +262,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
             await deleteFile(deletedItem.id)
           }
           requestAnimationFrame(() => {
-            onChange?.()
+            onChange?.(items)
             deleteFileHnadler?.(deletedItem?.id)
           })
         } catch (e) {
@@ -292,7 +292,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     const removeAll = useCallback(() => {
       setFiles([])
       requestAnimationFrame(() => {
-        onChange?.()
+        onChange?.([])
       })
     }, [onChange])
 
@@ -357,7 +357,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     return (
       <>
         <div>
-          <p className="mb-2 text-md">{title}</p>
+          <p className="my-2 text-md">{title}</p>
 
           <textarea name={name} value={makeIdsClean()} readOnly hidden />
 
@@ -582,6 +582,7 @@ export default FileUpload
 
 const FILE_ACCEPT_MAP: Record<AllowedFileCategory, Record<string, string[]>> = {
   image: { 'image/*': ['.jpg', '.jpeg', '.png', '.webp'] },
+  image_svg: { 'image/svg+xml': ['.svg'] },
   video: { 'video/*': ['.mp4', '.mov', '.avi', '.mkv'] },
   audio: { 'audio/*': ['.mp3', '.wav', '.ogg'] },
   pdf: { 'application/pdf': ['.pdf'] },

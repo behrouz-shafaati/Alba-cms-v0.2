@@ -13,7 +13,7 @@ export type MenuTranslationSchema = {
   /**
    * زبان مطلب
    */
-  lang: string // "fa", "en", "de", ...
+  locale: string // "fa", "en", "de", ...
 
   /**
    * عنوان فهرست

@@ -1,7 +1,7 @@
 export const buttonBlockDefaults = {
   settings: {
     label: 'دکمه',
-    href: '',
+    href: '#',
     variant: 'default',
     size: 'default',
   },

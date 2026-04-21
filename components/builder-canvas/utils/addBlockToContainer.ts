@@ -1,84 +1,23 @@
 import insertWithPosition from '@/lib/utils/insertWithPosition'
+import findElementContainer from './findElementContainer'
 
 export default function addBlockToContainer(
   content: any,
   goalContainerId: string,
   movedBlock: any,
-  position: 'start' | 'end' | number = 'end'
+  position: 'start' | 'end' | number = 'end',
 ) {
-  let handled = false
-  return {
-    ...content,
-    rows: content.rows.map((row: any) => {
-      if (handled) return row
+  const updatedContent = { ...content }
 
-      return {
-        ...row,
-        columns: row.columns.map((column: any) => {
-          if (handled) return column
+  // 1️⃣ container واقعی را پیدا می‌کنیم (column یا section)
+  const container = findElementContainer(updatedContent, goalContainerId)
+  if (!container) return updatedContent
 
-          let columnChanged = false
+  // 2️⃣ blocks کنونی container را می‌گیریم
+  const currentBlocks = container.blocks || []
 
-          // 1️⃣ تلاش برای internalSection (از طریق wrapper)
-          const newBlocks = (column.blocks || []).map((block: any) => {
-            if (
-              handled ||
-              block.type !== 'internalSectionWrapper' ||
-              !block.sections
-            ) {
-              return block
-            }
+  // 3️⃣ بلوک جدید را در جای درست اضافه می‌کنیم
+  container.blocks = insertWithPosition(currentBlocks, movedBlock, position)
 
-            let wrapperChanged = false
-
-            const newSections = block.sections.map((section: any) => {
-              if (handled || section.id !== goalContainerId) return section
-
-              handled = true
-              wrapperChanged = true
-
-              return {
-                ...section,
-                blocks: insertWithPosition(
-                  section.blocks || [],
-                  movedBlock,
-                  position
-                ),
-              }
-            })
-
-            if (!wrapperChanged) return block
-
-            columnChanged = true
-            return {
-              ...block,
-              sections: newSections,
-            }
-          })
-
-          if (handled) {
-            return {
-              ...column,
-              blocks: newBlocks,
-            }
-          }
-
-          // 2️⃣ اگر target خود column بود
-          if (column.id === goalContainerId) {
-            handled = true
-            return {
-              ...column,
-              blocks: insertWithPosition(
-                column.blocks || [],
-                movedBlock,
-                position
-              ),
-            }
-          }
-
-          return columnChanged ? { ...column, blocks: newBlocks } : column
-        }),
-      }
-    }),
-  }
+  return updatedContent
 }

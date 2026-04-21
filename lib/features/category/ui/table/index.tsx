@@ -1,26 +1,32 @@
-import { DataTable } from '@/components/other/ui/data-table'
 import { Heading } from '@/components/other/ui/heading'
 import { LinkButton } from '@/components/other/ui/link-button'
 import CategoryCtrl from '../../controller'
 import { Category } from '../../interface'
 import { Plus } from 'lucide-react'
-import { columns } from './columns'
 import { QueryResponse } from '@/lib/features/core/interface'
 import GroupAction from './group-action'
 import { User } from '@/lib/features/user/interface'
 import { getSession } from '@/lib/auth/get-session'
 import authorize from '@/lib/utils/authorize'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import ClientCategoryTable from './client-tabel'
 
 interface CategoriesTableProps {
+  locale: string
+  dictionary: DashboardLocaleSchema
+  filters: any
   query: string
   page: number
 }
 
 export default async function CategoryTable({
+  locale,
+  dictionary,
   query,
+  filters,
   page,
 }: CategoriesTableProps) {
-  let filters = { query }
+  filters = { ...filters, query }
   const user = (await getSession())?.user as User
   if (!authorize(user.roles, 'category.view.any', false)) {
     filters = { ...filters, user: user.id }
@@ -36,22 +42,23 @@ export default async function CategoryTable({
     <>
       <div className="flex items-start justify-between">
         <Heading
-          title={`دسته بندی ها (${findResult?.totalDocuments || 0})`}
-          description="مدیریت دسته بندی ها"
+          title={`${dictionary.feature.category.title} (${findResult?.totalDocuments || 0})`}
+          description={dictionary.feature.category.description}
         />
         {canCreate && (
           <LinkButton
             className="text-xs md:text-sm"
             href="/dashboard/categories/create"
           >
-            <Plus className="ml-2 h-4 w-4" /> افزودن دسته بندی
+            <Plus className="ml-2 h-4 w-4" />{' '}
+            {dictionary.feature.category.create}
           </LinkButton>
         )}
       </div>
-      <DataTable
-        searchTitle="جستجو ..."
-        columns={columns}
-        response={findResult}
+      <ClientCategoryTable
+        dictionary={dictionary}
+        locale={locale}
+        findResult={findResult}
         groupAction={GroupAction}
       />
     </>

@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Block } from '@/components/builder-canvas/types'
-import { computedStyles } from '@/components/builder-canvas/utils/styleUtils'
+import computedStyles from '@/components/builder-canvas/utils/computedStyles'
 
 type ContentBlockProps = {
   widgetName: string

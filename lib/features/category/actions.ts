@@ -17,7 +17,7 @@ import authorize from '@/lib/utils/authorize'
 const FormSchema = z.object({
   title: z.string({}).min(1, { message: 'لطفا عنوان را وارد کنید.' }),
   parent: z.string({}).nullable(),
-  lang: z.string({}),
+  locale: z.string({}),
   slug: z.string({}),
   description: z.string({}),
   status: z.string({}).min(1, { message: 'لطفا وضعیت را تعیین کنید.' }),
@@ -37,12 +37,12 @@ async function sanitizePostData(validatedFields: any, id?: string | undefined) {
   const slug = payload.slug !== '' ? payload.slug : slugify(payload.title)
   const translations = [
     {
-      lang: payload.lang,
+      locale: payload.locale,
       title: payload.title,
       description: payload.description, // contentJson
     },
     ...prevState.translations.filter(
-      (t: CategoryTranslationSchema) => t.lang != payload.lang
+      (t: CategoryTranslationSchema) => t.locale != payload.locale,
     ),
   ]
   const params = {
@@ -64,14 +64,14 @@ async function sanitizePostData(validatedFields: any, id?: string | undefined) {
  */
 export async function createCategory(
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   // Validate form fields
   const rawValues = Object.fromEntries(formData)
   const values = {
     ...rawValues,
     translation: {
-      lang: rawValues.lang,
+      locale: rawValues.locale,
       title: rawValues.title,
       description: rawValues.description,
     },
@@ -132,14 +132,14 @@ export async function createCategory(
 export async function updateCategory(
   id: string,
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   const user = (await getSession())?.user as User
   const rawValues = Object.fromEntries(formData)
   const values = {
     ...rawValues,
     translation: {
-      lang: rawValues.lang,
+      locale: rawValues.locale,
       title: rawValues.title,
       description: rawValues.description,
     },
@@ -158,7 +158,7 @@ export async function updateCategory(
     const prevCategory = await categoryCtrl.findById({ id })
     authorize(
       user.roles,
-      prevCategory.user !== user.id ? 'category.edit.any' : 'category.edit.own'
+      prevCategory.user !== user.id ? 'category.edit.any' : 'category.edit.own',
     )
     const params = await sanitizePostData(validatedFields, id)
     await categoryCtrl.findOneAndUpdate({
@@ -201,7 +201,7 @@ export async function deleteCategorysAction(ids: string[]) {
         user.roles,
         prevCategory.user !== user.id
           ? 'category.delete.any'
-          : 'category.delete.own'
+          : 'category.delete.own',
       )
     }
     await categoryCtrl.delete({ filters: ids })
@@ -236,34 +236,34 @@ export async function getAllCategories(filters: any = {}) {
 }
 export async function getAllCategoriesSlimAction({
   payload,
-  lang = 'fa',
+  locale = 'fa',
 }: {
   payload?: { filters: any }
-  lang?: 'fa'
+  locale?: 'fa'
 }) {
-  const cacheKy = ['category', stableHash(payload), lang]
+  const cacheKy = ['category', stableHash(payload), locale]
   try {
     return await unstable_cache(
       async () => {
         return categoryCtrl.findAllSlim({
           payload: { filters: payload?.filters || {} },
-          lang,
+          locale,
         })
       },
       cacheKy,
       {
         tags: ['categories'],
-      }
+      },
     )()
   } catch (error) {
     // fallback امن: اگر cache fail شد
     console.warn(
       '[getAllCategoriesSlimAction] unstable_cache failed, fallback to direct call',
-      error
+      error,
     )
     return categoryCtrl.findAllSlim({
       payload: { filters: payload?.filters || {} },
-      lang,
+      locale,
     })
   }
 }
@@ -275,14 +275,14 @@ export async function getCategoryAction({ slug }: { slug: string }) {
 
 export async function searchCategories(
   query: string,
-  locale: string = 'fa'
+  locale: string = 'fa',
 ): Promise<Option[]> {
   const results = await categoryCtrl.find({ filters: { query } })
 
   return results.data.map((cat: Category) => {
     const translation: CategoryTranslationSchema =
       cat?.translations?.find(
-        (t: CategoryTranslationSchema) => t.lang === locale
+        (t: CategoryTranslationSchema) => t.locale === locale,
       ) ||
       cat?.translations[0] ||
       {}

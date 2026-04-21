@@ -49,7 +49,7 @@ const PostOverlayCard = ({ post, direction = 'row', options }: Props) => {
     >
       {/* تصویر پس‌زمینه */}
       <Image
-        src={post?.image?.srcMedium || '/image-placeholder-Medium.webp'}
+        src={post?.image?.srcMedium || '/assets/placeholder.jpg'}
         alt={translationImage?.alt || translationImage?.title || ''}
         layout="fill"
         objectFit="cover"

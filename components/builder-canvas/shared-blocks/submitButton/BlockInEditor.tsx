@@ -2,8 +2,8 @@
 
 import React from 'react'
 import { Block } from '@/components/builder-canvas/types'
-import { computedStyles } from '@/components/builder-canvas/utils/styleUtils'
 import SubmitButton from '@/components/input/submit-button'
+import computedStyles from '../../utils/computedStyles'
 
 type BlockInEditorProps = {
   widgetName: string

@@ -2,9 +2,9 @@
 
 import React from 'react'
 import { Block } from '@/components/builder-canvas/types'
-import { computedStyles } from '@/components/builder-canvas/utils/styleUtils'
 import { PostTags } from '@/components/post/tags'
-import { Tag } from '@/features/tag/interface'
+import { Tag } from '@/lib/features/tag/interface'
+import computedStyles from '@/components/builder-canvas/utils/computedStyles'
 
 type ContentBlockProps = {
   content: {

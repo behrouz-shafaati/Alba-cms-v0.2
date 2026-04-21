@@ -66,9 +66,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
           {canEdit && (
             <DropdownMenuItem
-              onClick={() =>
-                router.push(`/dashboard/template-parts/${data.id}`)
-              }
+              onClick={() => router.push(`/dashboard/sections/${data.id}`)}
             >
               <Edit className="ml-2 h-4 w-4" /> بروزرسانی
             </DropdownMenuItem>

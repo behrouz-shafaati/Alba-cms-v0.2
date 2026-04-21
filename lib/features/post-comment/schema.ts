@@ -3,12 +3,12 @@ import { PostCommentSchema } from './interface'
 
 const PostCommentTranslationSchema = new Schema(
   {
-    lang: { type: String, required: true }, // "fa", "en", "de", ...
+    locale: { type: String, required: true }, // "fa", "en", "de", ...
     excerpt: { type: String, default: '' },
     contentJson: { type: String, default: '' },
     readingTime: { type: Number, default: 0 },
   },
-  { _id: false }
+  { _id: false },
 )
 
 const postCommentSchema = new Schema<PostCommentSchema>(
@@ -52,7 +52,7 @@ const postCommentSchema = new Schema<PostCommentSchema>(
     },
     deleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 )
 
 postCommentSchema.pre(['findOne', 'find', 'findOneAndUpdate'], function () {
@@ -66,7 +66,7 @@ postCommentSchema.pre(['findOne', 'find', 'findOneAndUpdate'], function () {
 
       // 🔻 محدود کردن محتوای translations
       doc.translations = (doc?.translations || []).map((t: any) => ({
-        lang: t.lang,
+        locale: t.locale,
         title: t.title,
       }))
 

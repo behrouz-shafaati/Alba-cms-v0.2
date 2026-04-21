@@ -29,7 +29,7 @@ const PostHorizontalCard = ({
 
   const translationImage: FileTranslationSchema =
     post.image?.translations?.find(
-      (t: FileTranslationSchema) => t.lang === locale
+      (t: FileTranslationSchema) => t.lang === locale,
     ) ||
     post.image?.translations[0] ||
     {}
@@ -67,14 +67,14 @@ const PostHorizontalCard = ({
         <div className="relative w-full h-full min-h-28 aspect-square md:aspect-[4/3] md:row-span-2 overflow-hidden rounded-sm">
           {post?.image?.srcMedium && (
             <Image
-              src={post?.image?.srcMedium || '/image-placeholder-Medium.webp'}
+              src={post?.image?.srcMedium || '/assets/placeholder.jpg'}
               alt={translationImage?.alt || translationImage?.title}
               fill
               className="object-cover"
               sizes="(max-width: 640px) 112px, 200px"
               placeholder="blur"
               blurDataURL={
-                post?.image?.blurDataURL || '/image-placeholder-Small.webp'
+                post?.image?.blurDataURL || '/assets/placeholder.jpg'
               }
               priority={isLCP} // برای تصویر LCP
               loading={isLCP ? 'eager' : 'lazy'}

@@ -72,7 +72,7 @@ export default function LoginForm({
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col text-center justify-center">
           <Link href={'/'} target="_self" className=" w-20 m-auto">
-            {logo && <ImageAlba zoomable={false} file={logo} />}
+            {logo?.srcMedium && <ImageAlba zoomable={false} file={logo} />}
           </Link>
           <p className="text-sm text-muted-foreground">
             {site_title

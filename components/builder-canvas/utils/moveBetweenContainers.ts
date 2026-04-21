@@ -1,4 +1,3 @@
-import { DndSortable } from '../types'
 import addBlockToContainer from './addBlockToContainer'
 import extractMovedBlockContent from './extractMovedBlockContent'
 import findElementContainer from './findElementContainer'

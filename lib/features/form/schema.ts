@@ -31,15 +31,15 @@ const FieldSchema = new Schema(
     description: MultiLangString,
     defaultValue: MultiLangString,
   },
-  { _id: false }
+  { _id: false },
 )
 
 const TranslationSchema = new Schema(
   {
-    lang: { type: String, required: true }, // "fa", "en", "de", ...
+    locale: { type: String, required: true }, // "fa", "en", "de", ...
     successMessage: { type: String, default: '' },
   },
-  { _id: false }
+  { _id: false },
 )
 
 const formSchema = new Schema<FormSchema>(
@@ -64,7 +64,7 @@ const formSchema = new Schema<FormSchema>(
     },
     deleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 )
 
 const transform = (doc: any, ret: any, options: any) => {

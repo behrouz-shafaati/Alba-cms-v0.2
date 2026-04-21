@@ -13,6 +13,7 @@ export type RevalidatePathProp = {
     | 'menu'
     | 'settings'
     | 'tag'
+    | 'productTag'
     | 'city'
     | 'country'
     | 'province'
@@ -52,7 +53,7 @@ class controller {
   }
 
   async getAllPathesNeedRevalidate(
-    revalidate: RevalidatePathProp
+    revalidate: RevalidatePathProp,
   ): Promise<string[]> {
     if (!revalidate) return []
 

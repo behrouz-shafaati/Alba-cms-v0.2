@@ -43,7 +43,6 @@ export default function Combobox({
   const errorMessages = state?.errors?.[name] ?? []
   const hasError = state?.errors?.[name]?.length > 0
   const InputIcon = typeof icon === 'object' ? () => icon : icon
-
   const [query, setQuery] = useState<string>('')
   const [selectedOption, setSelectedOption] = useState<Option | null>(null)
   useEffect(() => {

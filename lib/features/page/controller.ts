@@ -85,12 +85,10 @@ class controller extends baseController {
 
   async getHomePage(): Promise<Page | null> {
     const siteSettings = await getSettings()
-    const pageTranslation = getTranslation({
-      translations: siteSettings?.general?.translations || [],
+    const homePage = await this.findById({
+      id: siteSettings?.general?.homePageId,
     })
-    console.log('#884725 pageTranslation in build time:', pageTranslation)
-    if (pageTranslation?.homePageId == null) return null
-    const homePage = await this.findById({ id: pageTranslation.homePageId })
+    console.log('#234 homePage', homePage)
     return homePage
   }
   async getTermsPage() {

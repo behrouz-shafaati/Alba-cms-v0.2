@@ -5,7 +5,7 @@ export type CampaignTranslationSchema = {
   /**
    * زبان مطلب
    */
-  lang: string // "fa", "en", "de", ...
+  locale: string // "fa", "en", "de", ...
   /**
    * بنرها
    */
@@ -15,7 +15,7 @@ export type CampaignTranslation = {
   /**
    * زبان مطلب
    */
-  lang: string // "fa", "en", "de", ...
+  locale: string // "fa", "en", "de", ...
   /**
    * بنرها
    */

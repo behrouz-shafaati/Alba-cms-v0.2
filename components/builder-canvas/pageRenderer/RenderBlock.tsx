@@ -1,11 +1,7 @@
 'use server'
 import { getBlocksSafe } from '@/lib/singletonBlockRegistry'
 import { Block } from '../types'
-import {
-  combineClassNames,
-  computedStyles,
-  getVisibilityClass,
-} from '../utils/styleUtils'
+import { combineClassNames, getVisibilityClass } from '../utils/styleUtils'
 import { Settings } from '@/lib/features/settings/interface'
 
 type RestProps = Record<string, unknown>
@@ -17,6 +13,7 @@ type RenderBlockProp = {
   pageSlug: string | null
   categorySlug: string | null
   searchParams?: any
+  locale: string
 }
 const RenderBlock = async ({
   siteSettings,
@@ -25,14 +22,16 @@ const RenderBlock = async ({
   pageSlug,
   categorySlug,
   searchParams = {},
+  locale,
   ...rest
 }: RenderBlockProp) => {
   const blocks = getBlocksSafe() // برای محتوا دار بودن این برای رسیدن به این کامپوننت هیچ کامپوننتی نباید از use client‌ استفاده کرده باشد
 
   const visibility: any = item.styles?.visibility
-  const className = getVisibilityClass(visibility)
-
   const block = blocks[item.type]
+  const className = getVisibilityClass(visibility, {
+    display: item?.settings?.display || 'block',
+  })
   const Component = block?.Renderer
   if (Component) {
     if (item.type.startsWith('content_')) {
@@ -43,14 +42,12 @@ const RenderBlock = async ({
             <Component
               siteSettings={siteSettings}
               blockData={item}
-              className={`${className} ${combineClassNames(
-                item.classNames || {},
-                computedStyles(item.styles),
-              )}`}
+              className={`b${item.id} ${className}`}
               content={node} // به ویژگی content جهت نمایش در جایگاه مورد نظر پاس داده میشود
               pageSlug={pageSlug}
               categorySlug={categorySlug}
               searchParams={searchParams}
+              locale={locale}
             />
           </>
         )
@@ -61,14 +58,12 @@ const RenderBlock = async ({
           <Component
             siteSettings={siteSettings}
             blockData={item}
-            className={`${className} ${combineClassNames(
-              item.classNames || {},
-              computedStyles(item.styles),
-            )}`}
+            className={`b${item.id} ${className}}`}
             {...rest} // 👈 همه content_all به صورت داینامیک پاس داده میشه
             pageSlug={pageSlug}
             categorySlug={categorySlug}
             searchParams={searchParams}
+            locale={locale}
           />
         </>
       )
@@ -79,10 +74,11 @@ const RenderBlock = async ({
         <Component
           siteSettings={siteSettings}
           blockData={item}
-          className={`${className} ${combineClassNames(item.classNames || {}, computedStyles(item.styles))}`}
+          className={`b${item.id} ${className}}`}
           pageSlug={pageSlug}
           categorySlug={categorySlug}
           searchParams={searchParams}
+          locale={locale}
         />
       </>
     )

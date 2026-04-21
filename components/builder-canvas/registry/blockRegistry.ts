@@ -10,17 +10,21 @@ import { ThemeModeSwitchBlockDef } from '../shared-blocks/theme-mode-switch'
 import { UserNavBlockDef } from '../shared-blocks/user-nav'
 import { ImageSliderBlockDef } from '../shared-blocks/imageSlider'
 import { BlogPostSliderBlockDef } from '../shared-blocks/blogPostSlider'
-// import { MenuBlockDef } from '../shared-blocks/menu'
+import { MenuBlockDef } from '../shared-blocks/menu'
 import { ButtonBlockDef } from '../shared-blocks/button'
-// import { WriteBlockDef } from '../shared-blocks/write'
+import { WriteBlockDef } from '../shared-blocks/write'
 import { VideoPlaylistBlockDef } from '../shared-blocks/video-playlist'
 import { TextInputBlockDef } from '../shared-blocks/text-input'
 import { TextareaInputBlockDef } from '../shared-blocks/textarea-input'
 import { SubmitButtonBlockDef } from '../shared-blocks/submitButton'
-// import { FormBlockDef } from '../shared-blocks/form'
+import { FormBlockDef } from '../shared-blocks/form'
 import { SearchBlockDef } from '../shared-blocks/search'
 import { InternalSectionWrapperBlockDef } from '../shared-blocks/internalSectionWrapper'
 import { InternalSectionBlockDef } from '../shared-blocks/internalSection'
+import { LocaleBlockDef } from '../shared-blocks/locale'
+import { LinkButtonBlockDef } from '../shared-blocks/link-button'
+import { DividerBlockDef } from '../shared-blocks/Divider'
+import { IconCardBlockDef } from '../shared-blocks/icon-card'
 export const blockRegistry = {
   row: RowBlockDef,
   column: columnBlockDef,
@@ -32,17 +36,21 @@ export const blockRegistry = {
   userNav: UserNavBlockDef,
   imageSlider: ImageSliderBlockDef,
   blogPostSlider: BlogPostSliderBlockDef,
-  // menu: MenuBlockDef,
-  button: ButtonBlockDef,
-  // write: WriteBlockDef,
+  menu: MenuBlockDef,
+  // button: ButtonBlockDef,
+  write: WriteBlockDef,
   videoPlaylist: VideoPlaylistBlockDef,
   textInput: TextInputBlockDef, // input [type=text]
   textareaInput: TextareaInputBlockDef,
   submitButton: SubmitButtonBlockDef,
   internalSectionWrapper: InternalSectionWrapperBlockDef,
-  // form: FormBlockDef,
+  form: FormBlockDef,
   search: SearchBlockDef,
   internalSection: InternalSectionBlockDef,
+  locale: LocaleBlockDef,
+  linkButton: LinkButtonBlockDef,
+  divider: DividerBlockDef,
+  iconCard: IconCardBlockDef,
 }
 
 // registerBlock(blockRegistry)

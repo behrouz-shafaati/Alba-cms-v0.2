@@ -6,9 +6,9 @@ import { QueryResponse } from '@/lib/features/core/interface'
 import { Heading } from '@/components/other/ui/heading'
 import { LinkButton } from '@/components/other/ui/link-button'
 import { Plus } from 'lucide-react'
+import { useLocale } from '@/hooks/useLocale'
 
 type Props = {
-  dictionary: any
   locale: string
   findResult: QueryResponse<any>
   refetchDataUrl: string
@@ -17,13 +17,13 @@ type Props = {
 }
 
 export function ClientPostTable({
-  dictionary,
   locale,
   findResult,
   refetchDataUrl,
   GroupAction,
   canCreate,
 }: Props) {
+  const dictionary = useLocale()
   const columns = getColumns(dictionary, locale)
   return (
     <>

@@ -1,5 +1,5 @@
 export type GeneralTranslation = {
-  lang: string
+  locale: string
   site_title: string
 
   site_introduction: string

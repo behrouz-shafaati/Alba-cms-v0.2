@@ -6,7 +6,7 @@ export type PostCommentTranslationSchema = {
   /**
    * زبان مطلب
    */
-  lang: string // "fa", "en", "de", ...
+  locale: string // "fa", "en", "de", ...
 
   /**
    * توضیحات مربوط به مطلب

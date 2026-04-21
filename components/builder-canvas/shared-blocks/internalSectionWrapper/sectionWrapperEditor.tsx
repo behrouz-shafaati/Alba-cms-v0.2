@@ -23,6 +23,7 @@ export default function sectionWrapperEditor({
   ...props
 }: BlockProps) {
   const { sections, settings, styles } = blockData
+  const responsiveDesign = settings?.responsiveDesign ?? true
   return (
     <div
       style={{
@@ -37,6 +38,7 @@ export default function sectionWrapperEditor({
             key={section.id}
             blockData={section}
             widgetName="internalSection"
+            responsiveDesign={responsiveDesign}
           />
         ))}
       </div>

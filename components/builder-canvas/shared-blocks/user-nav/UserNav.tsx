@@ -9,11 +9,11 @@ import {
 // import { logout } from '@/lib/auth'
 import { User } from '@/lib/features/user/interface'
 import { Block } from '../../types'
-import { computedStyles } from '../../utils/styleUtils'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { LinkAlba } from '@/components/other/link-alba'
 import authorize from '@/lib/utils/authorize'
+import computedStyles from '../../utils/computedStyles'
 type props = {
   widgetName: string
   user: User

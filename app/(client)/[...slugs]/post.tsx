@@ -115,6 +115,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
             categorySlug={post?.mainCategory?.slug || null}
             // searchParams={resolvedSearchParams}
             editroMode={false}
+            locale={locale}
             content_all={
               <DefaultSinglePageBlog
                 siteSettings={siteSettings}

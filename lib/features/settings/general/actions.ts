@@ -24,7 +24,6 @@ const FormSchema = z.object({
   homePageId: z.string({}).nullable().optional(),
   termsPageId: z.string({}).nullable().optional(),
   privacyPageId: z.string({}).nullable().optional(),
-  lang: z.string({}).nullable().optional(),
 })
 
 /**
@@ -37,7 +36,7 @@ const FormSchema = z.object({
 
 export async function updateGeneralSettings(
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   const rawValues = Object.fromEntries(formData.entries())
   const t = getDashboardDictionary(rawValues?.locale)
@@ -98,7 +97,6 @@ export async function updateGeneralSettings(
 
 async function sanitizeSettingsData(validatedFields: any) {
   const locale = validatedFields.locale
-  const lang = validatedFields.lang
   // const session = (await getSession()) as Session
   // Create the settings
   const settings: General = (await getSettings({
@@ -108,12 +106,13 @@ async function sanitizeSettingsData(validatedFields: any) {
   // public
   const generalTranslation = getTranslation({
     translations: settings?.translations || [],
-    lang,
+    locale,
   })
   const generalTranslations = [
-    ...((settings?.translations || []).filter((t) => t?.lang !== lang) || []),
+    ...((settings?.translations || []).filter((t) => t?.locale !== locale) ||
+      []),
     {
-      lang,
+      locale,
       site_title:
         settingsPayload?.site_title || generalTranslation?.site_title || '',
       site_introduction:

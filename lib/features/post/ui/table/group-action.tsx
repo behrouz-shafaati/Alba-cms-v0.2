@@ -7,12 +7,14 @@ import { deletePostsAction } from '../../actions'
 import { AlertModal } from '@/components/other/modal/alert-modal'
 import { useSession } from '@/components/context/SessionContext'
 import authorize from '@/lib/utils/authorize'
+import { useLocale } from '@/hooks/useLocale'
 
 type GroupActionProps = {
   table: any
   items: any[]
 }
 export default function GroupAction({ table, items }: GroupActionProps) {
+  const dictionary = useLocale()
   const router = useRouter()
   const [open, setOpen] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
@@ -45,7 +47,13 @@ export default function GroupAction({ table, items }: GroupActionProps) {
       {canDelete && (
         <>
           <AlertModal
-            description={`از حذف ${items.length}  مورد اطمینان دارید؟ این عمل غیر قابل بازگشت است!`}
+            description={
+              dictionary?.shared?.deleteItemsAlarm.replace(
+                '%s%',
+                String(items.length),
+              ) ||
+              `از حذف ${items.length}  مورد اطمینان دارید؟ این عمل غیر قابل بازگشت است!`
+            }
             isOpen={open}
             onClose={() => setOpen(false)}
             onConfirm={onDelete}
@@ -56,7 +64,8 @@ export default function GroupAction({ table, items }: GroupActionProps) {
             className="text-xs"
             onClick={() => setOpen(true)}
           >
-            <Trash className="ml-2 h-4 w-4 " /> حذف گروهی
+            <Trash className="ml-2 h-4 w-4 " />{' '}
+            {dictionary?.shared?.deleteItems || 'Delete items'}
           </Button>
         </>
       )}

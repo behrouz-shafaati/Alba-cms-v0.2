@@ -48,7 +48,7 @@ export async function createPostComment(
     ...rawValues,
     locale: rawValues?.locale,
     translation: {
-      lang: rawValues?.lang || 'fa',
+      locale: rawValues?.locale || 'fa',
       contentJson: rawValues.contentJson || '',
     },
   }
@@ -130,7 +130,7 @@ export async function updatePostComment(
   const values = {
     ...rawValues,
     translation: {
-      lang: rawValues?.lang || 'fa',
+      locale: rawValues?.locale || 'fa',
       title: rawValues?.title || '',
       contentJson: rawValues.contentJson || '',
     },
@@ -328,13 +328,14 @@ async function sanitizePostCommentData(
 
   const translations = [
     {
-      lang: postCommentPayload.locale,
+      locale: postCommentPayload.locale,
       excerpt,
       contentJson: postCommentPayload.contentJson,
       readingTime: postCommentPayload.readingTime,
     },
     ...prevState.translations.filter(
-      (t: PostCommentTranslationSchema) => t.lang != postCommentPayload.lang,
+      (t: PostCommentTranslationSchema) =>
+        t.locale != postCommentPayload.locale,
     ),
   ]
   const status = authorize(

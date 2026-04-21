@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Block } from '../../types'
 import Menu from './Menu'
-import { getMenus } from '@/features/menu/actions'
+import { getMenus } from '@/lib/features/menu/actions'
 import EmptyBlock from '../../components/EmptyBlock'
 
 type MenuBlockProps = {

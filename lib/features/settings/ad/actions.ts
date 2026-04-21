@@ -15,7 +15,6 @@ const METADATA_KEY = 'ad'
 
 const FormSchema = z.object({
   locale: z.string({}).nullable().optional(),
-  lang: z.string({}).nullable().optional(),
   //ad
   fallbackBehavior: z.string().nullable().optional(),
   targetUrl: z.string().nullable().optional(),
@@ -25,7 +24,7 @@ const FormSchema = z.object({
       z.object({
         aspect: z.string(),
         file: z.string().nullable(), // یا z.string().uuid() یا z.string().regex(...) اگه نیاز داری
-      })
+      }),
     )
     .nullable()
     .optional(),
@@ -42,7 +41,7 @@ const FormSchema = z.object({
 
 export async function updateAdSettings(
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   const rawValues = Object.fromEntries(formData.entries())
   const validatedFields = FormSchema.safeParse(rawValues)
@@ -116,15 +115,16 @@ export async function updateAdSettings(
 }
 
 async function sanitizeSettingsData(validatedFields: any) {
-  const lang = validatedFields.lang
+  const locale = validatedFields.locale
   // const session = (await getSession()) as Session
   // Create the settings
   const adSettings: AD = await getSettings({ key: METADATA_KEY })
   const settingsPayload = validatedFields
   const bannersTranslations = [
-    ...((adSettings?.translations || []).filter((t) => t?.lang !== lang) || []),
+    ...((adSettings?.translations || []).filter((t) => t?.locale !== locale) ||
+      []),
     {
-      lang,
+      locale,
       banners: settingsPayload.banners,
     },
   ]

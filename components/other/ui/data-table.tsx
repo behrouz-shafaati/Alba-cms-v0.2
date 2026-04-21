@@ -24,6 +24,7 @@ import Search from './search'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import Pagination from './pagination'
 import { useLocale } from '@/hooks/useLocale'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -72,7 +73,7 @@ export function DataTable<TData, TValue>({
   const t = useLocale()
   return (
     <>
-      <div className="flex space-x-2 space-x-reverse space-y-2 md:space-y-0 flex-col md:flex-row">
+      <div className="flex space-x-2  space-y-2 md:space-y-0 flex-col md:flex-row">
         {showSearch && <Search placeholder={searchTitle} />}
         {showFilters && <Filters table={table} dictianory={t} />}
       </div>

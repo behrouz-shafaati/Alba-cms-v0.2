@@ -4,8 +4,12 @@ import { CellAction } from './cell-action'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Category } from '@/lib/features/category/interface'
 import { Status } from '@/components/other/Status'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
-export const columns: ColumnDef<Category>[] = [
+export const getPostCategoryColumns = (
+  dictionary: DashboardLocaleSchema,
+  locale: string,
+): ColumnDef<Category>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -26,16 +30,24 @@ export const columns: ColumnDef<Category>[] = [
     enableHiding: false,
   },
   {
-    header: 'نام',
+    header: dictionary.feature.category.title,
     accessorFn: (row) => {
-      const locale = 'fa' // یا از context/state
-      return row.translations?.find((t) => t.lang === locale)?.title ?? ''
+      return row.translations?.find((t) => t.locale === locale)?.title ?? ''
     },
   },
   {
     accessorKey: 'status',
-    header: 'وضعیت',
+    header: dictionary.shared.status,
     cell: ({ row }) => <Status row={row} />,
+    meta: {
+      filterConfig: {
+        type: 'select',
+        options: [
+          { label: dictionary.shared.active, value: 'active' },
+          { label: dictionary.shared.deactive, value: 'deactive' },
+        ],
+      },
+    },
   },
   {
     id: 'actions',

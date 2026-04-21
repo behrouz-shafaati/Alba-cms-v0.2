@@ -16,12 +16,14 @@ import Link from 'next/link'
 import { deletePostsAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
 import authorize from '@/lib/utils/authorize'
+import { useLocale } from '@/hooks/useLocale'
 
 interface CellActionProps {
   data: Post
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const dictionary = useLocale()
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const router = useRouter()
@@ -66,7 +68,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <DropdownMenuItem
               onClick={() => router.push(`/dashboard/posts/${data.id}`)}
             >
-              <Edit className="ml-2 h-4 w-4" /> بروزرسانی
+              <Edit className="ml-2 h-4 w-4" /> {dictionary.shared.update}
             </DropdownMenuItem>
           )}
           <DropdownMenuItem asChild>
@@ -75,12 +77,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Eye className="ml-2 h-4 w-4" /> مشاهده
+              <Eye className="ml-2 h-4 w-4" /> {dictionary.shared.view}
             </Link>
           </DropdownMenuItem>
           {canDelete && (
             <DropdownMenuItem onClick={() => setOpen(true)}>
-              <Trash className="ml-2 h-4 w-4" /> حذف
+              <Trash className="ml-2 h-4 w-4" /> {dictionary.shared.delete}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

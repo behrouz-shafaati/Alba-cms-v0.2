@@ -16,7 +16,6 @@ export default async function PageOrPost({ locale, pageSlug, slugs }: Props) {
 
   if (slugs.length > 1) isPost = true
   else isPage = true
-
   if (isPage) {
     pageResult = await pageCtrl.find({
       filters: { slug: pageSlug, 'translations.locale': locale },
@@ -30,6 +29,7 @@ export default async function PageOrPost({ locale, pageSlug, slugs }: Props) {
         },
       } as any,
     })
+    console.log('#234olm pageResult: ', pageResult)
     if (pageResult?.data.length == 0) {
       notFound()
     }

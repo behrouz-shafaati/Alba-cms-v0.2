@@ -2,6 +2,7 @@
 import { CheckCircle, XCircle, Eye, EyeOff, Clock1 } from 'lucide-react'
 import { Row } from '@tanstack/react-table'
 import { Badge } from '../ui/badge'
+import { useLocale } from '@/hooks/useLocale'
 
 // نوع وضعیت‌ها
 type StatusType =
@@ -22,6 +23,7 @@ interface StatusProps<T> {
 
 export const Status = <T,>({ row, accessorKey = 'status' }: StatusProps<T>) => {
   let status: StatusType | undefined
+  const dictionary = useLocale()
 
   if (typeof row?.getValue === 'function') {
     // TanStack Table Row
@@ -34,34 +36,34 @@ export const Status = <T,>({ row, accessorKey = 'status' }: StatusProps<T>) => {
   let icon, label
   switch (status) {
     case 'active':
-      label = 'فعال'
+      label = dictionary.shared.active
       break
     case 'deactive':
-      label = 'غیر فعال'
+      label = dictionary.shared.deactive
       break
     case 'published':
-      label = 'منتشر شده'
+      label = dictionary.shared.published
       break
     case 'draft':
-      label = 'پیش نویس'
+      label = dictionary.shared.draft
       break
     case 'pending':
-      label = 'در انتظار '
+      label = dictionary.shared.pending
       break
     case 'approved':
-      label = 'تایید شده'
+      label = dictionary.shared.approved
       break
     case 'rejected':
-      label = 'رد شده'
+      label = dictionary.shared.rejected
       break
     case 'read':
-      label = 'خوانده شده'
+      label = dictionary.shared.read
       break
     case 'unread':
-      label = 'خوانده نشده'
+      label = dictionary.shared.unread
       break
     default:
-      label = 'نامشخص'
+      label = dictionary.shared.uknown
   }
   let bgGradient =
     'rounded-full border-none bg-yellow-600/15 hover:bg-yellow-600/15 text-amber-600 focus-visible:ring-red-600/20 focus-visible:outline-none dark:bg-yellow-400/15 dark:text-amber-400 dark:focus-visible:ring-red-400/40'

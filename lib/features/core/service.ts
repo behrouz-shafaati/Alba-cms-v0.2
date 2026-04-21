@@ -45,7 +45,7 @@ export default class service {
     filters = {},
     pagination: Pagination = defaultPagination,
     sort = { createdAt: -1 },
-    options: { projection?: Record<string, 0 | 1> } = {}
+    options: { projection?: Record<string, 0 | 1> } = {},
   ): Promise<QueryResponse<any>> {
     // Connect to the MongoDB database
     await dbConnect()
@@ -94,7 +94,7 @@ export default class service {
     filters = {},
     sort = { createdAt: -1 },
     populate?: string,
-    options: { projection?: Record<string, 0 | 1> } = {}
+    options: { projection?: Record<string, 0 | 1> } = {},
   ): Promise<QueryResponse<any>> {
     // Connect to the MongoDB database
     await dbConnect()
@@ -123,14 +123,14 @@ export default class service {
 
   async findById(
     _id: string,
-    options: { projection?: Record<string, 0 | 1> } = {}
+    options: { projection?: Record<string, 0 | 1> } = {},
   ) {
     if (!_id || _id == '') return null
     // Connect to the MongoDB database
     await dbConnect()
     const projection = options.projection ?? {}
     return toObject(
-      await this.model.findById({ _id, deleted: false }, projection)
+      await this.model.findOne({ _id, deleted: false }, projection),
     )
   }
   async findOne(filters: object = {}, populate?: string) {
@@ -174,7 +174,7 @@ export default class service {
       upsert?: boolean
       new?: boolean
       [key: string]: any
-    } = {}
+    } = {},
   ) {
     // Connect to the MongoDB database
     await dbConnect()
@@ -202,7 +202,7 @@ export default class service {
       {
         new: true,
         ...options, //  projection همینجا عبور می‌کند
-      }
+      },
     )
 
     return toObject(updatedValue)
@@ -237,7 +237,7 @@ export default class service {
           _id: { $in: ids },
         },
         { deleted: true },
-        { multi: true }
+        { multi: true },
       )
       return result
     } catch (error) {
@@ -257,7 +257,7 @@ export default class service {
       const result: any = await this.model.updateMany(
         filters,
         { deleted: true },
-        { multi: true }
+        { multi: true },
       )
       return result
     } catch (error) {
@@ -317,7 +317,7 @@ export default class service {
 
   async bulkWrite(
     operations: any,
-    { ordered }: { ordered: boolean } = { ordered: false }
+    { ordered }: { ordered: boolean } = { ordered: false },
   ) {
     await dbConnect()
     return this.model.bulkWrite(operations, { ordered })

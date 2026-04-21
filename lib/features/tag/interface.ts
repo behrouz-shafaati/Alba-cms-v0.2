@@ -1,11 +1,11 @@
-import { Id, Model, SchemaModel } from '@/lib/entity/core/interface'
+import { Id, Model, SchemaModel } from '@/lib/features/core/interface'
 import { User } from '../user/interface'
 
 export type TagTranslationSchema = {
   /**
    * زبان مطلب
    */
-  lang: string // "fa", "en", "de", ...
+  locale: string // "fa", "en", "de", ...
 
   /**
    * عنوان برچسب

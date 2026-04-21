@@ -1,23 +1,42 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+// import { Geist, Geist_Mono } from 'next/font/google'
 import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 import '@/app/globals.css'
 import { SupportedLanguage } from '@/lib/types'
 import { ServerProviders } from '@/components/context/ServerProviders'
-import { getInstallDictionary } from '@/lib/i18n/install'
 import { Toaster } from '@/components/ui/sonner'
 import { getDirection } from '@/lib/i18n/utils/getDirection'
-import { notFound } from 'next/navigation'
+import localFont from 'next/font/local'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+const iransans = localFont({
+  src: [
+    {
+      path: '../../../public/fonts/IRANSansX-Light.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../../../public/fonts/IRANSansX-Medium.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../../../public/fonts/IRANSansX-DemiBold.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-iransans',
 })
+// const geistSans = Geist({
+//   variable: '--font-geist-sans',
+//   subsets: ['latin'],
+// })
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-})
+// const geistMono = Geist_Mono({
+//   variable: '--font-geist-mono',
+//   subsets: ['latin'],
+// })
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -31,13 +50,13 @@ type Props = {
 export default async function Layout({ children, params }: Props) {
   const resolvedParams = await params
   const locale = resolvedParams?.slugs?.[0] || ''
-  const resolvedLocale = resolveLocale({ locale }) as SupportedLanguage
+  const resolvedLocale = (await resolveLocale({ locale })) as SupportedLanguage
   // const dictionary = getInstallDictionary(resolvedLocale)
   const dir = getDirection(resolvedLocale)
 
   return (
     <html lang={resolvedLocale} dir={dir}>
-      <body>
+      <body className={iransans.className}>
         {/* <ServerProviders dictionary={dictionary}>{children}</ServerProviders> */}
         <ServerProviders>{children}</ServerProviders>
         <Toaster />

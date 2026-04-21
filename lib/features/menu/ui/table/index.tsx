@@ -1,15 +1,15 @@
-import { DataTable } from '@/components/ui/data-table'
-import { Heading } from '@/components/ui/heading'
-import { LinkButton } from '@/components/ui/link-button'
-import MenuCtrl from '@/features/menu/controller'
-import { Menu } from '@/features/menu/interface'
+import { DataTable } from '@/components/other/ui/data-table'
+import { Heading } from '@/components/other/ui/heading'
+import { LinkButton } from '@/components/other/ui/link-button'
+import MenuCtrl from '@/lib/features/menu/controller'
+import { Menu } from '@/lib/features/menu/interface'
 import { Plus } from 'lucide-react'
 import { columns } from './columns'
-import { QueryResponse } from '@/lib/entity/core/interface'
+import { QueryResponse } from '@/lib/features/core/interface'
 import GroupAction from './group-action'
 import { getSession } from '@/lib/auth/get-session'
-import { User } from '@/features/user/interface'
-import { can } from '@/lib/utils/can.server'
+import { User } from '@/lib/features/user/interface'
+import authorize from '@/lib/utils/authorize'
 
 interface CategoriesTableProps {
   query: string
@@ -19,11 +19,11 @@ interface CategoriesTableProps {
 export default async function MenuTable({ query, page }: CategoriesTableProps) {
   let filters = { query }
   const user = (await getSession())?.user as User
-  if (!(await can(user.roles, 'menu.view.any', false))) {
+  if (!authorize(user.roles, 'menu.view.any', false)) {
     filters = { ...filters, user: user.id }
   }
 
-  const canCreate = await can(user.roles, 'menu.create', false)
+  const canCreate = authorize(user.roles, 'menu.create', false)
 
   const findResult: QueryResponse<Menu> = await MenuCtrl.find({
     filters,

@@ -6,7 +6,7 @@ import internalSection from './internalSectionEditor'
 
 export const InternalSectionBlockDef = {
   type: 'internalSection',
-  label: 'بخش داخلی',
+  label: 'ستون بخش داخلی',
   showInBlocksList: false,
   RendererEditor: internalSection,
   settingsSchema: blockSchema,

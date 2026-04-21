@@ -3,33 +3,38 @@ import categoryCtrl from '@/lib/features/category/controller'
 import { notFound } from 'next/navigation'
 import { CategoryForm } from '@/lib/features/category/ui/category-form'
 import { FileTranslationSchema } from '@/lib/features/file/interface'
+import { getSession } from '@/lib/auth/get-session'
+import { User } from '@/lib/features/user/interface'
+import { getSettingsAction } from '@/lib/features/settings/actions'
+import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
+import { getDashboardDictionary } from '@/lib/i18n/dashboard'
+import { PostCategoryFormTranslation } from '@/lib/features/category/ui/category-form-translation'
 
 interface PageProps {
   params: Promise<{ id: string }>
 }
 export default async function Page({ params }: PageProps) {
-  const locale = 'fa' //  from formData
+  const user = (await getSession())?.user as User
   const resolvedParams = await params
   const { id } = resolvedParams
   let category = null,
-    allCategories
-  let pageBreadCrumb = {
-    title: 'افزودن',
-    link: '/dashboard/categories/create',
-  }
+    allCategories,
+    settings
+  let pageBreadCrumb = null
   if (id !== 'create') {
-    ;[category, allCategories] = await Promise.all([
+    ;[category, allCategories, settings] = await Promise.all([
       categoryCtrl.findById({ id }),
       categoryCtrl.findAll({}),
+      getSettingsAction(),
     ])
 
     if (!category) {
       notFound()
     }
-
+    const locale = user?.locale || settings?.language?.dashboardDefault || ''
     const translation: FileTranslationSchema =
       category?.translations?.find(
-        (t: FileTranslationSchema) => t.lang === locale,
+        (t: FileTranslationSchema) => t.locale === locale,
       ) ||
       category?.translations[0] ||
       {}
@@ -39,18 +44,33 @@ export default async function Page({ params }: PageProps) {
       link: `/dashboard/categories/${id}`,
     }
   } else {
-    ;[allCategories] = await Promise.all([categoryCtrl.findAll({})])
+    ;[allCategories, settings] = await Promise.all([
+      categoryCtrl.findAll({}),
+      getSettingsAction(),
+    ])
   }
 
+  const locale = user?.locale || settings?.language?.dashboardDefault || ''
+  const resolvedLocale = await resolveLocale({ locale })
+  const dictionary = getDashboardDictionary(resolvedLocale)
+
+  if (!pageBreadCrumb)
+    pageBreadCrumb = {
+      title: dictionary.feature.category.create,
+      link: '/dashboard/categories/create',
+    }
+
   const breadcrumbItems = [
-    { title: 'دسته ها', link: '/dashboard/categories' },
+    { title: dictionary.feature.category.title, link: '/dashboard/categories' },
     pageBreadCrumb,
   ]
   return (
     <>
       <div className="flex-1 space-y-4 p-5">
         <BreadCrumb items={breadcrumbItems} />
-        <CategoryForm
+        <PostCategoryFormTranslation
+          settings={settings}
+          dictionary={dictionary}
           initialData={category}
           allCategories={allCategories.data}
         />

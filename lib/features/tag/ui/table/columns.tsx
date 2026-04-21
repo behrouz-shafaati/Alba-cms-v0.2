@@ -4,8 +4,12 @@ import { CellAction } from './cell-action'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Tag } from '@/lib/features/tag/interface'
 import { Status } from '@/components/other/Status'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
-export const columns: ColumnDef<Tag>[] = [
+export const getPostTagColumns = (
+  dictionary: DashboardLocaleSchema,
+  locale: string,
+): ColumnDef<Tag>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -26,16 +30,24 @@ export const columns: ColumnDef<Tag>[] = [
     enableHiding: false,
   },
   {
-    header: 'نام',
+    header: dictionary.feature.tag.title,
     accessorFn: (row) => {
-      const locale = 'fa' // یا از context/state
-      return row.translations?.find((t) => t.lang === locale)?.title ?? ''
+      return row.translations?.find((t) => t.locale === locale)?.title ?? ''
     },
   },
   {
     accessorKey: 'status',
-    header: 'وضعیت',
+    header: dictionary.shared.status,
     cell: ({ row }) => <Status row={row} />,
+    meta: {
+      filterConfig: {
+        type: 'select',
+        options: [
+          { label: dictionary.shared.active, value: 'active' },
+          { label: dictionary.shared.deactive, value: 'deactive' },
+        ],
+      },
+    },
   },
   {
     id: 'actions',

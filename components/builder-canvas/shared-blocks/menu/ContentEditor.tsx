@@ -22,7 +22,7 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
       const menuOptions: Option[] = allMenus.data.map((menu: Menu) => {
         const translation: MenuTranslationSchema =
           menu?.translations?.find(
-            (t: MenuTranslationSchema) => t.lang === locale
+            (t: MenuTranslationSchema) => t.locale === locale,
           ) ||
           menu?.translations[0] ||
           {}
@@ -38,7 +38,7 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
   }, [])
   console.log(
     '#selectedBlock?.content?.menuIdwsr :',
-    selectedBlock?.content?.menuId
+    selectedBlock?.content?.menuId,
   )
   return (
     <>
@@ -52,7 +52,7 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
         onChange={(e) =>
           update(selectedBlock?.id as string, 'content', {
             ...selectedBlock?.content,
-            menuId: e.target.value,
+            menuId: e.value,
           })
         }
       />

@@ -6,6 +6,7 @@ import templateCtrl from '@/lib/features/template/controller'
 import { getSettings } from '@/lib/features/settings/controller'
 import RendererTemplate from '../templateRender/RenderTemplate.server'
 import { Settings } from '@/lib/features/settings/interface'
+import { generateResponsiveCSS } from '../utils/css-generator'
 
 type Props = {
   locale: string
@@ -18,8 +19,9 @@ export const PageRenderer = async ({
   locale = 'fa',
   searchParams = {},
 }: Props) => {
+  console.log('#@#d43 resolvedLocale in page render:', locale)
   const translation: any =
-    page?.translations?.find((t: any) => t.lang === locale) ||
+    page?.translations?.find((t: any) => t.locale === locale) ||
     page?.translations[0] ||
     {}
   const { template: templateId } = translation.content
@@ -30,29 +32,38 @@ export const PageRenderer = async ({
     const [template] = await Promise.all([
       templateCtrl.findById({ id: templateId }),
     ])
+
     return (
-      <RendererTemplate
-        template={template}
-        pageSlug={page?.slug}
-        siteSettings={siteSettings}
-        searchParams={searchParams}
-        rows={template.content.rows}
-        editroMode={false}
-        content_all={
-          <RendererRows
-            rows={translation?.content.rows}
-            editroMode={false}
-            siteSettings={siteSettings}
-            searchParams={searchParams}
-          />
-        }
-      />
+      <>
+        <p>hhhhhhhhhhhhhhhhhhhhhh</p>
+        <style id="44558899">{generateResponsiveCSS(translation)}</style>
+        <RendererTemplate
+          template={template}
+          pageSlug={page?.slug}
+          siteSettings={siteSettings}
+          searchParams={searchParams}
+          rows={template.content.rows}
+          editroMode={false}
+          locale={locale}
+          content_all={
+            <RendererRows
+              rows={translation?.content.rows}
+              editroMode={false}
+              siteSettings={siteSettings}
+              searchParams={searchParams}
+              locale={locale}
+            />
+          }
+        />
+      </>
     )
   }
 
   return (
     <>
+      <style id="44558899">{generateResponsiveCSS(translation)}</style>
       <RendererRows
+        locale={locale}
         siteSettings={siteSettings}
         rows={translation?.content.rows}
         editroMode={false}

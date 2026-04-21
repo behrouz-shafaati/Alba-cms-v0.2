@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 import {
   Select as SelectInput,
@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
+import { cn } from '@/lib/utils'
 
 export type Option = {
   value: string
@@ -25,7 +26,7 @@ type SelectProps = {
   icon?: any
   state?: any
   onChange?: (value: string) => void
-}
+} & React.ComponentProps<'select'>
 export default function Select({
   title,
   name,
@@ -35,6 +36,8 @@ export default function Select({
   icon,
   state,
   onChange,
+  className,
+  ...props
 }: SelectProps) {
   const errorMessages = state?.errors?.[name] ?? []
   const hasError = state?.errors?.[name]?.length > 0
@@ -53,7 +56,7 @@ export default function Select({
   const [value, setValue] = useState(defaultSelectedOption?.value)
 
   return (
-    <div className="mb-4">
+    <div className={cn('mb-4', className)}>
       <label htmlFor={name} className="mb-2 block text-sm font-medium">
         {title}
       </label>
@@ -66,7 +69,7 @@ export default function Select({
               if (onChange) onChange(value)
               setSelectedOption(
                 options.find((option) => option.value === value) ||
-                  defaultSelectedOption
+                  defaultSelectedOption,
               )
             }}
           >

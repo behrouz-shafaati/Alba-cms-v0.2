@@ -7,20 +7,28 @@ import { Label } from '@/components/ui/label'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import getTranslation from '@/lib/utils/getTranslation'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import { useLocale } from '@/hooks/useLocale'
 
 const SEO_TITLE_LIMIT = 60
 const META_DESC_LIMIT = 160
 
 type Props = {
   defaultValues: any
+  locale: string
   className?: string
 }
 
 export default function SeoSnippetForm({
   defaultValues,
+  locale,
   className = '',
 }: Props) {
-  const t = getTranslation({ translations: defaultValues?.translations })
+  const t = getTranslation({
+    translations: defaultValues?.translations,
+    locale,
+  })
+  const dictionary = useLocale() as DashboardLocaleSchema
   const [seoTitle, setSeoTitle] = useState(t?.seoTitle || '')
   const [slug, setSlug] = useState(defaultValues?.slug || '')
   const [metaDescription, setMetaDescription] = useState(
@@ -48,14 +56,16 @@ export default function SeoSnippetForm({
     <div className={`space-y-6 ${className}`}>
       {/* SEO Title */}
       <div className="space-y-1">
-        <Label htmlFor="seoTitle">عنوان سئو</Label>
+        <Label htmlFor="seoTitle">
+          {dictionary.feature.post.form.seoTitle}
+        </Label>
         <Input
           id="seoTitle"
           name="seoTitle"
           value={seoTitle}
           onChange={(e) => setSeoTitle(e.target.value)}
           maxLength={SEO_TITLE_LIMIT}
-          placeholder="عنوان مطلب برای موتورهای جستجو"
+          placeholder={dictionary.feature.post.form.seoTitlePlaceholder}
         />
         <p
           className={cn(
@@ -64,28 +74,30 @@ export default function SeoSnippetForm({
             seoTitle.length >= SEO_TITLE_LIMIT && 'text-red-600',
           )}
         >
-          {seoTitle.length}/{SEO_TITLE_LIMIT} کاراکتر
+          {seoTitle.length}/{SEO_TITLE_LIMIT} {dictionary.shared.character}
         </p>
       </div>
 
       {/* Slug */}
       <div className="space-y-1">
-        <Label htmlFor="slug">پیوند یکتا</Label>
+        <Label htmlFor="slug">{dictionary.feature.post.form.slug}</Label>
         <Input
           id="slug"
           name="slug"
           value={slug}
           onChange={(e) => setSlug(e.target.value)}
-          placeholder="مثلاً how-to-learn-math"
+          placeholder="how-to-learn-math"
         />
         <p className="text-xs text-gray-500">
-          از حروف کوچک، عدد و خط فاصله (-) استفاده کنید.
+          {dictionary.feature.post.form.seoTitlePlaceholder}
         </p>
       </div>
 
       {/* Meta Description */}
       <div className="space-y-1">
-        <Label htmlFor="metaDescription">توضیح</Label>
+        <Label htmlFor="metaDescription">
+          {dictionary.feature.post.form.metaDescription}
+        </Label>
         <Textarea
           id="metaDescription"
           name="metaDescription"
@@ -93,7 +105,7 @@ export default function SeoSnippetForm({
           onChange={(e) => setMetaDescription(e.target.value)}
           maxLength={META_DESC_LIMIT}
           rows={3}
-          placeholder="توضیح کوتاه برای نتایج جستجو..."
+          placeholder={dictionary.feature.post.form.metaDescriptionPlaceholder}
         />
         <p
           className={cn(
@@ -102,7 +114,8 @@ export default function SeoSnippetForm({
             metaDescription.length >= META_DESC_LIMIT && 'text-red-600',
           )}
         >
-          {metaDescription.length}/{META_DESC_LIMIT} کاراکتر
+          {metaDescription.length}/{META_DESC_LIMIT}{' '}
+          {dictionary.shared.character}
         </p>
       </div>
 
@@ -110,19 +123,19 @@ export default function SeoSnippetForm({
       <Card className="border rounded-lg bg-white dark:bg-gray-950 shadow">
         <CardHeader>
           <CardTitle className="text-sm font-medium text-gray-500 dark:text-gray-200 ltr">
-            Google Snippet Preview
+            {dictionary.feature.post.form.googleSnippetPreview}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-1">
           <div className="text-blue-600 dark:text-blue-400 text-lg truncate">
-            {seoTitle || 'عنوان سئو'}
+            {seoTitle || dictionary.feature.post.form.seoTitle}
           </div>
           <div className="text-green-700 dark:text-green-500 text-sm">
             example.com/{slug || 'sample-slug'}
           </div>
           <div className="text-gray-700 text-sm line-clamp-2 dark:text-gray-300">
             {metaDescription ||
-              'شرح مختصری از مطلب شما در اینجا نمایش داده می‌شود.'}
+              dictionary.feature.post.form.metaDescriptionPlaceholder}
           </div>
         </CardContent>
       </Card>

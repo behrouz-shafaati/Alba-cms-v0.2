@@ -32,7 +32,7 @@ export const getColumns = (
   {
     header: dictionary.feature.post.title,
     accessorFn: (row) => {
-      return row.translations?.find((t) => t.lang === locale)?.title ?? ''
+      return row.translations?.find((t) => t.locale === locale)?.title ?? ''
     },
   },
   {

@@ -106,10 +106,10 @@ export default class taxonomyController extends baseController {
 
   async findAllSlim({
     payload,
-    lang,
+    locale,
   }: {
     payload: QueryFind
-    lang: 'fa'
+    locale: 'fa'
   }): Promise<QueryResponse<any>> {
     const result = await super.findAll({
       ...payload,
@@ -121,11 +121,11 @@ export default class taxonomyController extends baseController {
       data: result.data.map((taxonomy: Taxonomy) => {
         const translation = getTranslation({
           translations: taxonomy.translations,
-          locale: lang,
+          locale,
         })
         return {
           id: taxonomy.id,
-          translations: [{ lang, title: translation.title }],
+          translations: [{ locale, title: translation.title }],
           slug: taxonomy.slug,
           icon: taxonomy?.icon,
         }
@@ -161,7 +161,7 @@ export default class taxonomyController extends baseController {
 
   async taxonomyExist(title: string, locale: string = 'fa'): Promise<boolean> {
     const count = await this.countAll({
-      translations: { $elemMatch: { lang: locale, title } },
+      translations: { $elemMatch: { locale, title } },
       type: this.type,
     })
     if (count == 0) return false
@@ -170,7 +170,7 @@ export default class taxonomyController extends baseController {
 
   async ensureTaxonomyExist(
     taxonomies: { value: string; label: string }[],
-    locale: string = 'fa'
+    locale: string = 'fa',
   ): Promise<string[]> {
     const taxonomyIds = []
     for (let i = 0; i < taxonomies.length; i++) {
@@ -181,7 +181,7 @@ export default class taxonomyController extends baseController {
         const slug = slugify(taxonomy.label)
         const newTaxonomy = await this.create({
           params: {
-            translations: { lang: locale, title: taxonomy.label },
+            translations: { locale, title: taxonomy.label },
             slug,
             type: this.type,
           },

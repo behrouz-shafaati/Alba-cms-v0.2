@@ -9,13 +9,13 @@ import { Language } from '@/lib/features/settings/locales/interface'
 import settingsCtrl from '@/lib/features/settings/controller'
 import { writeConfigAction } from '../../action'
 import { generateAndSaveJwtSecret } from '../../generateAndSaveJwtSecret'
-import seedData from '@/lib/seed/seed'
+import seedData from '@/scripts/seed/seed'
 
 const METADATA_KEY = 'language'
 
 export default async function installLanguagesAction(
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ) {
   const rawValues = Object.fromEntries(formData)
   const locale = formData.get('locale')?.toString() || 'en'
@@ -24,7 +24,7 @@ export default async function installLanguagesAction(
   // Validate form fields
   console.log('#234897 rawValues:', rawValues)
   const validatedFields = FormSchema.safeParse(
-    Object.fromEntries(formData.entries())
+    Object.fromEntries(formData.entries()),
   )
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {

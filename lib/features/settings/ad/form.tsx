@@ -24,7 +24,7 @@ interface SettingsFormProps {
 
 export const FormAD: React.FC<SettingsFormProps> = ({ settings }) => {
   const searchParams = useSearchParams()
-  const contantLang = searchParams?.get('lang')
+  const contantLang = searchParams?.get('locale')
 
   const _t = useLocale()
   const t = _t?.feature?.setting?.adCampaign
@@ -41,7 +41,7 @@ export const FormAD: React.FC<SettingsFormProps> = ({ settings }) => {
   }
   const [state, dispatch] = useActionState(
     updateAdSettings as any,
-    initialState
+    initialState,
   )
 
   const [loading, setLoading] = useState(false)
@@ -53,7 +53,7 @@ export const FormAD: React.FC<SettingsFormProps> = ({ settings }) => {
   if (!canModerate) return <AccessDenied />
   const translation: CampaignTranslation = getTranslation({
     translations: state?.values?.translations || [],
-    lang: contantLang || settings.language?.siteDefault,
+    locale: contantLang || settings.language?.siteDefault,
   })
   const fallbackBehaviorOptions: Option[] = [
     {
@@ -120,7 +120,7 @@ export const FormAD: React.FC<SettingsFormProps> = ({ settings }) => {
             {aspectKeys.map((aspectKey, index) => {
               const ratio = aspectKey.split('/')
               const defaultValu = translation?.banners?.find(
-                (b) => b.aspect === aspectKey
+                (b) => b.aspect === aspectKey,
               )
               return (
                 <section

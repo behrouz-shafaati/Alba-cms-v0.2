@@ -2,7 +2,7 @@ import { SupportedLanguage } from '@/lib/types'
 import { Language } from './locales/interface'
 
 type GeneralTranslation = {
-  lang: SupportedLanguage
+  locale: SupportedLanguage
   site_title: string
   site_introduction: string
   homePageId: string
@@ -44,5 +44,5 @@ export type SettingsKey =
 
 export type GetSessingsProps = {
   key?: SettingsKey
-  lang?: string
+  locale?: string
 }

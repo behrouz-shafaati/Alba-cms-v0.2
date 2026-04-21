@@ -51,16 +51,16 @@ export function getBlocksSafe() {
 
 // فقط import های server-only و registry بلاک‌ها
 import { serverRenderBlockRegistry } from '@/components/builder-canvas/registry/blockRegistry.server'
-// import { serverRenderBuilderTemplateRegistry } from '@/components/builder-template/registry/blockRegistry.server'
+import { serverRenderBuilderTemplateRegistry } from '@/components/builder-template/registry/blockRegistry.server'
 import { serverRenderBuilderPageRegistry } from '@/components/builder-page/registry/blockRegistry.server'
-// import { serverRenderBuilderSectionRegistry } from '@/components/builder-template-part/registry/blockRegistry.server'
-// import { serverRenderBuilderFormRegistry } from '@/components/builder-form/registry/blockRegistry.server'
+import { serverRenderBuilderSectionRegistry } from '@/components/builder-section/registry/blockRegistry.server'
+import { serverRenderBuilderFormRegistry } from '@/components/builder-form/registry/blockRegistry.server'
 
 // تابع واقعی که بلاک‌ها را register می‌کند
 function registerAllBlocks() {
   registerBlock(serverRenderBlockRegistry)
   registerBlock(serverRenderBuilderPageRegistry)
-  // registerBlock(serverRenderBuilderTemplateRegistry)
-  // registerBlock(serverRenderBuilderSectionRegistry)
-  // registerBlock(serverRenderBuilderFormRegistry)
+  registerBlock(serverRenderBuilderTemplateRegistry)
+  registerBlock(serverRenderBuilderSectionRegistry)
+  registerBlock(serverRenderBuilderFormRegistry)
 }

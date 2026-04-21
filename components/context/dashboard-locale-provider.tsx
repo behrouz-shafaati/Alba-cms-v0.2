@@ -1,12 +1,13 @@
 'use client'
-import { LocaleSchema } from '@/lib/i18n/dashboard'
+
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 import { LocaleContext } from './locale-context'
 
 export function DashboardLocaleProvider({
   dictionary,
   children,
 }: {
-  dictionary: LocaleSchema
+  dictionary: DashboardLocaleSchema
   children: React.ReactNode
 }) {
   return (

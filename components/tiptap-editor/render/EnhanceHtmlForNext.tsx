@@ -3,7 +3,6 @@ import Link from 'next/link'
 import parse, { domToReact, Element } from 'html-react-parser'
 
 import { AccordionNode, TNode } from '../type'
-import { computedStyles } from '@/components/builder-canvas/utils/styleUtils'
 import { Settings } from '@/lib/features/settings/interface'
 import ImageAlba from '@/components/other/image-alba'
 import VideoEmbed from '@/components/other/VideoEmbed'
@@ -13,6 +12,7 @@ import AccordionRenderLazy from '../tiptap-renderers/AccordionRenderLazy'
 import AdSlotBlockLazy from '@/components/builder-canvas/shared-blocks/AdSlot/AdSlotBlockLazy'
 import toNumber from '@/lib/utils/toNumber'
 import slugify from '@/lib/utils/slugify'
+import computedStyles from '@/components/builder-canvas/utils/computedStyles'
 
 // تابع کمکی: جمع‌آوری همه‌ی نودهای accordion (ترتیب درختی)
 function collectAccordions(node: TNode | undefined, out: TNode[] = []) {

@@ -11,11 +11,15 @@ import { revalidatePath } from 'next/cache'
 import { User } from '../user/interface'
 import { FormActionState, Session } from '@/lib/types'
 import authorize from '@/lib/utils/authorize'
+import postCtrl from '../post/controller'
+import pageCtrl from '../page/controller'
+import categoryCtrl from '../category/controller'
+import tagCtrl from '../tag/controller'
 
 const FormSchema = z.object({
   title: z.string({}).min(1, { message: 'لطفا عنوان را وارد کنید.' }),
   itemsJson: z.string({}),
-  lang: z.string({}),
+  locale: z.string({}),
 })
 
 async function sanitizePostData(validatedFields: any, id?: string | undefined) {
@@ -30,12 +34,12 @@ async function sanitizePostData(validatedFields: any, id?: string | undefined) {
   const user = session.user.id
   const translations = [
     {
-      lang: payload.lang,
+      locale: payload.locale,
       title: payload.title,
       items: JSON.parse(payload.itemsJson),
     },
     ...prevState.translations.filter(
-      (t: MenuTranslationSchema) => t.lang != payload.lang
+      (t: MenuTranslationSchema) => t.locale != payload.locale,
     ),
   ]
   const params = {
@@ -56,14 +60,14 @@ async function sanitizePostData(validatedFields: any, id?: string | undefined) {
  */
 export async function createMenu(
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   // Validate form fields
   const rawValues = Object.fromEntries(formData)
   const values = {
     ...rawValues,
     translation: {
-      lang: rawValues?.lang,
+      locale: rawValues?.locale,
       title: rawValues?.title,
       items: JSON.parse(rawValues?.itemsJson),
     },
@@ -127,13 +131,13 @@ export async function createMenu(
 export async function updateMenu(
   id: string,
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   const rawValues = Object.fromEntries(formData)
   const values = {
     ...rawValues,
     translation: {
-      lang: rawValues?.lang,
+      locale: rawValues?.locale,
       title: rawValues?.title,
       items: rawValues?.itemsJson,
     },
@@ -145,7 +149,7 @@ export async function updateMenu(
     const prevMenu = await menuCtrl.findById({ id })
     authorize(
       user.roles,
-      prevMenu?.user !== user.id ? 'menu.edit.any' : 'menu.edit.own'
+      prevMenu?.user !== user.id ? 'menu.edit.any' : 'menu.edit.own',
     )
     // If form validation fails, return errors early. Otherwise, continue.
     if (!validatedFields.success) {
@@ -200,7 +204,7 @@ export async function deleteMenusAction(ids: string[]) {
     for (const prevMenu of prevMenuResult.data) {
       authorize(
         user.roles,
-        prevMenu.user !== user.id ? 'menu.delete.any' : 'menu.delete.own'
+        prevMenu.user !== user.id ? 'menu.delete.any' : 'menu.delete.own',
       )
     }
     await menuCtrl.delete({ filters: ids })
@@ -235,4 +239,28 @@ export async function getAllMenus() {
 }
 export async function getMenus(payload: QueryFind): Promise<QueryResult> {
   return menuCtrl.find(payload)
+}
+
+export async function getMenuLinksAction() {
+  const [postsResult, pagesResult, categoriesResult, tagsResult] =
+    await Promise.all([
+      postCtrl.findAll({}),
+      pageCtrl.findAll({}),
+      categoryCtrl.findAll({}),
+      tagCtrl.findAll({}),
+    ])
+  return {
+    posts: postsResult.data.map((post) => {
+      return { id: post.id, title: post.translations[0].title }
+    }),
+    pages: pagesResult.data.map((page) => {
+      return { id: page.id, title: page.translations[0].title }
+    }),
+    categories: categoriesResult.data.map((cat) => {
+      return { id: cat.id, title: cat.translations[0].title }
+    }),
+    tags: tagsResult.data.map((tag) => {
+      return { id: tag.id, title: tag.translations[0].title }
+    }),
+  }
 }

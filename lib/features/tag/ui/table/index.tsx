@@ -1,24 +1,33 @@
-import { DataTable } from '@/components/other/ui/data-table'
 import { Heading } from '@/components/other/ui/heading'
 import { LinkButton } from '@/components/other/ui/link-button'
 import TagCtrl from '../../controller'
 import { Tag } from '../../interface'
 import { Plus } from 'lucide-react'
-import { columns } from './columns'
 import { QueryResponse } from '@/lib/features/core/interface'
 import GroupAction from './group-action'
 import { getSession } from '@/lib/auth/get-session'
 import { User } from '@/lib/features/user/interface'
 import authorize from '@/lib/utils/authorize'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import ClientTagTable from './client-tabel'
 
 interface TagsTableProps {
+  locale: string
+  dictionary: DashboardLocaleSchema
   query: string
+  filters: any
   page: number
 }
 
-export default async function TagTable({ query, page }: TagsTableProps) {
+export default async function TagTable({
+  locale,
+  dictionary,
+  query,
+  filters,
+  page,
+}: TagsTableProps) {
   const user = (await getSession())?.user as User
-  let filters = { query }
+  filters = { ...filters, query }
   if (!authorize(user.roles, 'tag.view.any', false)) {
     filters = { ...filters, user: user.id }
   }
@@ -33,23 +42,23 @@ export default async function TagTable({ query, page }: TagsTableProps) {
     <>
       <div className="flex items-start justify-between">
         <Heading
-          title={`برچسب ها (${findResult?.totalDocuments || 0})`}
-          description="مدیریت برچسب ها"
+          title={`${dictionary.feature.tag.title} (${findResult?.totalDocuments || 0})`}
+          description={dictionary.feature.tag.description}
         />
         {canCreate && (
           <LinkButton
             className="text-xs md:text-sm"
             href="/dashboard/tags/create"
           >
-            <Plus className="ml-2 h-4 w-4" /> افزودن برچسب
+            <Plus className="me-2 h-4 w-4" /> {dictionary.feature.tag.create}
           </LinkButton>
         )}
       </div>
-      <DataTable
-        searchTitle="جستجو ..."
-        columns={columns}
-        response={findResult}
-        groupAction={GroupAction}
+      <ClientTagTable
+        dictionary={dictionary}
+        locale={locale}
+        findResult={findResult}
+        GroupAction={GroupAction}
       />
     </>
   )

@@ -13,6 +13,7 @@ type Props = {
   pageSlug: string | null
   categorySlug?: string | null
   searchParams?: any
+  locale: string
 }
 
 const RendererTemplate = async ({
@@ -23,6 +24,7 @@ const RendererTemplate = async ({
   pageSlug = null,
   categorySlug = null,
   searchParams = {},
+  locale,
   ...rest
 }: Props) => {
   const parentTemplateId = template.parent
@@ -38,6 +40,7 @@ const RendererTemplate = async ({
         pageSlug={pageSlug}
         categorySlug={categorySlug}
         searchParams={searchParams}
+        locale={locale}
         content_all={
           <RendererRows
             siteSettings={siteSettings}
@@ -47,6 +50,7 @@ const RendererTemplate = async ({
             pageSlug={pageSlug}
             categorySlug={categorySlug}
             searchParams={searchParams}
+            locale={locale}
             {...rest}
           />
         }
@@ -63,6 +67,7 @@ const RendererTemplate = async ({
       pageSlug={pageSlug}
       categorySlug={categorySlug}
       searchParams={searchParams}
+      locale={locale}
       {...rest}
     />
   )

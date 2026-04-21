@@ -11,20 +11,24 @@ import {
 
 import { Label } from '../ui/label'
 import { ICON_NAMES } from '@/lib/icon/icon-names'
-import DynamicIcon from '../builder-canvas/components/IconRenderer'
 import { cn } from '@/lib/utils'
+import FileUpload from './file-upload'
+import IconRender from '../builder-canvas/components/IconRender'
+import DynamicLucideIcon from '../builder-canvas/components/DynamicLucideIcon'
+
+export type IconValue = { lucide: string; file: string }
 
 type Props = {
   name: string
   title?: string
-  defaultValue?: string
-  onChange?: (value: string) => void
+  defaultValue?: IconValue
+  onChange?: (value: IconValue) => void
 }
 
 export default function IconPicker({
   name,
   title = '',
-  defaultValue = '',
+  defaultValue = { lucide: '', file: null },
   onChange,
 }: Props) {
   // const [value, setValue] = React.useState(defaultValue)
@@ -38,9 +42,16 @@ export default function IconPicker({
     return ICON_NAMES.filter((name) => name.toLowerCase().includes(q))
   }, [search])
 
+  const update = (key: 'lucide' | 'file', val: any) => {
+    const updatedValue = { ...value }
+    updatedValue[key] = val
+    setValue(updatedValue)
+    onChange?.(updatedValue)
+  }
+
   return (
     <div className="flex flex-col gap-2">
-      <input type="hidden" name={name} value={value || ''} />
+      <input type="hidden" name={name} value={JSON.stringify(value) || ''} />
       <Label htmlFor={name} className="mb-2 block text-sm font-medium">
         {title}
       </Label>
@@ -52,17 +63,25 @@ export default function IconPicker({
             className="w-full flex justify-between"
           >
             <span className="flex items-center gap-2">
-              <DynamicIcon name={value || 'Circle'} size={20} />
-              <span>{value || 'انتخاب آیکون'}</span>
+              <IconRender icon={value} size={20} />
+              <span>{value.lucide || 'انتخاب آیکون'}</span>
             </span>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80 h-96 p-2 overflow-y-auto">
+          <FileUpload
+            name="image"
+            title={``}
+            defaultValues={value?.file || null}
+            maxFiles={1}
+            onChange={(f) => update('file', { id: f.id, srcSmall: f.srcSmall })}
+            allowedFileTypes={['image_svg']}
+          />
           <Input
             placeholder="جستجوی آیکون..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="mb-2"
+            className="my-2"
           />
           <div className="h-72 overflow-y-auto">
             <div className="grid grid-cols-6 gap-2">
@@ -71,17 +90,16 @@ export default function IconPicker({
                   key={name}
                   type="button"
                   onClick={() => {
-                    setValue(name)
-                    onChange?.(name)
+                    update('lucide', name)
                     setOpen(false)
                   }}
                   className={cn(
                     'flex items-center justify-center p-2 rounded-md border hover:bg-muted transition',
-                    value === name && 'bg-muted border-primary',
+                    value.lucide === name && 'bg-muted border-primary',
                   )}
                   title={name}
                 >
-                  <DynamicIcon name={name} size={20} />
+                  {/* <DynamicLucideIcon name={name} size={20} /> */}
                 </button>
               ))}
             </div>

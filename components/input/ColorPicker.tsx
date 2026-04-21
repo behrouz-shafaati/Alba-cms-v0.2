@@ -21,9 +21,9 @@ type Props = {
 }
 
 export default function ColorPicker({ value, onChange, tokens = [] }: Props) {
-  const light = value.light as string | undefined
+  const light = value?.light as string | undefined
   // const dark = value.autoDark && light ? autoDark(light) : value.dark
-  const dark = light ? autoDark(light) : value.dark
+  const dark = light ? autoDark(light) : value?.dark
 
   const contrast = useMemo(() => {
     if (!light || light.startsWith('token:')) return null

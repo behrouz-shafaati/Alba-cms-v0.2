@@ -31,7 +31,7 @@ export const FormValidation: React.FC<SettingsFormProps> = ({ settings }) => {
   }
   const [state, dispatch] = useActionState(
     updateValidationSettings as any,
-    initialState
+    initialState,
   )
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export const FormValidation: React.FC<SettingsFormProps> = ({ settings }) => {
         </div>
         {/* <Separator /> */}
         <form action={dispatch} ref={formRef} className="space-y-8 w-full">
-          <input type="hidden" name="locale" value={_t.lang} readOnly />
+          <input type="hidden" name="locale" value={_t.locale} readOnly />
           <div>
             <Switch
               name="commentApprovalRequired"

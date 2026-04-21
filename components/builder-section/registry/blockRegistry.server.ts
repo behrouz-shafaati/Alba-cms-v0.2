@@ -1,5 +1,5 @@
 // رجیستری مرکزی بلاک‌ها
 
-export const serverRenderBuilderTemplatePartRegistry = {
+export const serverRenderBuilderSectionRegistry = {
   // ...
 }

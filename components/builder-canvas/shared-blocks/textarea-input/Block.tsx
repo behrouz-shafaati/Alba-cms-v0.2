@@ -3,7 +3,7 @@
 import React, { ElementType } from 'react'
 import { Block as BlockType } from '@/components/builder-canvas/types'
 
-import IconRenderer from '@/components/builder-canvas/components/IconRenderer'
+import IconRenderer from '@/components/builder-canvas/components/DynamicLucideIcon'
 import TextArea from '@/components/input/textArea'
 import computedStyles from '../../utils/computedStyles'
 

@@ -9,7 +9,7 @@ type Props = {
 }
 
 const ContentEditor = ({ savePage }: Props) => {
-  const { updateRowColumns, update, selectedBlock } = useBuilderStore()
+  const { update, selectedBlock } = useBuilderStore()
 
   const debouncedUpdate = useDebouncedCallback(
     (id, key, form) => update(id, key, form),

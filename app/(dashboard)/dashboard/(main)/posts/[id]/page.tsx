@@ -1,30 +1,32 @@
-import React from 'react'
 import postCtrl from '@/lib/features/post/controller'
 import { notFound } from 'next/navigation'
 import { BreadCrumb } from '@/components/other/breadcrumb'
-import { PostForm } from '@/lib/features/post/ui/post-form'
 import categoryCtrl from '@/lib/features/category/controller'
 import { PostTranslationSchema } from '@/lib/features/post/interface'
 import { getSettingsAction } from '@/lib/features/settings/actions'
 import { PostFormTranslation } from '@/lib/features/post/ui/post-form-translation'
+import { User } from '@/lib/features/user/interface'
+import { getSession } from '@/lib/auth/get-session'
+import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
+import { getDashboardDictionary } from '@/lib/i18n/dashboard'
 
 interface PageProps {
   params: Promise<{ id: string }>
 }
 
 export default async function Page({ params }: PageProps) {
-  const locale = 'fa' //  from formData
+  const user = (await getSession())?.user as User
   const resolvedParams = await params
   const { id } = resolvedParams
-  let post = null
-  let pageBreadCrumb = {
-    title: 'افزودن',
-    link: '/dashboard/posts/create',
-  }
+  let post = null,
+    pageBreadCrumb = null
   const [settings, allCategories] = await Promise.all([
     getSettingsAction(),
     categoryCtrl.findAll({}),
   ])
+  const locale = user?.locale || settings?.language?.dashboardDefault || ''
+  const resolvedLocale = await resolveLocale({ locale })
+  const dictionary = getDashboardDictionary(resolvedLocale)
   if (id !== 'create') {
     ;[post] = await Promise.all([postCtrl.findById({ id })])
 
@@ -33,7 +35,7 @@ export default async function Page({ params }: PageProps) {
     }
     const translation: PostTranslationSchema =
       post?.translations?.find(
-        (t: PostTranslationSchema) => t.lang === locale,
+        (t: PostTranslationSchema) => t.locale === locale,
       ) ||
       post?.translations[0] ||
       {}
@@ -44,8 +46,13 @@ export default async function Page({ params }: PageProps) {
     }
   }
 
+  if (!pageBreadCrumb)
+    pageBreadCrumb = {
+      title: dictionary.feature.post.create,
+      link: '/dashboard/posts/create',
+    }
   const breadcrumbItems = [
-    { title: 'مطلب', link: '/dashboard/posts' },
+    { title: dictionary.feature.post.title, link: '/dashboard/posts' },
     pageBreadCrumb,
   ]
 

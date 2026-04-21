@@ -75,7 +75,7 @@ export default settingsCtrl
  */
 export const getSettings = async ({
   key = '',
-  lang = '',
+  locale = '',
 }: GetSessingsProps = {}): Promise<
   Record<string, unknown> | unknown | null | Settings
 > => {
@@ -87,7 +87,7 @@ export const getSettings = async ({
 
   const siteInfo = getTranslation({
     translations: settings?.general?.translations || [],
-    lang,
+    locale,
   })
   const _settings = { ...settings, ...siteInfo }
   return Object.prototype.hasOwnProperty.call(_settings, key)

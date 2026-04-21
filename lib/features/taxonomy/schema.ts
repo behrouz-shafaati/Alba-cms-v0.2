@@ -3,11 +3,11 @@ import { TaxonomySchema } from './interface'
 
 const TaxonomyTranslationSchema = new Schema(
   {
-    lang: { type: String, required: true }, // "fa", "en", "de", ...
+    locale: { type: String, required: true }, // "fa", "en", "de", ...
     title: { type: String, required: true },
     description: { type: String, default: '' },
   },
-  { _id: false }
+  { _id: false },
 )
 
 const taxonomySchema = new Schema<TaxonomySchema>(
@@ -58,7 +58,7 @@ const taxonomySchema = new Schema<TaxonomySchema>(
     count: { type: Number, default: 0 },
     deleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 )
 
 // ==================== Indexes ====================
@@ -70,7 +70,7 @@ taxonomySchema.index(
   {
     unique: true,
     partialFilterExpression: { deleted: false },
-  }
+  },
 )
 
 taxonomySchema.index({ type: 1, parent: 1 })
@@ -96,7 +96,7 @@ taxonomySchema
   .pre(['findOne', 'find'], function () {
     this.populate({
       path: 'parent',
-      select: '_id id translations.title translations.lang slug',
+      select: '_id id translations.title translations.locale slug',
     })
     this.populate('image')
     this.where({ deleted: false })

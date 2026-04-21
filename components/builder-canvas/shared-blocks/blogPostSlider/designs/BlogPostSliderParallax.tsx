@@ -44,14 +44,14 @@ const BlogPostSliderParallax = ({
     const isLCP = index == 0 && settings?.isLCP
     const translationPost: PostTranslationSchema =
       post?.translations?.find(
-        (t: PostTranslationSchema) => t.lang === locale
+        (t: PostTranslationSchema) => t.lang === locale,
       ) ||
       post?.translations[0] ||
       {}
 
     const translationImage: FileTranslationSchema =
       post.image?.translations?.find(
-        (t: FileTranslationSchema) => t.lang === locale
+        (t: FileTranslationSchema) => t.lang === locale,
       ) ||
       post.image?.translations[0] ||
       {}
@@ -66,7 +66,7 @@ const BlogPostSliderParallax = ({
             <LinkAlba href={post.href} className="">
               <Image
                 className="embla__slide__img embla__parallax__img "
-                src={post?.image?.srcMedium || '/image-placeholder-Medium.webp'}
+                src={post?.image?.srcMedium || '/assets/placeholder.jpg'}
                 sizes="(max-width: 640px) 640px, (max-width: 768px) 768px, 1280px"
                 alt={translationImage?.alt || translationImage?.title}
                 layout="fill"

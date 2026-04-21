@@ -43,13 +43,13 @@ export function Filters<T>({ table, dictianory }: FiltersProps<T>) {
               <ComboboxInput
                 key={column.id}
                 name="templateFor"
-                defaultValue={filterValue ?? ''}
+                value={filterValue ?? ''}
                 {...(config.options ? { options: config.options } : {})}
                 {...(config.fetchOptions
                   ? { fetchOptions: config.fetchOptions }
                   : {})}
                 placeholder={`${dictianory.shared.filter} ${title}`}
-                onChange={({ target }) => handleChange(key, target.value)}
+                onChange={({ value }) => handleChange(key, value)}
                 showClean={true}
               />
             )

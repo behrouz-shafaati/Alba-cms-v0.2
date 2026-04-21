@@ -41,7 +41,7 @@ export async function createForm(
     templateFor: content.templateFor,
     status: content.status,
     translation: {
-      lang: content?.lang || 'fa',
+      locale: content?.locale || 'fa',
       title: content?.title || '',
       successMessage: content?.successMessage,
       fields: extractFieldsFromFormContent(content),
@@ -133,7 +133,7 @@ export async function updateForm(
     status: content.status,
     fields: extractFieldsFromFormContent(content),
     translation: {
-      lang: content?.lang || 'fa',
+      locale: content?.locale || 'fa',
       title: content?.title || '',
       successMessage: content?.successMessage,
     },
@@ -254,10 +254,10 @@ async function sanitizeFormData(validatedFields: any, id?: string | undefined) {
   const fields = extractFieldsFromFormContent(content)
   const formTranslations = [
     ...prevState.translations.filter(
-      (t: PostTranslationSchema) => t.lang != content.lang,
+      (t: PostTranslationSchema) => t.locale != content.locale,
     ),
     {
-      lang: content?.lang || 'fa',
+      locale: content?.locale || 'fa',
       successMessage: content?.successMessage,
     },
   ]

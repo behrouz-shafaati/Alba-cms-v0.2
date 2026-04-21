@@ -2,9 +2,9 @@
 
 import React, { ElementType } from 'react'
 import { Block } from '@/components/builder-canvas/types'
-import { computedStyles } from '@/components/builder-canvas/utils/styleUtils'
 import { PostCommentForm } from '@/components/post/comment-form'
-import { Post } from '@/features/post/interface'
+import { Post } from '@/lib/features/post/interface'
+import computedStyles from '@/components/builder-canvas/utils/computedStyles'
 
 type ContentBlockProps = {
   post: Post

@@ -43,7 +43,7 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
         onChange={(e) =>
           update(selectedBlock?.id as string, 'content', {
             ...selectedBlock?.content,
-            templateId: e.target.value,
+            templateId: e.value,
           })
         }
       />

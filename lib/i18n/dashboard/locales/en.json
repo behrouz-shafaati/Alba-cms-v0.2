@@ -20,7 +20,27 @@
     "isEmpty": "Is Empty",
     "from": "From",
     "selectedRow": "Selected row",
-    "filter": "Filter"
+    "filter": "Filter",
+    "deleteItems": "Delete items",
+    "deleteItemsAlarm": "Are you shure to want delete %s% item(s)?",
+    "warning": "Warning",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "update": "Update",
+    "view": "View",
+    "delete": "Delete",
+    "status": "Status",
+    "draft": "Draft",
+    "active": "Active",
+    "deactive": "Deactive",
+    "published": "Published",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "read": "Read",
+    "unread": "Unread",
+    "uknown": "Uknown",
+    "character": "character"
   },
   "input": {
     "combobox": {
@@ -39,7 +59,31 @@
       "description": "Post management",
       "status": "Status",
       "published": "Published",
-      "draft": "Draft"
+      "draft": "Draft",
+      "edit": "Edit post",
+      "view": "View post",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Title",
+        "schema": "JSON Schema",
+        "mainCategory": "Main category",
+        "otherCategory": "Other category",
+        "otherCategoryPlaceholder": "Import categories ...",
+        "tags": "Tags",
+        "tagsPlaceholder": "Import tags ...",
+        "featuredImage": "Featured image",
+        "featuredMovie": "Featured Movie",
+        "featuredMovieDescription": "Web page URI from Youtub or Aparat",
+        "seoTitle": "SEO Title",
+        "seoTitlePlaceholder": "SEO Title for search engines",
+        "slug": "Unique slug",
+        "slugDescription": "Use small letters , numbers , and distance lines ( - ) .",
+        "metaDescription": "Meta description",
+        "metaDescriptionPlaceholder": "Brief explanation for search results …",
+        "googleSnippetPreview": "Google Snippet Preview",
+        "linkOffer": "Link offer",
+        "submit": "Save"
+      }
     },
     "postComment": { "title": "Comments" },
     "user": {
@@ -82,8 +126,52 @@
         "required_error": ""
       }
     },
-    "category": { "title": "Categories", "create": "Add category" },
-    "tag": { "title": "Tags", "create": "Add tag" },
+    "category": {
+      "title": "Categories",
+      "description": "Categories management",
+      "create": "Add category",
+      "createDescription": "Add category",
+      "edit": "Edit catgory",
+      "editDescription": "Edit catgory",
+      "active": "Active",
+      "deactive": "Dective",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Title",
+        "slug": "Slug",
+        "slugPlaceholder": "Slug",
+        "parent": "Parent category",
+        "parentPlaceholder": "Parent category",
+        "description": "Description",
+        "descriptionPlaceholder": "Description",
+        "status": "Status",
+        "statusPlaceholder": "Status",
+        "icon": "Icon",
+        "image": "Featured category image"
+      }
+    },
+    "tag": {
+      "title": "Tags",
+      "description": "Tags management",
+      "create": "Add tag",
+      "createDescription": "Add tag",
+      "edit": "Edit tag",
+      "editDescription": "Edit tag",
+      "active": "Active",
+      "deactive": "Dective",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Title",
+        "slug": "Slug",
+        "slugPlaceholder": "Slug",
+        "description": "Description",
+        "descriptionPlaceholder": "Description",
+        "status": "Status",
+        "statusPlaceholder": "Status",
+        "icon": "Icon",
+        "image": "Featured tag image"
+      }
+    },
     "menu": { "title": "Menus", "create": "Add menu" },
     "page": { "title": "Pages", "create": "Add page" },
     "adCampaign": { "title": "AD Campaign", "create": "Add campaign" },
@@ -236,7 +324,56 @@
         "commentBtn": "Start migration Post views"
       }
     },
-    "logout": { "title": "Logout" }
+    "logout": { "title": "Logout" },
+    "productCategory": {
+      "title": "Product categories",
+      "description": "Product categories management",
+      "create": "Add product category",
+      "edit": "Edit product catgory",
+      "editDescription": "Edit product catgory",
+      "add": "Add product catgory",
+      "addDescription": "Add product catgory",
+      "active": "Active",
+      "deactive": "Dective",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Title",
+        "slug": "Slug",
+        "slugPlaceholder": "Slug",
+        "parent": "Parent product category",
+        "parentPlaceholder": "Parent product category",
+        "description": "Description",
+        "descriptionPlaceholder": "Description",
+        "status": "Status",
+        "statusPlaceholder": "Status",
+        "icon": "Icon",
+        "image": "Featured product category image"
+      }
+    },
+    "productTag": {
+      "title": "Product tags",
+      "description": "Product tags management",
+      "create": "Add product tags",
+      "createDescription": "Add product tags",
+      "edit": "Edit product tags",
+      "editDescription": "Edit product tags",
+      "active": "Active",
+      "deactive": "Dective",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Title",
+        "slug": "Slug",
+        "slugPlaceholder": "Slug",
+        "parent": "Parent product tags",
+        "parentPlaceholder": "Parent product tags",
+        "description": "Description",
+        "descriptionPlaceholder": "Description",
+        "status": "Status",
+        "statusPlaceholder": "Status",
+        "icon": "Icon",
+        "image": "Featured product tags image"
+      }
+    }
   },
   "installer": {
     "title": "Installation",

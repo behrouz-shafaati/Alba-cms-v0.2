@@ -10,7 +10,7 @@ import {
 } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useEffect, useRef } from 'react'
-import { Content, DndSortable } from '../types'
+import { Content } from '../types'
 import { blockRegistry } from '../registry/blockRegistry'
 import SortableRow from '../shared-blocks/row/SortableRow'
 import ToolsSection from './toolsSection' // <==
@@ -21,12 +21,15 @@ import findElementContainer from '../utils/findElementContainer'
 import moveBetweenContainers from '../utils/moveBetweenContainers'
 import addBlockToContainer from '../utils/addBlockToContainer'
 import { getDirection } from '@/lib/i18n/utils/getDirection'
+import { Plus, PlusIcon, Settings } from 'lucide-react'
+import { generateResponsiveCSS } from '../utils/css-generator'
 
 type props = {
   name: string
   submitFormHandler: any
   initialContent?: Content
-  settingsPanel: React.ReactNode
+  SettingsPanel: React.ReactNode
+  Header?: React.ReactNode
   newBlocks?: any
   locale: string
 }
@@ -35,7 +38,8 @@ export default function Builder({
   initialContent,
   name,
   submitFormHandler,
-  settingsPanel,
+  SettingsPanel,
+  Header,
   newBlocks,
   locale,
 }: props) {
@@ -46,16 +50,14 @@ export default function Builder({
     content,
     addRow,
     getJson,
-    addElementToColumn,
-    addElementToInternalSection,
-    moveElementWithinColumn,
-    moveElementBetweenColumns,
     setActiveElement,
     activeElement,
     reorderRows,
+    selectBlock,
     deselectBlock,
     setContent,
     resetContent,
+    device,
   } = useBuilderStore()
 
   const allBlocks = { ...blockRegistry, ...newBlocks }
@@ -103,11 +105,11 @@ export default function Builder({
     }
 
     const sourceContainer = findElementContainer(content, String(activeId))
-    const goalContainer = findElementContainer(content, String(overId))
+    const targetContainer = findElementContainer(content, String(overId))
     const oldIndex = sourceContainer?.blocks?.findIndex(
       (el: any) => el.id === activeId,
     )
-    const newIndex = goalContainer.blocks.findIndex(
+    const newIndex = targetContainer.blocks.findIndex(
       (el: any) => el.id === overId,
     )
 
@@ -121,7 +123,7 @@ export default function Builder({
         typeof block.defaultSettings === 'function'
           ? block.defaultSettings()
           : block.defaultSettings
-      const targetContainer = findElementContainer(content, String(overId))
+      console.log('@9**d4 targetContainer:', targetContainer)
       const newContent = addBlockToContainer(
         content,
         targetContainer.id,
@@ -154,20 +156,37 @@ export default function Builder({
   console.log('$2376 content:', content)
   return (
     <>
+      <style id="445588">{generateResponsiveCSS(content)}</style>
+      <div className="w-full fixed top-0 flex justify-between px-4 py-3 bg-slate-950 text-gray-50 z-20">
+        <div className="flex gap-3">
+          <Settings
+            role="button"
+            className="hover:brightness-90"
+            onClick={() => selectBlock('settings-panel')}
+          />
+          <Plus
+            role="button"
+            className="hover:brightness-90"
+            onClick={deselectBlock}
+          />
+        </div>
+        <div>{device}</div>
+        <div>{Header}</div>
+      </div>
       <DndContext
         onDragEnd={handleDragEnd}
         collisionDetection={pointerWithin}
         onDragStart={handleDragStart}
       >
-        <div className="flex w-full h-screen ">
+        <div className="flex w-full  mt-12">
           {/* نوار ابزار */}
-          <aside className="relative h-screen overflow-x-hidden overflow-y-auto w-80 max-w-80 shrink-0 bg-slate-50 dark:bg-slate-950 ">
+          <aside className="relative h-[calc(100vh-48px)] overflow-x-hidden overflow-y-auto w-80 max-w-80 shrink-0 bg-slate-900 text-gray-50 z-20 dark">
             <ToolsSection
-              settingsPanel={settingsPanel}
+              SettingsPanel={SettingsPanel}
               savePage={submitManually}
               newBlocks={newBlocks}
             />
-            <div className="sticky bottom-0  w-full gap-2 p-2 bg-slate-100 dark:bg-slate-900">
+            <div className="sticky bottom-0  w-full gap-2 p-2 bg-slate-950">
               <form action={submitFormHandler} ref={formRef}>
                 <textarea readOnly name={name} value={getJson()} hidden />
                 <textarea readOnly name="locale" value={locale} hidden />
@@ -188,9 +207,8 @@ export default function Builder({
             </div>
           </aside>
           {/* ناحیه ساخت صفحه */}
-          <div className="w-0 h-screen -z-50 "></div>
           <div
-            className="flex-1 h-screen py-8 overflow-y-auto p-4 rtl:pr-10 ltr:pl-10"
+            className="flex-1 h-[calc(100vh-48px)] py-8 overflow-y-auto p-4 rtl:pr-10 ltr:pl-10"
             style={{ direction: direction }}
             onClick={() => {
               deselectBlock()
@@ -221,7 +239,7 @@ export default function Builder({
               افزودن ردیف
             </Button>
             {process.env.NODE_ENV === 'development' && (
-              <pre className="p-4 mt-4 ltr border mt-2 rounded">
+              <pre className="p-4 mt-4 ltr border rounded ">
                 <code>{getJson()}</code>
               </pre>
             )}

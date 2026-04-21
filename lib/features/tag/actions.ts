@@ -16,7 +16,7 @@ import authorize from '@/lib/utils/authorize'
 const FormSchema = z.object({
   title: z.string({}).min(1, { message: 'لطفا عنوان را وارد کنید.' }),
   slug: z.string({}).nullable(),
-  lang: z.string({}).nullable(),
+  locale: z.string({}).nullable(),
   description: z.string({}),
   status: z.string({}).min(1, { message: 'لطفا وضعیت را تعیین کنید.' }),
   image: z.string({}).nullable(),
@@ -35,12 +35,12 @@ async function sanitizePostData(validatedFields: any, id?: string | undefined) {
   const slug = payload.slug !== '' ? payload.slug : slugify(payload.title)
   const translations = [
     {
-      lang: payload.lang,
+      locale: payload.locale,
       title: payload.title,
       description: payload.description,
     },
     ...prevState.translations.filter(
-      (t: TagTranslationSchema) => t.lang != payload.lang
+      (t: TagTranslationSchema) => t.locale != payload.locale,
     ),
   ]
   const params = {
@@ -62,20 +62,20 @@ async function sanitizePostData(validatedFields: any, id?: string | undefined) {
  */
 export async function createTag(
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   const rawValues = Object.fromEntries(formData)
   const values = {
     ...rawValues,
     translation: {
-      lang: rawValues?.lang,
+      locale: rawValues?.locale,
       title: rawValues?.title,
       description: rawValues?.description,
     },
   }
   // Validate form fields
   const validatedFields = FormSchema.safeParse(
-    Object.fromEntries(formData.entries())
+    Object.fromEntries(formData.entries()),
   )
   try {
     const user = (await getSession())?.user as User
@@ -131,13 +131,13 @@ export async function createTag(
 export async function updateTag(
   id: string,
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   const rawValues = Object.fromEntries(formData)
   const values = {
     ...rawValues,
     translation: {
-      lang: rawValues?.lang,
+      locale: rawValues?.locale,
       title: rawValues?.title,
       description: rawValues?.description,
     },
@@ -150,7 +150,7 @@ export async function updateTag(
     const prevTag = await tagCtrl.findById({ id })
     authorize(
       user.roles,
-      prevTag?.user.id !== user.id ? 'tag.edit.any' : 'tag.edit.own'
+      prevTag?.user.id !== user.id ? 'tag.edit.any' : 'tag.edit.own',
     )
     // If form validation fails, return errors early. Otherwise, continue.
     if (!validatedFields.success) {
@@ -200,7 +200,7 @@ export async function deleteTagsAction(ids: string[]) {
     for (const prevTag of prevTagResult.data) {
       authorize(
         user.roles,
-        prevTag?.user.id !== user.id ? 'tag.delete.any' : 'tag.delete.own'
+        prevTag?.user.id !== user.id ? 'tag.delete.any' : 'tag.delete.own',
       )
     }
 
@@ -234,34 +234,34 @@ export async function getAllTags(filters: any = {}) {
 
 export async function getAllTagsSlimAction({
   payload,
-  lang = 'fa',
+  locale = 'fa',
 }: {
   payload?: { filters: any }
-  lang?: 'fa'
+  locale?: 'fa'
 }) {
-  const cacheKy = ['tag', stableHash(payload), lang]
+  const cacheKy = ['tag', stableHash(payload), locale]
   try {
     return await unstable_cache(
       async () => {
         return tagCtrl.findAllSlim({
           payload: { filters: payload?.filters || {} },
-          lang,
+          locale,
         })
       },
       cacheKy,
       {
         tags: ['tags'],
-      }
+      },
     )()
   } catch (error) {
     // fallback امن: اگر cache fail شد
     console.warn(
       '[getAllTagsSlimAction] unstable_cache failed, fallback to direct call',
-      error
+      error,
     )
     return tagCtrl.findAllSlim({
       payload: { filters: payload?.filters || {} },
-      lang,
+      locale,
     })
   }
 }
@@ -273,13 +273,13 @@ export async function getTagAction({ slug }: { slug: string }) {
 
 export async function searchTags(
   query: string,
-  locale: string = 'fa'
+  locale: string = 'fa',
 ): Promise<Option[]> {
   const results = await tagCtrl.find({ filters: { query } })
 
   return results.data.map((tag: Tag) => {
     const translation: any =
-      tag?.translations?.find((t: any) => t.lang === locale) ||
+      tag?.translations?.find((t: any) => t.locale === locale) ||
       tag?.translations[0] ||
       {}
     return {
