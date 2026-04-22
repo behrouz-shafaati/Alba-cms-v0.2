@@ -18,6 +18,7 @@ import { combineClassNames } from '../utils/styleUtils'
 import addBlockToContainer from '../utils/addBlockToContainer'
 import findElementContainer from '../utils/findElementContainer'
 import { regenerateAllIds } from '../utils/regenerateAllIds'
+import computedStyles from '../utils/computedStyles'
 
 type SortableItemProp = {
   item: Block
@@ -123,7 +124,7 @@ export default function SortableItem({
           <Component
             widgetName={block.label}
             blockData={item}
-            className={`b${item.id}`}
+            className={`b${item.id} ${combineClassNames(computedStyles(item?.styles))}`}
           />
         ) : (
           <span className="rounded bg-red-600 text-gray-50">

@@ -46,9 +46,6 @@ export const TextBlock = ({
   return (
     <Tag
       style={{
-        fontSize: `${content?.fontSize?.lg || '16'}px `,
-        fontWeight: content.fontWeight || 'normal',
-        textAlign: content.textAlign || 'left',
         ...computedStyles(blockData.styles),
       }}
       {...props}

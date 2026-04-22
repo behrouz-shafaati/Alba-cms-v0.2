@@ -68,6 +68,12 @@ export const textColorSchema = {
   title: 'Text color',
   additionalProperties: true,
 }
+const cssSchema = {
+  type: 'object',
+  title: 'CSS',
+  additionalProperties: true,
+  'x-field': 'CssField',
+}
 export const backgroundColorSchema = {
   type: 'object',
   title: 'Background color',
@@ -97,16 +103,13 @@ export const publicStylesSchema: any = {
       type: 'object',
       title: 'Padding',
       additionalProperties: true,
+      'x-responsive': true,
     },
     margin: {
       type: 'object',
       title: 'Margin',
-      properties: {
-        top: { type: 'number', title: 'بالا', default: undefined },
-        right: { type: 'number', title: 'راست', default: undefined },
-        bottom: { type: 'number', title: 'پایین', default: undefined },
-        left: { type: 'number', title: 'چپ', default: undefined },
-      },
+      additionalProperties: true,
+      'x-responsive': true,
     },
     boxShadow: {
       type: 'object',
@@ -149,12 +152,8 @@ export const publicStylesSchema: any = {
     borderRadius: {
       type: 'object',
       title: 'Border radius',
-      properties: {
-        top: { type: 'number', title: 'بالا', default: undefined },
-        right: { type: 'number', title: 'راست', default: undefined },
-        bottom: { type: 'number', title: 'پایین', default: undefined },
-        left: { type: 'number', title: 'چپ', default: undefined },
-      },
+      additionalProperties: true,
+      'x-responsive': true,
     },
     opacity: {
       type: 'number',
@@ -177,10 +176,7 @@ export const publicStylesSchema: any = {
         mobile: { type: 'boolean', title: 'نمایش در موبایل', default: true },
       },
     },
-    css: {
-      type: 'string',
-      titile: 'Css',
-    },
+    css: cssSchema,
   },
 }
 
@@ -193,13 +189,13 @@ export const PublicStylesForm = () => {
   )
 
   if (!selectedBlock) return null
-  console.log('#234 selectedBlock.styles: ', selectedBlock.styles)
   return (
     <>
       <TailwindForm
         key={`shared-styles-block-${selectedBlock.id}`} // باعث میشه فرم کاملاً ری‌ست و رندر بشه
         schema={publicStylesSchema}
-        uiSchema={buildUiSchemaFromX(publicStylesSchema)}
+        uiSchema={uiSchema}
+        // uiSchema={buildUiSchemaFromX(publicStylesSchema)}
         formData={selectedBlock.styles}
         validator={validator}
         onChange={(e) =>
@@ -211,7 +207,7 @@ export const PublicStylesForm = () => {
         liveValidate
         widgets={{}} // می‌تونی در آینده کاستوم‌سازی کنی
         templates={{
-          FieldTemplate: CustomFieldTemplate,
+          // FieldTemplate: CustomFieldTemplate,
           //  حذف دکمه Submit
           ButtonTemplates: {
             SubmitButton: () => null,

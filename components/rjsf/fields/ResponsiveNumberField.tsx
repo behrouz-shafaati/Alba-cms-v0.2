@@ -14,11 +14,13 @@ const options = [
   { label: 'px', value: 'px' },
   { label: '%', value: '%' },
   { label: 'rem', value: 'rem' },
+  { label: 'vw', value: 'vw' },
+  { label: 'vh', value: 'vh' },
 ]
 
 export default function ResponsiveNumberField(props) {
   const { device } = useBuilderStore()
-  const { formData, onChange } = props
+  const { formData, onChange, schema } = props
 
   console.log('#@23432=============>4 formData:', formData)
   const [value, setValue] = useState(formData?.[device]?.value || '')
@@ -66,7 +68,7 @@ export default function ResponsiveNumberField(props) {
           setUnit(value)
         }}
       >
-        <SelectTrigger className="border-none rounded-none outline-none">
+        <SelectTrigger className="border-none rounded-none outline-none text-[10px]">
           <SelectValue placeholder={unit} />
         </SelectTrigger>
         <SelectContent>

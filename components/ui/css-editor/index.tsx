@@ -16,37 +16,30 @@ const CodeMirror = dynamic(() => import('@uiw/react-codemirror'), {
 import { css } from '@codemirror/lang-css'
 import { oneDark } from '@codemirror/theme-one-dark'
 import { useState } from 'react'
+import { useBuilderStore } from '@/components/builder-canvas/store/useBuilderStore'
 
-type Device = 'allDevices' | 'mobile' | 'tablet' | 'desktop'
+type Device = 'sm' | 'md' | 'lg'
 
 type CssEditorProps = {
   value?: {
-    allDevices: string
-    mobile: string
-    tablet: string
-    desktop: string
+    sm: string
+    md: string
+    lg: string
   }
-  onChange?: (output: {
-    allDevices: string
-    mobile: string
-    tablet: string
-    desktop: string
-  }) => void
+  onChange?: (output: { sm: string; md: string; lg: string }) => void
   height?: string
 }
 
 export default function CssEditor({
-  value = { allDevices: '', mobile: '', tablet: '', desktop: '' },
+  value = { sm: '', md: '', lg: '' },
   onChange,
   height = '400px',
 }: CssEditorProps) {
   const [_value, setValue] = useState(value)
-  const [device, setDevice] = useState<Device>('allDevices')
+  const { device, setDevice } = useBuilderStore()
 
   function update(css: string) {
-    const next = structuredClone(
-      _value || { allDevices: '', mobile: '', tablet: '', desktop: '' },
-    )
+    const next = structuredClone(_value || { sm: '', md: '', lg: '' })
 
     next[device] = css
 
@@ -58,13 +51,13 @@ export default function CssEditor({
     <div className="rounded-md overflow-hidden border border-gray-700">
       <Tabs value={device} onValueChange={(v) => setDevice(v as Device)}>
         <TabsList className="grid grid-cols-4">
-          <TabsTrigger value="allDevices">All</TabsTrigger>
-          <TabsTrigger value="mobile">Mobile</TabsTrigger>
-          <TabsTrigger value="tablet">Tablet</TabsTrigger>
-          <TabsTrigger value="desktop">Desktop</TabsTrigger>
+          <TabsTrigger value="sm">Mobile</TabsTrigger>
+          <TabsTrigger value="md">Tablet</TabsTrigger>
+          <TabsTrigger value="lg">Desktop</TabsTrigger>
         </TabsList>
       </Tabs>
       <CodeMirror
+        className="w-[273px]"
         value={_value[device]}
         height={height}
         extensions={[css()]}

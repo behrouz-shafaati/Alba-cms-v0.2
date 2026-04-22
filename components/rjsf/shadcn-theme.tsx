@@ -9,7 +9,7 @@ import { CheckboxWidget } from './widgets/CheckboxWidget'
 import { TextareaWidget } from './widgets/TextareaWidget'
 import { NumberWidget } from './widgets/NumberWidget'
 import { SliderWidget } from './widgets/SliderWidget'
-import { FourSideBoxWidget } from './fields/FourSideBoxWidget'
+import { FourSideBoxField } from './fields/FourSideBoxField'
 import { ShadowWidget } from './widgets/ShadowWidget'
 import { TailwindTextColorPickerWidget } from './widgets/TailwindTextColorPickerWidget'
 import LayoutField from './fields/Layout'
@@ -20,31 +20,7 @@ import CssEditor from '../ui/css-editor'
 import IconPickerWidget from './fields/IconPickerField'
 import IconPickerField from './fields/IconPickerField'
 import ResponsiveNumberField from './fields/ResponsiveNumberField'
-
-const CustomFieldTemplate = ({
-  id,
-  classNames,
-  label,
-  children,
-  errors,
-  help,
-}: any) => {
-  return (
-    <div className="mb-4">
-      {label && (
-        <label
-          htmlFor={id}
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          {label}
-        </label>
-      )}
-      {children}
-      {errors}
-      {help}
-    </div>
-  )
-}
+import CustomFieldTemplate from './templates/CustomFieldTemplate'
 
 const CustomObjectFieldTemplate = ({ properties }: any) => {
   return <div>{properties.map((prop: any) => prop.content)}</div>
@@ -62,30 +38,10 @@ export const CustomTheme = {
     TextareaWidget,
     NumberWidget,
     SliderWidget,
-    CssEditor,
   },
   fields: {
     ResponsiveNumber: ResponsiveNumberField,
-    PaddingField: (props: FieldProps) => {
-      return (
-        <FourSideBoxWidget
-          value={props.formData}
-          onChange={(val) => props.onChange(val, ['padding'])}
-        />
-      )
-    },
-    MarginField: (props: FieldProps) => (
-      <FourSideBoxWidget
-        value={props.formData}
-        onChange={(val) => props.onChange(val, ['margin'])}
-      />
-    ),
-    BorderRadiusField: (props: FieldProps) => (
-      <CornersRoundField
-        value={props.formData}
-        onChange={(val) => props.onChange(val, ['borderRadius'])}
-      />
-    ),
+    FourSideBoxField: FourSideBoxField,
     ShadowField: (props: FieldProps) => (
       <ShadowWidget
         value={props.formData}
@@ -109,9 +65,11 @@ export const CustomTheme = {
       const current = props.formData ?? {}
       // وقتی کاربر رنگ انتخاب میکنه
       const handleChange = (val: { light: any; dark: any }) => {
+        console.log('#234234 value in color widget:', val)
         props.onChange(val, ['textColor'])
       }
 
+      console.log('#234234 value in color current:', current)
       return <ColorWidget value={current} onChange={handleChange} />
     },
     BackgroundColorField: (props: FieldProps) => {
@@ -138,6 +96,15 @@ export const CustomTheme = {
         onChange={(val) => props.onChange(val, ['icon'])}
       />
     ),
+    CssField: (props: FieldProps) => {
+      const current = props.formData ?? {}
+      // وقتی کاربر رنگ انتخاب میکنه
+      const handleChange = (val) => {
+        props.onChange(val, ['css'])
+      }
+
+      return <CssEditor value={current} onChange={handleChange} />
+    },
   },
   templates: {
     FieldTemplate: CustomFieldTemplate,

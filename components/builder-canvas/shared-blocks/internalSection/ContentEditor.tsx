@@ -29,7 +29,8 @@ const ContentEditor = ({ savePage }: Props) => {
             : null
         }
         updateFileDetailsHandler={(files) => {
-          update(selectedBlock?.id as string, 'settings', {
+          update(selectedBlock?.id as string, 'content', {
+            ...selectedBlock?.content,
             bgMedia: {
               id: files[0].id,
               srcMedium: files[0].srcMedium,
@@ -38,8 +39,8 @@ const ContentEditor = ({ savePage }: Props) => {
           })
         }}
         deleteFileHnadler={(fileId) => {
-          update(selectedBlock?.id as string, 'settings', {
-            ...selectedBlock?.settings,
+          update(selectedBlock?.id as string, 'content', {
+            ...selectedBlock?.content,
             bgMedia: null,
           })
           requestAnimationFrame(() => {

@@ -58,7 +58,7 @@ export const useBuilderStore = create<State>((set, get) => ({
             type: 'row',
             classNames: '',
             styles: {},
-            settings: { rowColumns: '4-4-4' },
+            content: { rowColumns: '4-4-4' },
             columns: [defaultColumn(), defaultColumn(), defaultColumn()],
           }
 
@@ -157,7 +157,7 @@ export const useBuilderStore = create<State>((set, get) => ({
         return {
           ...node,
           columns: rebuildColumns(node.columns, widths),
-          settings: { ...node.settings, rowColumns: layout },
+          content: { ...node.content, rowColumns: layout },
         }
       }
 
@@ -214,6 +214,12 @@ export const useBuilderStore = create<State>((set, get) => ({
   },
   update: (itemId, key, value) =>
     set((state) => {
+      console.log(
+        ' #77 in update store; key: ',
+        key,
+        '#234****** value:',
+        value,
+      )
       value = removeEmptyItems(value)
 
       const updatedContent = updateContentItem(

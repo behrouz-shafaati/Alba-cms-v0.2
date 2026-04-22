@@ -27,13 +27,13 @@ export const uiSchema = {
     'ui:widget': 'SliderWidget',
   },
   padding: {
-    'ui:field': 'PaddingField',
+    'ui:field': 'FourSideBoxField',
   },
   margin: {
-    'ui:field': 'MarginField',
+    'ui:field': 'FourSideBoxField',
   },
   borderRadius: {
-    'ui:field': 'BorderRadiusField',
+    'ui:field': 'FourSideBoxField',
   },
   boxShadow: {
     'ui:field': 'ShadowField',
@@ -44,13 +44,13 @@ export const uiSchema = {
   tailwindClasses: {
     'ui:widget': 'TailwindClassInput',
   },
-  css: {
-    'ui:widget': 'CssEditor',
-  },
   visibility: {
     'ui:field': 'ResponsiveVisibilityField',
   },
   border: {
     'ui:field': 'BorderField',
+  },
+  css: {
+    'ui:field': 'CssField',
   },
 }

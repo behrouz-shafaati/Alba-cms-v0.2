@@ -33,6 +33,7 @@ export default function DroppableColumn({
     activeClass = 'border-2 border-fuchsia-500 border-opacity-30'
   return (
     <div
+      data-col
       ref={setNodeRef}
       className={`flex flex-col relative border border-amber-700 my-1 col-span-${
         col.width
@@ -41,10 +42,7 @@ export default function DroppableColumn({
         computedStyles(col.styles),
       )} ${isOver ? 'bg-green-100' : ''} group/column ${activeClass}`}
     >
-      <div
-        key={`div-${col?.id}`}
-        className="flex align-middle items-center justify-between  pl-2 gap-2 z-10  group-hover/column:opacity-100 transition-opacity bg-amber-50 dark:bg-gray-800"
-      >
+      <div className="flex align-middle items-center justify-between  pl-2 gap-2 z-10  group-hover/column:opacity-100 transition-opacity bg-amber-50 dark:bg-gray-800">
         <div className="flex align-middle items-center">
           <Button
             type="button"
@@ -57,7 +55,7 @@ export default function DroppableColumn({
                 id: col?.id,
                 type: 'column',
                 styles: col?.styles,
-                settings: col?.settings,
+                content: col?.content,
               })
             }}
           >
@@ -67,10 +65,10 @@ export default function DroppableColumn({
         <span className="text-xs">ستون</span>
       </div>
       <div
-        className="p-1"
+        className={`b${col.id} p-1`}
         style={{
           ...computedStyles(col.styles),
-          ...computedStyles(col.settings),
+          ...computedStyles(col?.content),
         }}
       >
         {col.blocks.map((el: any, index: number) => (

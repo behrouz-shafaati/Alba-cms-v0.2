@@ -2,7 +2,7 @@ import { Block } from '../../types'
 import InternalSection from '../internalSection/internalSection'
 import computedStyles from '../../utils/computedStyles'
 import { Settings } from '@/lib/features/settings/interface'
-import ResponsiveStyle from '@/components/other/ResponsiveStyle'
+import { combineClassNames, getVisibilityClass } from '../../utils/styleUtils'
 
 type BlockProps = {
   widgetName: string
@@ -28,18 +28,19 @@ export default function sectionWrapper({
 }: BlockProps) {
   const { sections, settings, styles } = blockData
   const responsiveDesign = settings?.responsiveDesign ?? true
+
+  const visibility: any = styles?.visibility
+  const visibilityClassName = getVisibilityClass(visibility, {
+    display: 'grid',
+  })
   return (
     <div
       style={{
         ...computedStyles(blockData.styles),
       }}
       {...props}
-      className={`section_wrapper_${blockData.id}`}
+      className={`b${blockData.id} ${visibilityClassName} ${combineClassNames(computedStyles(styles))}`}
     >
-      <ResponsiveStyle
-        selector={`section_wrapper_${blockData.id}`}
-        styles={blockData.styles?.css}
-      />
       <div className="grid grid-cols-12 gap-4">
         {sections.map((section: any) => (
           <InternalSection

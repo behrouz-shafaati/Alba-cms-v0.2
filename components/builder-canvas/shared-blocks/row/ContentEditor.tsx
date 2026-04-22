@@ -17,11 +17,9 @@ const ContentEditor = ({ savePage }: Props) => {
     (id, key, form) => update(id, key, form),
     400,
   )
-  const defaultValu =
-    selectedBlock?.content?.srcMedium !== null ? selectedBlock?.content : null
   console.log(
-    '#345 selectedBlock?.settings?.responsiveDesign:',
-    selectedBlock?.settings?.responsiveDesign,
+    '#345 selectedBlock?.content?.responsiveDesign:',
+    selectedBlock?.content?.responsiveDesign,
   )
   return (
     <>
@@ -29,11 +27,11 @@ const ContentEditor = ({ savePage }: Props) => {
         <Label>چینش ستون</Label>
         <ColumnLayoutCombobox
           key={`block-${selectedBlock.id}`} //  باعث میشه فرم کاملاً ری‌ست و رندر بشه
-          value={selectedBlock.settings.rowColumns}
+          value={selectedBlock?.content?.rowColumns}
           onChange={(value) => {
             updateRowColumns(selectedBlock.id as string, value)
-            debouncedUpdate(selectedBlock.id as string, 'settings', {
-              ...selectedBlock?.settings,
+            debouncedUpdate(selectedBlock.id as string, 'content', {
+              ...selectedBlock?.content,
               rowColumns: value,
             })
           }}
@@ -45,10 +43,10 @@ const ContentEditor = ({ savePage }: Props) => {
       <Checkbox
         name="responsiveDesign"
         title="طراحی ریسپانسیو"
-        defaultChecked={selectedBlock?.settings?.responsiveDesign ?? true}
+        defaultChecked={selectedBlock?.content?.responsiveDesign ?? true}
         onChange={(value: boolean) => {
-          debouncedUpdate(selectedBlock?.id as string, 'settings', {
-            ...selectedBlock?.settings,
+          debouncedUpdate(selectedBlock?.id as string, 'content', {
+            ...selectedBlock?.content,
             responsiveDesign: value,
           })
         }}
@@ -58,10 +56,10 @@ const ContentEditor = ({ savePage }: Props) => {
       <Checkbox
         name="sticky"
         title="چسبان"
-        defaultChecked={selectedBlock?.settings?.sticky ?? false}
+        defaultChecked={selectedBlock?.content?.sticky ?? false}
         onChange={(value: boolean) => {
-          debouncedUpdate(selectedBlock?.id as string, 'settings', {
-            ...selectedBlock?.settings,
+          debouncedUpdate(selectedBlock?.id as string, 'content', {
+            ...selectedBlock?.content,
             sticky: value,
           })
         }}
@@ -73,13 +71,14 @@ const ContentEditor = ({ savePage }: Props) => {
         title="پس زمینه"
         maxFiles={1}
         defaultValues={
-          selectedBlock?.settings?.bgMedia
-            ? [selectedBlock?.settings?.bgMedia]
+          selectedBlock?.content?.bgMedia
+            ? [selectedBlock?.content?.bgMedia]
             : null
         }
         updateFileDetailsHandler={(files) => {
           console.log('#88237 updaTED DATA: ', files)
-          update(selectedBlock?.id as string, 'settings', {
+          update(selectedBlock?.id as string, 'content', {
+            ...selectedBlock?.content,
             bgMedia: {
               id: files[0].id,
               srcMedium: files[0].srcMedium,
@@ -88,8 +87,8 @@ const ContentEditor = ({ savePage }: Props) => {
           })
         }}
         deleteFileHnadler={(fileId) => {
-          update(selectedBlock?.id as string, 'settings', {
-            ...selectedBlock?.settings,
+          update(selectedBlock?.id as string, 'content', {
+            ...selectedBlock?.content,
             bgMedia: null,
           })
           requestAnimationFrame(() => {

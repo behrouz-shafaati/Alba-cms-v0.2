@@ -1,7 +1,6 @@
 'use server'
 import { getBlocksSafe } from '@/lib/singletonBlockRegistry'
 import { Block } from '../types'
-import { combineClassNames, getVisibilityClass } from '../utils/styleUtils'
 import { Settings } from '@/lib/features/settings/interface'
 
 type RestProps = Record<string, unknown>
@@ -13,6 +12,7 @@ type RenderBlockProp = {
   pageSlug: string | null
   categorySlug: string | null
   searchParams?: any
+  className?: string
   locale: string
 }
 const RenderBlock = async ({
@@ -23,15 +23,11 @@ const RenderBlock = async ({
   categorySlug,
   searchParams = {},
   locale,
+  className = '',
   ...rest
 }: RenderBlockProp) => {
   const blocks = getBlocksSafe() // برای محتوا دار بودن این برای رسیدن به این کامپوننت هیچ کامپوننتی نباید از use client‌ استفاده کرده باشد
-
-  const visibility: any = item.styles?.visibility
   const block = blocks[item.type]
-  const className = getVisibilityClass(visibility, {
-    display: item?.settings?.display || 'block',
-  })
   const Component = block?.Renderer
   if (Component) {
     if (item.type.startsWith('content_')) {
@@ -74,7 +70,7 @@ const RenderBlock = async ({
         <Component
           siteSettings={siteSettings}
           blockData={item}
-          className={`b${item.id} ${className}}`}
+          className={`b${item.id} ${className}`}
           pageSlug={pageSlug}
           categorySlug={categorySlug}
           searchParams={searchParams}

@@ -417,6 +417,10 @@ const MenuBar = ({
           <option value="18px">18</option>
           <option value="24px">24</option>
           <option value="32px">32</option>
+          <option value="32px">36</option>
+          <option value="32px">40</option>
+          <option value="32px">44</option>
+          <option value="32px">48</option>
         </select>
         <ColorPickerPopover
           key={JSON.stringify(active.color)}

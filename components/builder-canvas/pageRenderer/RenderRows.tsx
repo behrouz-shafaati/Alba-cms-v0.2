@@ -6,8 +6,8 @@ import { combineClassNames, getVisibilityClass } from '../utils/styleUtils'
 import RenderBlock from './RenderBlock'
 import { Settings } from '@/lib/features/settings/interface'
 import Image from 'next/image'
-import ResponsiveStyle from '@/components/other/ResponsiveStyle'
 import computedStyles from '../utils/computedStyles'
+import { cn } from '@/lib/utils'
 
 type Props = {
   siteSettings: Settings
@@ -52,7 +52,7 @@ const RendererRows = async ({
         const className = getVisibilityClass(visibility, { display: 'grid' })
         let stickyClass = ''
         // این نوع چسبان فقط مخصوص ردیف است صله ی آن تا بالای ویو پورت همیشه صفر است. تنها یک ردیف این قابلیت را باید داشته باشد
-        if (row?.settings?.sticky || false) stickyClass = 'sticky top-0 z-50'
+        if (row?.content?.sticky || false) stickyClass = 'sticky top-0 z-50'
         console.log(
           `#${row.id} row.styles:`,
           row.styles,
@@ -64,17 +64,13 @@ const RendererRows = async ({
             data-row
             key={row.id}
             style={{ ...computedStyles(row.styles) }}
-            className={`row_${row.id} relative grid grid-cols-12 gap-4 ${combineClassNames(
+            className={`b${row.id} relative grid grid-cols-12 gap-4 ${combineClassNames(
               computedStyles(row.styles),
             )} ${className} ${stickyClass} `}
           >
-            <ResponsiveStyle
-              selector={`row_${row.id}`}
-              styles={row.styles?.css}
-            />
-            {row?.settings?.bgMedia && (
+            {row?.content?.bgMedia && (
               <Image
-                src={row?.settings?.bgMedia?.srcMedium}
+                src={row?.content?.bgMedia?.srcMedium}
                 alt="ALBA CMS Hero"
                 fill
                 priority
@@ -84,12 +80,12 @@ const RendererRows = async ({
             {row.columns.map((col: any) => {
               const visibilityClassName = getVisibilityClass(
                 col.styles?.visibility,
-                { display: col.settings?.display },
+                { display: col.content?.display },
               )
-              delete col.settings?.visibility
+              delete col.content?.visibility
               // as default columns content is sticky
-              col.settings = { sticky: true, ...col?.settings }
-              const responsiveDesign = row?.settings?.responsiveDesign ?? true
+              col.content = { sticky: true, ...col?.content }
+              const responsiveDesign = row?.content?.responsiveDesign ?? true
               const classBaseOnResponsiveDesign = responsiveDesign
                 ? `col-span-12 md:col-span-${col.width}`
                 : `col-span-${col.width}`
@@ -98,22 +94,18 @@ const RendererRows = async ({
                 <div
                   data-column
                   key={col.id}
-                  className={`col_${col.id} relative  ${classBaseOnResponsiveDesign} ${combineClassNames(
+                  className={`relative  ${classBaseOnResponsiveDesign} ${combineClassNames(
                     col?.tailwindClasses || {},
                     computedStyles(col.styles),
                   )} ${visibilityClassName}`}
                   style={{
                     ...computedStyles(col.styles),
-                    ...computedStyles(col.settings),
+                    ...computedStyles(col.content),
                   }}
                 >
-                  <ResponsiveStyle
-                    selector={`col_${col.id}`}
-                    styles={col.styles?.css}
-                  />
-                  {col?.settings?.bgMedia && (
+                  {col?.content?.bgMedia && (
                     <Image
-                      src={col?.settings?.bgMedia?.srcMedium}
+                      src={col?.content?.bgMedia?.srcMedium}
                       alt="ALBA CMS Hero"
                       fill
                       priority
@@ -123,12 +115,12 @@ const RendererRows = async ({
                   <div
                     data-block-wrapper
                     //When the row is sticky don't need sticky column
-                    {...(row?.settings?.sticky || col.settings?.sticky == false
-                      ? {}
-                      : {
-                          className:
-                            'w-full sticky [--header-top:var(--header-top-mobile)] sm:[--header-top:var(--header-top-tablet)] md:[--header-top:var(--header-top-desktop)]',
-                        })}
+                    className={cn(
+                      `b${col.id}`,
+                      row?.content?.sticky || col.content?.sticky == false
+                        ? ''
+                        : 'w-full sticky [--header-top:var(--header-top-mobile)] sm:[--header-top:var(--header-top-tablet)] md:[--header-top:var(--header-top-desktop)]',
+                    )}
                     style={{
                       ...computedStyles({
                         ...col.styles,
@@ -141,6 +133,14 @@ const RendererRows = async ({
                     }}
                   >
                     {col.blocks.map((el: any, index: number) => {
+                      const visibility: any = el.styles?.visibility
+                      const visibilityClassName = getVisibilityClass(
+                        visibility,
+                        {
+                          display: el?.settings?.display || 'block',
+                        },
+                      )
+
                       return (
                         <RenderBlock
                           siteSettings={siteSettings}
@@ -151,6 +151,9 @@ const RendererRows = async ({
                           categorySlug={categorySlug}
                           searchParams={searchParams}
                           locale={locale}
+                          className={`${visibilityClassName} ${combineClassNames(
+                            computedStyles(el?.styles),
+                          )}`}
                           {...contentProps}
                         />
                       )

@@ -4,46 +4,9 @@ const BREAKPOINTS = {
   lg: '',
 }
 
-const CSS_WHITELIST = new Set([
-  'width',
-  'height',
-  'maxWidth',
-  'fontSize',
-  'fontWeight',
-  'textAlign',
-  'color',
-  'background',
-  'backgroundColor',
-  'display',
-  'margin',
-  'marginTop',
-  'marginBottom',
-  'marginLeft',
-  'marginRight',
-  'padding',
-  'paddingTop',
-  'paddingBottom',
-  'paddingLeft',
-  'paddingRight',
-  'opacity',
-  'boxShadow',
-])
+const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v)
 
-const UNITLESS = new Set(['opacity', 'fontWeight'])
-
-const CUSTOM_BP = {
-  mobile: 'sm',
-  tablet: 'md',
-  desktop: 'lg',
-}
-
-function kebab(str) {
-  return str.replace(/([A-Z])/g, '-$1').toLowerCase()
-}
-
-function isObj(v) {
-  return v && typeof v === 'object' && !Array.isArray(v)
-}
+const kebab = (s) => s.replace(/([A-Z])/g, '-$1').toLowerCase()
 
 function push(map, bp, cls, rule) {
   map[bp] ??= {}
@@ -51,39 +14,107 @@ function push(map, bp, cls, rule) {
   map[bp][cls].push(rule)
 }
 
-function normalizeOpacity(val) {
-  const n = Number(val)
-  if (Number.isNaN(n)) return ''
-  const v = Math.max(0, Math.min(1, n / 100))
-  return String(v)
-}
+/* ----------------------------- */
+/* parse values */
+/* ----------------------------- */
 
-function parseValue(prop, data) {
+function parseValue(prop, val) {
   if (prop === 'opacity') {
-    const raw = isObj(data) ? (data.value ?? data) : data
-    if (raw === undefined || raw === null) return ''
-    return normalizeOpacity(raw)
+    const v = Number(val)
+    return Math.max(0, Math.min(1, v / 100))
   }
 
-  if (!isObj(data)) {
-    let value = String(data ?? '').trim()
-    if (value === '') return ''
+  if (!isObj(val)) return val
 
-    if (UNITLESS.has(prop) || /[a-z%)]$/i.test(value) || value === '0')
-      return value
+  const value = val.value ?? ''
+  const unit = val.unit ?? 'px'
 
-    return value + 'px'
-  }
-
-  let value = String(data.value ?? '').trim()
-  if (value === '') return ''
-
-  if (UNITLESS.has(prop) || /[a-z%)]$/i.test(value) || value === '0')
-    return value
-
-  const unit = data.unit || 'px'
-  return value + unit
+  return `${value}${unit}`
 }
+
+/* ----------------------------- */
+/* padding / margin */
+/* ----------------------------- */
+
+function handleSpacing(type, val, id, map) {
+  const cls = `.b${id}`
+
+  for (const bp of ['lg', 'md', 'sm']) {
+    if (!val[bp]) continue
+
+    const v = val[bp]
+
+    const t = v.top ?? 0
+    const r = v.right ?? t
+    const b = v.bottom ?? t
+    const l = v.left ?? r
+    const unit = v.unit ?? 'px'
+
+    push(
+      map,
+      bp,
+      cls,
+      `${type}:${t}${unit} ${r}${unit} ${b}${unit} ${l}${unit}`,
+    )
+  }
+}
+
+/* ----------------------------- */
+/* borderRadius */
+/* ----------------------------- */
+
+function handleRadius(val, id, map) {
+  const cls = `.b${id}`
+
+  for (const bp of ['lg', 'md', 'sm']) {
+    if (!val[bp]) continue
+
+    const v = val[bp]
+
+    const t = v.top ?? 0
+    const r = v.right ?? t
+    const b = v.bottom ?? t
+    const l = v.left ?? r
+    const unit = v.unit ?? 'px'
+
+    push(
+      map,
+      bp,
+      cls,
+      `border-radius:${t}${unit} ${r}${unit} ${b}${unit} ${l}${unit}`,
+    )
+  }
+}
+
+/* ----------------------------- */
+/* boxShadow */
+/* ----------------------------- */
+
+function handleShadow(val, id, map) {
+  if (!val) return
+
+  const { x, y, blur, spread } = val
+
+  if ([x, y, blur, spread].some((v) => v === undefined)) return
+
+  push(map, 'lg', `.b${id}`, `box-shadow:${x}px ${y}px ${blur}px ${spread}px`)
+}
+
+/* ----------------------------- */
+/* border */
+/* ----------------------------- */
+
+function handleBorder(val, id, map) {
+  const cls = `.b${id}`
+
+  if (val.width) push(map, 'lg', cls, `border-width:${val.width}px`)
+
+  if (val.bottom) push(map, 'lg', cls, `border-bottom-style:${val.bottom}`)
+}
+
+/* ----------------------------- */
+/* css custom */
+/* ----------------------------- */
 
 function sanitizeCss(css) {
   if (typeof css !== 'string') return ''
@@ -94,44 +125,97 @@ function sanitizeCss(css) {
     .split(';')
     .map((x) => x.trim())
     .filter(Boolean)
-    .map((rule) => {
-      const i = rule.indexOf(':')
-      if (i === -1) return ''
-
-      const prop = rule.slice(0, i).trim()
-      const val = rule.slice(i + 1).trim()
-
-      const camel = prop.replace(/-([a-z])/g, (m, p) => p.toUpperCase())
-
-      if (!CSS_WHITELIST.has(camel)) return ''
-
-      return `${prop}:${val}`
-    })
-    .filter(Boolean)
     .join(';')
 }
 
-function merge(arr) {
-  const map = {}
+/* ----------------------------- */
+/* process properties */
+/* ----------------------------- */
 
-  for (const g of arr) {
-    const parts = g.split(';')
+function process(prop, val, id, map) {
+  const cls = `.b${id}`
 
-    for (const p of parts) {
-      const i = p.indexOf(':')
-      if (i === -1) continue
+  if (prop === 'padding') return handleSpacing('padding', val, id, map)
 
-      const k = p.slice(0, i)
-      const v = p.slice(i + 1)
+  if (prop === 'margin') return handleSpacing('margin', val, id, map)
 
-      map[k] = v
+  if (prop === 'borderRadius') return handleRadius(val, id, map)
+
+  if (prop === 'boxShadow') return handleShadow(val, id, map)
+
+  if (prop === 'border') return handleBorder(val, id, map)
+
+  if (prop === 'css') {
+    for (const bp in val) {
+      const clean = sanitizeCss(val[bp])
+
+      if (clean) push(map, bp, cls, clean)
+    }
+
+    return
+  }
+
+  /* responsive */
+
+  if (isObj(val) && (val.lg || val.md || val.sm)) {
+    for (const bp of ['lg', 'md', 'sm']) {
+      if (!val[bp]) continue
+
+      const v = parseValue(prop, val[bp])
+
+      push(map, bp, cls, `${kebab(prop)}:${v}`)
+    }
+
+    return
+  }
+
+  /* normal */
+
+  if (typeof val === 'string' || typeof val === 'number') {
+    push(map, 'lg', cls, `${kebab(prop)}:${val}`)
+  }
+}
+
+/* ----------------------------- */
+/* traversal */
+/* ----------------------------- */
+
+function collect(node, parentId, map) {
+  if (!node) return
+
+  if (Array.isArray(node)) {
+    node.forEach((n) => collect(n, parentId, map))
+    return
+  }
+
+  if (!isObj(node)) return
+
+  const id = node.id || parentId
+
+  /* styles */
+
+  if (node.styles) {
+    const styles = node.styles
+
+    for (const key in styles) {
+      if (key === 'layout') {
+        for (const k in styles.layout) process(k, styles.layout[k], id, map)
+      } else process(key, styles[key], id, map)
     }
   }
 
-  return Object.entries(map)
-    .map(([k, v]) => `${k}:${v}`)
-    .join(';')
+  /* content */
+
+  if (node.content) {
+    for (const key in node.content) process(key, node.content[key], id, map)
+  }
+
+  for (const key in node) collect(node[key], id, map)
 }
+
+/* ----------------------------- */
+/* build css */
+/* ----------------------------- */
 
 function build(map, bp) {
   if (!map[bp]) return ''
@@ -139,8 +223,7 @@ function build(map, bp) {
   let css = ''
 
   for (const cls in map[bp]) {
-    const rules = merge(map[bp][cls])
-    if (!rules) continue
+    const rules = [...new Set(map[bp][cls])].join(';')
 
     css += `${cls}{${rules}}`
   }
@@ -148,81 +231,22 @@ function build(map, bp) {
   return css
 }
 
-function processStyle(prop, val, id, map) {
-  if (!CSS_WHITELIST.has(prop) || !id) return
-
-  const cls = `.b${id}`
-  const cssProp = kebab(prop)
-
-  if (isObj(val) && ('lg' in val || 'md' in val || 'sm' in val)) {
-    for (const bp of ['lg', 'md', 'sm']) {
-      const data = val[bp]
-      if (!data) continue
-
-      const v = parseValue(prop, data)
-      if (!v) continue
-
-      push(map, bp, cls, `${cssProp}:${v}`)
-    }
-  } else {
-    const v = parseValue(prop, val)
-    if (!v) return
-
-    push(map, 'lg', cls, `${cssProp}:${v}`)
-  }
-}
-
-function collect(node, parentId, map) {
-  if (!node) return
-
-  if (Array.isArray(node)) {
-    for (const n of node) collect(n, parentId, map)
-    return
-  }
-
-  if (typeof node !== 'object') return
-
-  const id = node.id || parentId
-
-  for (const key in node) {
-    const val = node[key]
-
-    if (key === 'css' && id && isObj(val)) {
-      const cls = `.b${id}`
-
-      for (const d in val) {
-        const bp = CUSTOM_BP[d]
-        if (!bp) continue
-
-        const css = sanitizeCss(val[d])
-        if (!css) continue
-
-        push(map, bp, cls, css)
-      }
-
-      continue
-    }
-
-    if (CSS_WHITELIST.has(key)) processStyle(key, val, id, map)
-
-    if (isObj(val) || Array.isArray(val)) collect(val, id, map)
-  }
-}
+/* ----------------------------- */
+/* main */
+/* ----------------------------- */
 
 export function generateResponsiveCSS(json) {
   const map = {}
 
   collect(json, null, map)
 
-  let css = ''
-
-  const lg = build(map, 'lg')
-  if (lg) css += lg
+  let css = build(map, 'lg')
 
   const sm = build(map, 'sm')
+  const md = build(map, 'md')
+
   if (sm) css += `${BREAKPOINTS.sm}{${sm}}`
 
-  const md = build(map, 'md')
   if (md) css += `${BREAKPOINTS.md}{${md}}`
 
   return css

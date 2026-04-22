@@ -15,7 +15,6 @@ import { useBuilderStore } from '../../store/useBuilderStore'
 import { Button } from '@/components/ui/button'
 import { combineClassNames } from '../../utils/styleUtils'
 import computedStyles from '../../utils/computedStyles'
-import ResponsiveStyle from '@/components/other/ResponsiveStyle'
 import { regenerateAllIds } from '../../utils/regenerateAllIds'
 
 export default function SortableRow({
@@ -40,7 +39,7 @@ export default function SortableRow({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    padding: activeElement?.type === 'row' ? '16px' : '0',
+    ...(activeElement?.type === 'row' ? { padding: '16px' } : {}),
   }
 
   let activeClass = ''
@@ -48,11 +47,11 @@ export default function SortableRow({
     activeClass = ' border-2 border-fuchsia-500 border-opacity-30'
 
   let stickyClass = ''
-  if (row?.settings?.sticky || false) stickyClass = 'sticky top-0 z-50'
+  if (row?.content?.sticky || false) stickyClass = 'sticky top-0 z-50'
   return (
     <div className={`${stickyClass} ${activeClass}`}>
-      {/* <ResponsiveStyle selector={`row_${row.id}`} styles={row.styles?.css} /> */}
       <div
+        data-row
         ref={setNodeRef}
         {...attributes}
         style={{
@@ -60,7 +59,7 @@ export default function SortableRow({
           ...computedStyles(row.styles),
         }}
         key={`${row.id}`}
-        className={`row_${row.id} border rounded cursor-default relative group/row transition-all duration-300 ease-in-out ${combineClassNames(
+        className={`b${row.id} border rounded cursor-default relative group/row transition-all duration-300 ease-in-out ${combineClassNames(
           computedStyles(row.styles),
         )}`}
       >
@@ -80,7 +79,7 @@ export default function SortableRow({
                   id: row.id,
                   type: 'row',
                   styles: row.styles,
-                  settings: row.settings,
+                  content: row.content,
                 })
               }}
             >

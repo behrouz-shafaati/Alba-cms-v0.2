@@ -1,6 +1,7 @@
 import { Block } from '../../types'
 import InternalSectionEditor from '../internalSection/internalSectionEditor'
 import computedStyles from '../../utils/computedStyles'
+import { combineClassNames } from '../../utils/styleUtils'
 
 type BlockProps = {
   widgetName: string
@@ -30,7 +31,7 @@ export default function sectionWrapperEditor({
         ...computedStyles(blockData.styles),
       }}
       {...props}
-      className=""
+      className={`${combineClassNames(computedStyles(styles))}`}
     >
       <div className="grid grid-cols-12">
         {sections.map((section: any) => (

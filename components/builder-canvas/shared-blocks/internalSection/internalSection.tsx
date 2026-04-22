@@ -1,9 +1,8 @@
 import { Block } from '../../types'
-import { combineClassNames } from '../../utils/styleUtils'
+import { combineClassNames, getVisibilityClass } from '../../utils/styleUtils'
 import RenderBlock from '../../pageRenderer/RenderBlock'
 import { Settings } from '@/lib/features/settings/interface'
 import Image from 'next/image'
-import ResponsiveStyle from '@/components/other/ResponsiveStyle'
 import computedStyles from '../../utils/computedStyles'
 
 type BlockProps = {
@@ -30,23 +29,24 @@ export default function InternalSection({
   blockData,
   ...props
 }: BlockProps) {
-  const { sections, settings, styles } = blockData
+  const { content, styles } = blockData
   const classBaseOnResponsiveDesign = responsiveDesign
     ? `col-span-12 md:col-span-${blockData.width}`
     : `col-span-${blockData.width}`
+
+  const visibilityInnerCol: any = styles?.visibility
+  const visibilityInnerColClassName = getVisibilityClass(visibilityInnerCol, {
+    display: 'flex',
+  })
   return (
     <div
       data-InternalSection
-      className={`section_${blockData.id} relative flex flex-col ${classBaseOnResponsiveDesign}   ${combineClassNames(styles?.tailwindClasses || {})}`}
-      style={{ ...computedStyles(styles), ...computedStyles(settings) }}
+      className={`b${blockData.id} relative flex-col ${classBaseOnResponsiveDesign}  ${visibilityInnerColClassName}  ${combineClassNames(computedStyles(styles))}`}
+      style={{ ...computedStyles(styles), ...computedStyles(content) }}
     >
-      <ResponsiveStyle
-        selector={`section_${blockData.id}`}
-        styles={blockData.styles?.css}
-      />
-      {settings?.bgMedia && (
+      {content?.bgMedia && (
         <Image
-          src={settings?.bgMedia?.srcMedium}
+          src={content?.bgMedia?.srcMedium}
           alt="ALBA CMS Hero"
           fill
           priority
@@ -54,16 +54,25 @@ export default function InternalSection({
         />
       )}
 
-      {blockData?.blocks?.map((el: any, index: number) => (
-        <RenderBlock
-          siteSettings={siteSettings}
-          key={el?.id}
-          item={el}
-          index={index}
-          colId={blockData.id}
-          parentType="internalSection"
-        />
-      ))}
+      {blockData?.blocks?.map((el: any, index: number) => {
+        const visibility: any = el.styles?.visibility
+        const visibilityClassName = getVisibilityClass(visibility, {
+          display: el?.settings?.display || 'block',
+        })
+        return (
+          <RenderBlock
+            siteSettings={siteSettings}
+            key={el?.id}
+            item={el}
+            index={index}
+            colId={blockData.id}
+            parentType="internalSection"
+            className={`${visibilityClassName} ${combineClassNames(
+              computedStyles(el?.styles),
+            )}`}
+          />
+        )
+      })}
     </div>
   )
 }

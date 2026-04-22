@@ -21,13 +21,11 @@ const options = [
 const LayoutField = (props: FieldProps) => {
   const { device } = useBuilderStore()
   const { formData, onChange, schema } = props
-  console.log('#@234324 schema:', schema)
-  console.log('#@23432==>3 layout props:', props)
   console.log('#@23432==>3 layout formData:', formData)
 
   const update = (key: string, val: any) => {
-    const newLayout = { layout: { ...formData, [key]: val } }
-    onChange(newLayout)
+    const newLayout = { ...formData, [key]: val }
+    onChange(newLayout, ['layout'])
   }
 
   return (

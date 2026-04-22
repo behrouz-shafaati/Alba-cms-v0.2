@@ -61,48 +61,23 @@ const computedStyles = (
           result['borderBottom'] = value?.bottom
           result['borderLeft'] = value?.left
           break
-        case 'opacity':
-          const num = parseFloat(value)
-          result.opacity = isNaN(num) ? 1 : Math.min(Math.max(num / 100, 0), 1)
-          break
-        case 'padding':
-          result.padding = `${value?.top || 0}px ${value?.right || 0}px ${
-            value?.bottom || 0
-          }px ${value?.left || 0}px`
-          break
-        case 'margin':
-          result.margin = `${value?.top || 0}px ${value?.right || 0}px ${
-            value?.bottom || 0
-          }px ${value?.left || 0}px`
-          break
-        case 'borderRadius':
-          result.borderRadius = `${value?.top || 0}px ${value?.right || 0}px ${
-            value?.bottom || 0
-          }px ${value?.left || 0}px`
-          break
-        case 'boxShadow':
-          result['boxShadow'] = `${value?.inset ? 'inset ' : ''}${
-            value?.x || 0
-          }px ${value?.y || 0}px ${value?.blur || 0}px ${value?.spread || 0}px ${
-            value?.color || ''
-          }`
-          break
-        case 'fontSize':
-          result.fontSize = `${value}px`
-          break
-        case 'layout':
-          result.width = value?.width ? `${value?.width}px` : 'auto'
-          result.height = value?.height ? `${value?.height}px` : 'auto'
-          break
-        case 'css':
-          const cssObject = parseCssStringToObject(value?.allDevices || '{}')
-          result = { ...result, ...cssObject }
-          break
+        // case 'borderRadius':
+        //   result.borderRadius = `${value?.top || 0}px ${value?.right || 0}px ${
+        //     value?.bottom || 0
+        //   }px ${value?.left || 0}px`
+        //   break
+        // case 'boxShadow':
+        //   result['boxShadow'] = `${value?.inset ? 'inset ' : ''}${
+        //     value?.x || 0
+        //   }px ${value?.y || 0}px ${value?.blur || 0}px ${value?.spread || 0}px ${
+        //     value?.color || ''
+        //   }`
+        //   break
         case 'visibility':
         case 'tailwindClasses':
           break
         default:
-          result[key] = value
+        // result[key] = value
       }
   }
   return result

@@ -28,6 +28,7 @@ export const BlockSettingsForm = ({
   if (!schema && !ContentEditor)
     return <div>تنظیماتی برای این بلاک وجود ندارد.</div>
 
+  console.log('#234**** selectedBlock:', selectedBlock)
   return (
     <>
       {ContentEditor && (

@@ -71,7 +71,7 @@ export default function InternalSection({
                 id: blockData.id,
                 type: 'internalSection',
                 styles: blockData.styles,
-                settings: blockData.settings,
+                content: blockData.content,
               })
             }}
           >
@@ -81,7 +81,10 @@ export default function InternalSection({
         <span className="text-xs">ستون داخلی</span>
       </div>
 
-      <div style={{ ...computedStyles(styles), ...computedStyles(settings) }}>
+      <div
+        style={{ ...computedStyles(styles), ...computedStyles(settings) }}
+        className={`b${blockData.id} ${combineClassNames(computedStyles(styles))}`}
+      >
         {blockData?.blocks?.map((el: any, index: number) => (
           <div key={el?.id} className="p-1">
             <SortableItem
