@@ -11,6 +11,7 @@ const blockSchema = {
       title: 'Display',
       enum: ['flex', 'unset'],
       default: 'unset',
+      'x-responsive': true,
     },
   },
   dependencies: {
@@ -24,6 +25,7 @@ const blockSchema = {
               title: 'flex-direction',
               enum: ['row', 'row-reverse', 'column', 'column-reverse'],
               default: 'row',
+              'x-responsive': true,
             },
             justifyContent: {
               type: 'string',
