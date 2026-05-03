@@ -133,7 +133,14 @@ export default class service {
       await this.model.findOne({ _id, deleted: false }, projection),
     )
   }
-  async findOne(filters: object = {}, populate?: string) {
+  async findOne(
+    filters: object = {},
+    populate?: string,
+    options: {
+      projection?: Record<string, 0 | 1>
+      sort?: Record<string, any>
+    } = {},
+  ) {
     // Connect to the MongoDB database
     await dbConnect()
     filters = standardizationFilters(filters)
@@ -143,13 +150,17 @@ export default class service {
         _id: filters,
       }
     }
-
+    const projection = options.projection ?? {}
+    const sort = options?.sort || { createdAt: -1 }
     if (populate) {
       return await this.model
-        .findOne({ ...filters, deleted: false })
+        .findOne({ ...filters, deleted: false }, projection)
+        .sort(sort)
         .populate(populate)
     }
-    return toObject(await this.model.findOne({ ...filters, deleted: false }))
+    return toObject(
+      await this.model.findOne({ ...filters, deleted: false }, projection),
+    )
   }
   async create(data: object) {
     // Connect to the MongoDB database

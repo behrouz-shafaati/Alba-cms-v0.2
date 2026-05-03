@@ -10,8 +10,8 @@ export const columnBlockDefaults = () => {
         styles: {},
       },
     ],
-    settings: {
-      sectionColumns: '12',
+    content: {
+      colspans: '12',
     },
     styles: {},
   }

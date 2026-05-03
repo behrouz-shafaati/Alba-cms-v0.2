@@ -46,7 +46,7 @@ const RendererRows = async ({
     {} as Record<string, React.ReactNode>,
   )
   return (
-    <>
+    <main data-page>
       {rows?.map((row: any) => {
         const visibility: any = row.styles?.visibility
         const className = getVisibilityClass(visibility, { display: 'grid' })
@@ -87,8 +87,8 @@ const RendererRows = async ({
               col.content = { sticky: true, ...col?.content }
               const responsiveDesign = row?.content?.responsiveDesign ?? true
               const classBaseOnResponsiveDesign = responsiveDesign
-                ? `col-span-12 md:col-span-${col.width}`
-                : `col-span-${col.width}`
+                ? `col-span-12 md:col-span-${col.colspan}`
+                : `col-span-${col.colspan}`
 
               return (
                 <div
@@ -124,11 +124,11 @@ const RendererRows = async ({
                     style={{
                       ...computedStyles({
                         ...col.styles,
-                        top: 'var(--header-top)',
-                        ['--header-top-mobile' as any]: `${siteSettings?.appearance?.mobileHeaderHeight}px`,
-                        ['--header-top-tablet' as any]: `${siteSettings?.appearance?.tabletHeaderHeight}px`,
-                        ['--header-top-desktop' as any]: `${siteSettings?.appearance?.desktopHeaderHeight}px`,
                       }),
+                      top: 'var(--header-top)',
+                      ['--header-top-mobile' as any]: `${siteSettings?.appearance?.mobileHeaderHeight}px`,
+                      ['--header-top-tablet' as any]: `${siteSettings?.appearance?.tabletHeaderHeight}px`,
+                      ['--header-top-desktop' as any]: `${siteSettings?.appearance?.desktopHeaderHeight}px`,
                       ...computedStyles(col.settings),
                     }}
                   >
@@ -137,10 +137,9 @@ const RendererRows = async ({
                       const visibilityClassName = getVisibilityClass(
                         visibility,
                         {
-                          display: el?.settings?.display || 'block',
+                          display: el?.constValues?.display || 'block',
                         },
                       )
-
                       return (
                         <RenderBlock
                           siteSettings={siteSettings}
@@ -165,7 +164,7 @@ const RendererRows = async ({
           </div>
         )
       })}
-    </>
+    </main>
   )
 }
 export default RendererRows

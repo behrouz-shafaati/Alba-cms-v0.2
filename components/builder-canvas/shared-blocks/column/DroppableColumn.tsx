@@ -11,12 +11,14 @@ type DroppableColumnProp = {
   rowId: string
   col: Column
   newBlocks: any
+  locale: string
 }
 
 export default function DroppableColumn({
   rowId,
   col,
   newBlocks,
+  locale,
 }: DroppableColumnProp) {
   const { isOver, setNodeRef } = useDroppable({
     id: col.id,
@@ -36,7 +38,7 @@ export default function DroppableColumn({
       data-col
       ref={setNodeRef}
       className={`flex flex-col relative border border-amber-700 my-1 col-span-${
-        col.width
+        col.colspan
       }   min-h-[100px] transition-all ${combineClassNames(
         col.classNames || {},
         computedStyles(col.styles),
@@ -78,6 +80,7 @@ export default function DroppableColumn({
             index={index}
             colId={col.id}
             newBlocks={newBlocks}
+            locale={locale}
           />
         ))}
       </div>

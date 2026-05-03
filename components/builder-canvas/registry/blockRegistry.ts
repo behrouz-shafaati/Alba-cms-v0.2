@@ -25,6 +25,8 @@ import { LocaleBlockDef } from '../shared-blocks/locale'
 import { LinkButtonBlockDef } from '../shared-blocks/link-button'
 import { DividerBlockDef } from '../shared-blocks/Divider'
 import { IconCardBlockDef } from '../shared-blocks/icon-card'
+import { IconBlockDef } from '../shared-blocks/icon'
+import { PostNavigationBlockDef } from '../shared-blocks/post-navigation'
 export const blockRegistry = {
   row: RowBlockDef,
   column: columnBlockDef,
@@ -51,6 +53,8 @@ export const blockRegistry = {
   linkButton: LinkButtonBlockDef,
   divider: DividerBlockDef,
   iconCard: IconCardBlockDef,
+  Icon: IconBlockDef,
+  PostNavigation: PostNavigationBlockDef,
 }
 
 // registerBlock(blockRegistry)

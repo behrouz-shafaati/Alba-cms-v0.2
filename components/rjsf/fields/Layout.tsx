@@ -1,9 +1,6 @@
 'use client'
 
 import { useBuilderStore } from '@/components/builder-canvas/store/useBuilderStore'
-import NumberInput from '@/components/input/number'
-import { MoveHorizontal, MoveVertical } from 'lucide-react'
-import { useState } from 'react'
 import ResponsiveNumberField from './ResponsiveNumberField'
 import { FieldProps } from '@rjsf/utils'
 

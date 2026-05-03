@@ -55,11 +55,6 @@ export default async function Page({ params }: PageProps) {
     { title: dictionary.feature.post.title, link: '/dashboard/posts' },
     pageBreadCrumb,
   ]
-
-  const defaultC = JSON.parse(
-    '{"contentJson":{"type":"doc","content":[{"type":"paragraph","attrs":{"dir":"rtl","textAlign":null},"content":[{"type":"text","text":"سلام"}]},{"type":"paragraph","attrs":{"dir":"rtl","textAlign":null},"content":[{"type":"text","text":"s"}]},{"type":"paragraph","attrs":{"dir":"rtl","textAlign":"left"},"content":[{"type":"text","marks":[{"type":"bold"}],"text":"خوبی"}]}]}}',
-  )
-  console.log('defaultC:', defaultC)
   return (
     <>
       <div className="flex-1 space-y-4 p-5">

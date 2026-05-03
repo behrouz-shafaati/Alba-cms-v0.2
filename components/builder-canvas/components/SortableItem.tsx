@@ -26,6 +26,7 @@ type SortableItemProp = {
   colId: string
   parentType?: string
   newBlocks?: any
+  locale: string
 }
 export default function SortableItem({
   item,
@@ -33,6 +34,7 @@ export default function SortableItem({
   colId,
   parentType = 'column',
   newBlocks = {},
+  locale,
 }: SortableItemProp) {
   const { content, selectBlock, deleteItem, selectedBlock, setContent } =
     useBuilderStore()
@@ -125,6 +127,7 @@ export default function SortableItem({
             widgetName={block.label}
             blockData={item}
             className={`b${item.id} ${combineClassNames(computedStyles(item?.styles))}`}
+            locale={locale}
           />
         ) : (
           <span className="rounded bg-red-600 text-gray-50">

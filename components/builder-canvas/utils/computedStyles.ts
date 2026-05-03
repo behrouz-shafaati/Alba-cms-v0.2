@@ -1,5 +1,3 @@
-import parseCssStringToObject from '@/lib/utils/parseCssStringToObject'
-
 const computedStyles = (
   styles?: Record<string, string>,
 ): Record<string, string | number> => {
@@ -54,12 +52,11 @@ const computedStyles = (
               }
             }
 
-          if (value?.width)
-            result['borderWidth'] = value?.width + 'px !important'
-          result['borderTop'] = value?.top
-          result['borderRight'] = value?.right
-          result['borderBottom'] = value?.bottom
-          result['borderLeft'] = value?.left
+          if (value?.w) result['borderWidth'] = value?.w + 'px !important'
+          result['borderTop'] = value?.t
+          result['borderRight'] = value?.r
+          result['borderBottom'] = value?.b
+          result['borderLeft'] = value?.l
           break
         // case 'borderRadius':
         //   result.borderRadius = `${value?.top || 0}px ${value?.right || 0}px ${

@@ -5,7 +5,7 @@ import { createPostHref } from '../features/post/utils'
  * @param post مطلب‌ای که باید breadcrumb برایش ساخته شود
  * @param lang زبان انتخابی برای نمایش عنوان‌ها (پیش‌فرض: fa)
  */
-export function buildBreadcrumbsArray(post: any, lang: string = 'fa') {
+export function buildBreadcrumbsArray(post: any, locale: string = 'fa') {
   /**
    * تابع بازگشتی برای جمع‌آوری سلسله‌مراتب دسته‌ها
    */
@@ -16,7 +16,7 @@ export function buildBreadcrumbsArray(post: any, lang: string = 'fa') {
 
     const parentBreadcrumbs = collectCategories(category.parent)
     const title =
-      category.translations?.find((t: any) => t.lang === lang)?.title ||
+      category.translations?.find((t: any) => t.locale === locale)?.title ||
       category.slug
     const link = `/archive/categories/${category.slug}`
 
@@ -31,7 +31,7 @@ export function buildBreadcrumbsArray(post: any, lang: string = 'fa') {
 
   // افزودن خود مطلب به انتها
   const postTitle =
-    post.translations?.find((t: any) => t.lang === lang)?.title || post.slug
+    post.translations?.find((t: any) => t.locale === locale)?.title || post.slug
 
   breadcrumbs.push({
     title: postTitle,

@@ -1,0 +1,16 @@
+{
+  "$schema": "./schema.json",
+  "lang": "fa",
+  "language": "فارسی",
+  "dir": "rtl",
+  "shared": {
+    "chooseYorLanguage": "زبانتان را انتخاب کنید",
+    "failMongodbConnection": "اتصال به پایگاه داده ناموفق بود.",
+    "next": "بعدی",
+    "previous": "قبلی",
+    "mongodbUri": "Mongodb URL",
+    "fillForm": "لطفا فیلدهای لازم را پر کنید.",
+    "dbError": "خطای پایگاه داده.",
+    "login": "وارد شوید"
+  }
+}

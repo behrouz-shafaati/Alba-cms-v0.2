@@ -28,7 +28,10 @@ export const BlockSettingsForm = ({
   if (!schema && !ContentEditor)
     return <div>تنظیماتی برای این بلاک وجود ندارد.</div>
 
-  console.log('#234**** selectedBlock:', selectedBlock)
+  console.log(
+    '#234**** buildUiSchemaFromX(schema):',
+    buildUiSchemaFromX(schema),
+  )
   return (
     <>
       {ContentEditor && (
@@ -54,12 +57,13 @@ export const BlockSettingsForm = ({
         liveValidate
         widgets={{}} // می‌تونی در آینده کاستوم‌سازی کنی
         templates={{
-          FieldTemplate: CustomFieldTemplate,
+          // FieldTemplate: CustomFieldTemplate,
           //  حذف دکمه Submit
           ButtonTemplates: {
             SubmitButton: () => null,
           },
         }}
+        transformErrors={() => []}
       />
     </>
   )

@@ -5,68 +5,12 @@ import { useDebouncedCallback } from 'use-debounce'
 import { TailwindForm } from '../../rjsf/shadcn-theme'
 import { uiSchema } from '../../rjsf/uiSchema'
 import { buildUiSchemaFromX } from '@/components/rjsf/utils/buildUiSchemaFromX'
-import CustomFieldTemplate from '@/components/rjsf/templates/CustomFieldTemplate'
 
-export const publicStylesSchema0 = {
-  type: 'object',
-  title: '',
-  properties: {
-    // display: {
-    //   type: 'string',
-    //   title: 'display',
-    //   enum: ['inline-block', 'grid', 'block'],
-    //   default: 'inline-block',
-    // },
-
-    boxShadow: {
-      type: 'object',
-      title: 'سایه (Box Shadow)',
-      properties: {
-        color: {
-          type: 'string',
-          title: 'رنگ',
-          default: undefined,
-        },
-        x: {
-          type: 'number',
-          title: 'افقی (X)',
-          default: undefined,
-        },
-        y: {
-          type: 'number',
-          title: 'عمودی (Y)',
-          default: undefined,
-        },
-        blur: {
-          type: 'number',
-          title: 'محو شدگی (Blur)',
-          default: undefined,
-        },
-        spread: {
-          type: 'number',
-          title: 'گستردگی (Spread)',
-          default: undefined,
-        },
-        inset: {
-          type: 'boolean',
-          title: 'درونی باشد؟',
-          default: false,
-        },
-      },
-      required: ['color', 'x', 'y', 'blur', 'spread', 'inset'],
-    },
-
-    manual: {
-      type: 'string',
-      title: 'style',
-      default: '',
-    },
-  },
-}
 export const textColorSchema = {
   type: 'object',
   title: 'Text color',
   additionalProperties: true,
+  'x-field': 'ColorField',
 }
 const cssSchema = {
   type: 'object',
@@ -78,6 +22,7 @@ export const backgroundColorSchema = {
   type: 'object',
   title: 'Background color',
   additionalProperties: true,
+  'x-field': 'ColorField',
 }
 export const layoutSchema = {
   type: 'object',
@@ -90,6 +35,7 @@ export const borderSchema = {
   type: 'object',
   title: 'Border',
   additionalProperties: true,
+  'x-field': 'BorderField',
 }
 
 export const publicStylesSchema: any = {
@@ -104,12 +50,14 @@ export const publicStylesSchema: any = {
       title: 'Padding',
       additionalProperties: true,
       'x-responsive': true,
+      'x-field': 'FourSideBoxField',
     },
     margin: {
       type: 'object',
       title: 'Margin',
       additionalProperties: true,
       'x-responsive': true,
+      'x-field': 'FourSideBoxField',
     },
     boxShadow: {
       type: 'object',
@@ -147,6 +95,7 @@ export const publicStylesSchema: any = {
         },
       },
       required: ['color', 'x', 'y', 'blur', 'spread', 'inset'],
+      'x-field': 'ShadowField',
     },
     border: borderSchema,
     borderRadius: {
@@ -154,6 +103,7 @@ export const publicStylesSchema: any = {
       title: 'Border radius',
       additionalProperties: true,
       'x-responsive': true,
+      'x-field': 'FourSideBoxField',
     },
     opacity: {
       type: 'number',
@@ -162,11 +112,8 @@ export const publicStylesSchema: any = {
       minimum: 0,
       maximum: 100,
       multipleOf: 1,
+      'x-widget': 'SliderWidget',
     },
-    // tailwindClasses: {
-    //   type: 'string',
-    //   titile: 'Tailwind classes',
-    // },
     visibility: {
       type: 'object',
       title: 'نمایش در دستگاه‌ها',
@@ -175,6 +122,7 @@ export const publicStylesSchema: any = {
         tablet: { type: 'boolean', title: 'نمایش در تبلت', default: true },
         mobile: { type: 'boolean', title: 'نمایش در موبایل', default: true },
       },
+      'x-field': 'ResponsiveVisibilityField',
     },
     css: cssSchema,
   },
@@ -194,8 +142,8 @@ export const PublicStylesForm = () => {
       <TailwindForm
         key={`shared-styles-block-${selectedBlock.id}`} // باعث میشه فرم کاملاً ری‌ست و رندر بشه
         schema={publicStylesSchema}
-        uiSchema={uiSchema}
-        // uiSchema={buildUiSchemaFromX(publicStylesSchema)}
+        // uiSchema={uiSchema}
+        uiSchema={buildUiSchemaFromX(publicStylesSchema)}
         formData={selectedBlock.styles}
         validator={validator}
         onChange={(e) =>
@@ -213,6 +161,7 @@ export const PublicStylesForm = () => {
             SubmitButton: () => null,
           },
         }}
+        transformErrors={() => []}
       />
     </>
   )

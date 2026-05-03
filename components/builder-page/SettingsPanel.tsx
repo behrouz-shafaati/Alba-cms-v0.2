@@ -7,8 +7,10 @@ import PageTypeSettings from './PageTypeSettings'
 import { useBuilderStore } from '../builder-canvas/store/useBuilderStore'
 import { PageContent } from './types'
 import { ContentLanguageTabs } from '../input/ContentLanguageTabs'
+import { clonePageAction } from '@/lib/features/page/actions'
 
 type SettingsPanelProp = {
+  pageId: string
   siteSettings: any
   allTemplates: PageContent[]
   allCategories: Category[]
@@ -16,6 +18,7 @@ type SettingsPanelProp = {
 }
 
 function SettingsPanel({
+  pageId,
   siteSettings,
   allCategories,
   allTemplates,
@@ -39,9 +42,14 @@ function SettingsPanel({
     },
   ]
 
+  const clone = async (from: string, to: string) => {
+    const result = await clonePageAction(pageId, from, to)
+    if (result?.success) window.location.reload()
+  }
+
   return (
     <>
-      <ContentLanguageTabs settings={siteSettings} />
+      <ContentLanguageTabs settings={siteSettings} clone={clone} />
       {/* <input type="text" name="lang" className="hidden" value="fa" readOnly /> */}
       <Text
         title="عنوان"

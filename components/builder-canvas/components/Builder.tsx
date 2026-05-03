@@ -226,6 +226,7 @@ export default function Builder({
                       row={row}
                       newBlocks={newBlocks}
                       index={index}
+                      locale={locale}
                     />
                   ))}
                 </div>

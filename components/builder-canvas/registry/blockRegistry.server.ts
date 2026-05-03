@@ -23,6 +23,8 @@ import { serverLocaleDef } from '../shared-blocks/locale/index.server'
 import { serverRenderLinkButtonDef } from '../shared-blocks/link-button/index.server'
 import { DividerBlockDef } from '../shared-blocks/Divider'
 import { IconCardBlockDef } from '../shared-blocks/icon-card'
+import { IconBlockDef } from '../shared-blocks/icon'
+import { PostNavigationBlockDef } from '../shared-blocks/post-navigation/index.server'
 
 export const serverRenderBlockRegistry = {
   write: serverRenderWriteDef, // 1KB
@@ -47,4 +49,6 @@ export const serverRenderBlockRegistry = {
   linkButton: serverRenderLinkButtonDef,
   divider: DividerBlockDef,
   iconCard: IconCardBlockDef,
+  Icon: IconBlockDef,
+  PostNavigation: PostNavigationBlockDef,
 }

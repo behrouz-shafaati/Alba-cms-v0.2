@@ -1,5 +1,5 @@
 export const schema = {
-  title: 'تنظیمات دکمه',
+  title: 'تنظیمات کارت',
   type: 'object',
   properties: {
     title: {
@@ -18,18 +18,32 @@ export const schema = {
     design: {
       type: 'string',
       title: 'نوع',
-      enum: ['default'],
+      enum: ['default', 'd1'],
       default: 'default',
+    },
+    alignItems: {
+      type: 'string',
+      title: 'چینش افقی',
+      enum: ['start', 'center', 'end'],
+      default: 'center',
     },
     icon: {
       type: 'string',
       title: 'آیکون',
       default: undefined,
+      'x-field': 'IconPickerField',
     },
     iconColor: {
-      type: 'string',
+      type: 'object',
       title: 'رنگ آیکون',
       default: undefined,
+      'x-field': 'ColorField',
+    },
+    iconBgColor: {
+      type: 'object',
+      title: 'رنگ پشت آیکون',
+      default: undefined,
+      'x-field': 'ColorField',
     },
     required: ['href'],
   },

@@ -1,9 +1,12 @@
 export const defaultSetings = {
-  settings: {
+  content: {
     title: 'عنوان',
     subtitle: 'زیر عنوان',
     href: '#',
     design: 'default',
+    alignItems: 'center',
+  },
+  constValues: {
     display: 'flex',
   },
 }

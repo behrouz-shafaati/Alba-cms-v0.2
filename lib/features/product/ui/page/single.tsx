@@ -26,7 +26,7 @@ type props = {
   searchParams?: any
 }
 
-const DefaultSinglePageBlog = ({
+const DefaultSinglePageProduct = ({
   breadcrumbItems,
   post,
   siteSettings,
@@ -79,4 +79,4 @@ const DefaultSinglePageBlog = ({
   )
 }
 
-export default DefaultSinglePageBlog
+export default DefaultSinglePageProduct

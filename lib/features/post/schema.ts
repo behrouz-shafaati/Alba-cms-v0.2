@@ -108,7 +108,7 @@ postSchema.pre(['find', 'findOne', 'findOneAndUpdate'], function () {
 })
 
 const transform = (doc: any, ret: any, options: any) => {
-  const category = ret?.categories[0] || { slug: '' }
+  // const category = ret?.categories?.[0] || { slug: '' }
   ret.id = ret._id?.toHexString()
   // ret.link = `${category.slug}/${ret.slug}`
   ret.href = createPostHref(ret)

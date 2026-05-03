@@ -29,7 +29,7 @@ export default function InternalSection({
   blockData,
   ...props
 }: BlockProps) {
-  const { sections, settings, styles } = blockData
+  const { sections, content, styles } = blockData
   const { selectedBlock, selectBlock, deleteItem } = useBuilderStore()
   const { isOver, setNodeRef } = useDroppable({
     id: blockData.id,
@@ -43,8 +43,8 @@ export default function InternalSection({
     activeClass = ' border-2 border-fuchsia-500 border-opacity-30'
 
   const classBaseOnResponsiveDesign = responsiveDesign
-    ? `col-span-12 md:col-span-${blockData.width}`
-    : `col-span-${blockData.width}`
+    ? `col-span-12 md:col-span-${blockData.colspan}`
+    : `col-span-${blockData.colspan}`
   return (
     <div
       ref={setNodeRef}
@@ -82,7 +82,7 @@ export default function InternalSection({
       </div>
 
       <div
-        style={{ ...computedStyles(styles), ...computedStyles(settings) }}
+        style={{ ...computedStyles(styles), ...computedStyles(content) }}
         className={`b${blockData.id} ${combineClassNames(computedStyles(styles))}`}
       >
         {blockData?.blocks?.map((el: any, index: number) => (

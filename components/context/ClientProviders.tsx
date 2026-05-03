@@ -1,25 +1,17 @@
 'use client'
 
-import {
-  ClientLocaleProvider,
-  ClientLocaleSchema,
-} from './client-locale-provider'
+import { getClientDictionary } from '@/lib/i18n/client'
+import { ClientLocaleProvider } from './client-locale-provider'
 import { ThemeProvider } from './theme-provider'
 
 interface ProvidersProps {
+  locale: string
   children: React.ReactNode
 }
 
-export function ClientProviders({ children }: ProvidersProps) {
-  const dictionary: ClientLocaleSchema = {
-    input: {
-      comboBox: {
-        loading: 'Loading',
-        notFound: 'Not found',
-        placeholder: 'Choose...',
-      },
-    },
-  }
+export function ClientProviders({ locale, children }: ProvidersProps) {
+  const dictionary = getClientDictionary(locale)
+  console.log('#234234 ---> dictionary:', dictionary)
   return (
     <ThemeProvider
       attribute="class"

@@ -4,10 +4,11 @@ type Props = {
   items: any
 }
 
-export default function VerticalMenu({ items, ...props }: Props) {
+export default function VerticalMenu(props: Props) {
+  console.log('#2349**********8723 props menu:', props.style)
   return (
-    <nav {...props}>
-      <MobileMenuList items={items} />
+    <nav>
+      <MobileMenuList {...props} />
     </nav>
   )
 }

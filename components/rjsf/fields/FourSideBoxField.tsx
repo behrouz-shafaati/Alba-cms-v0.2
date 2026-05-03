@@ -32,7 +32,7 @@ export const FourSideBoxField = (props: FieldProps) => {
     let newValues
     if (val) {
       if (linked) {
-        newValues = { top: val, right: val, bottom: val, left: val, unit }
+        newValues = { t: val, r: val, b: val, l: val, unit }
       } else {
         newValues = { ...formData?.[device], [key]: val, unit }
       }
@@ -53,9 +53,14 @@ export const FourSideBoxField = (props: FieldProps) => {
 
   return (
     <div className="flex rounded-md overflow-hidden">
-      {['left', 'bottom', 'top', 'right'].map((key) => {
+      {[
+        { label: 'left', key: 'l' },
+        { label: 'bottom', key: 'b' },
+        { label: 'top', key: 't' },
+        { label: 'right', key: 'r' },
+      ].map((f) => {
         return (
-          <div key={key} className="flex flex-col gap-1 text-center">
+          <div key={f.key} className="flex flex-col gap-1 text-center">
             <input
               autocomplete="off"
               className={cn(
@@ -64,12 +69,12 @@ export const FourSideBoxField = (props: FieldProps) => {
                 'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive outline-none',
                 'border text-sm px-1!',
               )}
-              value={Number(value?.[key])}
+              value={Number(value?.[f.key])}
               type="number"
-              name={key}
-              onChange={(e) => update(key, e.target.value)}
+              name={f.key}
+              onChange={(e) => update(f.key, e.target.value)}
             />
-            <span className="text-xs text-gray-400">{key}</span>
+            <span className="text-xs text-gray-400">{f.label}</span>
           </div>
         )
       })}

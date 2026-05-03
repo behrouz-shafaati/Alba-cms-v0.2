@@ -21,10 +21,12 @@ export default function SortableRow({
   row,
   newBlocks,
   index,
+  locale,
 }: {
   row: Row
   newBlocks: any
   index: number
+  locale: string
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
@@ -129,6 +131,7 @@ export default function SortableRow({
               rowId={row.id}
               col={col}
               newBlocks={newBlocks}
+              locale={locale}
             />
           ))}
         </div>

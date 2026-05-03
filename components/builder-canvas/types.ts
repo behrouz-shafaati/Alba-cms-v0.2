@@ -1,3 +1,5 @@
+import { ComponentType } from 'react'
+
 export type Content = {
   id: string // UUID
   title: string
@@ -83,4 +85,27 @@ export type DndSortable = {
     }
   }
   id: string
+}
+
+export type BlockDefinitionType<
+  PRenderer = any,
+  PRenderEditor = any,
+  PContentEditor = any,
+> = {
+  type: string
+  label: string
+  showInBlocksList: boolean
+  Renderer: ComponentType<PRenderer>
+  RendererInEditor: ComponentType<PRenderEditor>
+  settingsSchema: object
+  defaultSettings: object
+  ContentEditor: ComponentType<PContentEditor>
+  /**
+   * In all canves expect
+   */
+  notTemplateFor?: Array<'form' | 'page' | 'templatePart' | 'template'>
+  /**
+   * Just in canves
+   */
+  templateFor?: Array<'form' | 'page' | 'templatePart' | 'template'>
 }

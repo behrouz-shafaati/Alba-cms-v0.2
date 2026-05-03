@@ -15,16 +15,7 @@ export const buttonBlockSchema = {
       type: 'string',
       title: 'رنگ متن',
       default: undefined,
-    },
-    backgroundColor: {
-      type: 'string',
-      title: 'رنگ پس‌زمینه',
-      properties: {
-        default: { type: 'string', title: 'پیش‌فرض' },
-        hover: { type: 'string', title: 'Hover' },
-        focus: { type: 'string', title: 'Focus' },
-        active: { type: 'string', title: 'Active' },
-      },
+      'x-field': 'ColorField',
     },
     variant: {
       type: 'string',

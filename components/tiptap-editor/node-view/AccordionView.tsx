@@ -16,7 +16,7 @@ export function AccordionView({ editor, node, getPos }: NodeViewProps) {
           content: [
             {
               type: 'paragraph',
-              attrs: { dir: 'rtl', textAlign: null },
+              attrs: { dir: '', textAlign: null },
               content: [{ type: 'text', text: 'عنوان جدید' }],
             },
           ],
@@ -26,7 +26,7 @@ export function AccordionView({ editor, node, getPos }: NodeViewProps) {
           content: [
             {
               type: 'paragraph',
-              attrs: { dir: 'rtl', textAlign: null },
+              attrs: { dir: '', textAlign: null },
               content: [{ type: 'text', text: 'محتوای جدید' }],
             },
           ],
@@ -45,7 +45,7 @@ export function AccordionView({ editor, node, getPos }: NodeViewProps) {
   return (
     <NodeViewWrapper
       className={cn(
-        'border rounded-lg p-2 space-y-2 bg-gray-50 dark:bg-gray-900'
+        'border rounded-lg p-2 space-y-2 bg-gray-50 dark:bg-gray-900',
       )}
     >
       {/* محتوای موجود آکاردئون */}

@@ -10,6 +10,9 @@ export const columnBlockDefaults = () => {
         styles: {},
       },
     ],
+    settings: {
+      display: 'flex',
+    },
     styles: {},
   }
 }

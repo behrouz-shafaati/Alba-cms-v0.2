@@ -8,6 +8,7 @@ import Header from './Header'
 // import { blockRegistry as templatePartBlockregistry } from '../builder-template-part/registry/blockRegistry'
 
 type BuilderPageProp = {
+  pageId: string
   settings: any
   title?: string
   name: string
@@ -26,6 +27,7 @@ const defaultInitialValue = {
 }
 
 export default function BuilderPage({
+  pageId,
   settings,
   title = 'صفحه ساز',
   initialContent = defaultInitialValue,
@@ -42,6 +44,7 @@ export default function BuilderPage({
       Header={<Header locale={locale} />}
       SettingsPanel={
         <SettingsPanel
+          pageId={pageId}
           siteSettings={settings}
           allCategories={allCategories}
           allTemplates={allTemplates}

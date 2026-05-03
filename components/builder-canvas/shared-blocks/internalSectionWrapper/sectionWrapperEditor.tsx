@@ -23,7 +23,7 @@ export default function sectionWrapperEditor({
   blockData,
   ...props
 }: BlockProps) {
-  const { sections, settings, styles } = blockData
+  const { id, sections, settings, styles } = blockData
   const responsiveDesign = settings?.responsiveDesign ?? true
   return (
     <div
@@ -31,9 +31,9 @@ export default function sectionWrapperEditor({
         ...computedStyles(blockData.styles),
       }}
       {...props}
-      className={`${combineClassNames(computedStyles(styles))}`}
+      className={` ${combineClassNames(computedStyles(styles))}`}
     >
-      <div className="grid grid-cols-12">
+      <div className={`b${id} grid grid-cols-12`}>
         {sections.map((section: any) => (
           <InternalSectionEditor
             key={section.id}

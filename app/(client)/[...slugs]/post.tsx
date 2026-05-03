@@ -1,6 +1,5 @@
 import 'server-only'
 import RendererTemplate from '@/components/builder-canvas/templateRender/RenderTemplate.server'
-import TableOfContents from '@/components/post/table-of-contents'
 import RenderedHtml from '@/components/tiptap-editor/render/RenderedHtml.server'
 import { QueryResponse } from '@/lib/features/core/interface'
 import { getPostCommentsForClient } from '@/lib/features/post-comment/actions'
@@ -67,9 +66,9 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
 
   // ساخت TOC سمت سرور
   const toc = generateTableOfContents(JSON.parse(translation?.contentJson))
-  const breadcrumbItems = buildBreadcrumbsArray(post)
+  const breadcrumbItems = buildBreadcrumbsArray(post, locale)
 
-  const postSchema = generatePostSchema({ post, locale: 'fa' })
+  const postSchema = generatePostSchema({ post, locale })
   const faqSchema = generateFAQSchema(translation.contentJson)
 
   const writeJsonLd = () => (
@@ -122,7 +121,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
                 post={post}
                 breadcrumbItems={breadcrumbItems}
                 readingDuration={readingDuration}
-                tableOfContent={<TableOfContents toc={toc} />}
+                tableOfContent={toc}
                 comments={
                   <PostCommentListLazy
                     post={post}
@@ -153,7 +152,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
             content_post_content={
               <RenderedHtml contentJson={translation?.contentJson} />
             }
-            content_post_tablecontent={<TableOfContents toc={toc} />}
+            content_post_tablecontent={toc}
             content_post_comments={
               <PostCommentListLazy
                 post={post}
@@ -176,7 +175,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
           siteSettings={siteSettings}
           breadcrumbItems={breadcrumbItems}
           readingDuration={readingDuration}
-          tableOfContent={<TableOfContents toc={toc} />}
+          tableOfContent={toc}
           comments={
             <PostCommentListLazy
               post={post}

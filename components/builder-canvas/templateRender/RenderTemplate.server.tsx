@@ -3,6 +3,7 @@ import templateCtrl from '@/lib/features/template/controller'
 import { Template } from '@/lib/features/template/interface'
 import RendererRows from '../pageRenderer/RenderRows'
 import { Settings } from '@/lib/features/settings/interface'
+import { generateResponsiveCSS } from '../utils/css-generator'
 
 type Props = {
   template: Template
@@ -33,43 +34,50 @@ const RendererTemplate = async ({
       templateCtrl.findById({ id: parentTemplateId }),
     ])
     return (
-      <RendererRows
-        siteSettings={siteSettings}
-        rows={parentTemplate?.content.rows}
-        editroMode={false}
-        pageSlug={pageSlug}
-        categorySlug={categorySlug}
-        searchParams={searchParams}
-        locale={locale}
-        content_all={
-          <RendererRows
-            siteSettings={siteSettings}
-            rows={template?.content.rows}
-            editroMode={false}
-            content_all={content_all}
-            pageSlug={pageSlug}
-            categorySlug={categorySlug}
-            searchParams={searchParams}
-            locale={locale}
-            {...rest}
-          />
-        }
-      />
+      <>
+        RendererTemplate #87687
+        <style>{generateResponsiveCSS(parentTemplate)}</style>
+        <RendererRows
+          siteSettings={siteSettings}
+          rows={parentTemplate?.content.rows}
+          editroMode={false}
+          pageSlug={pageSlug}
+          categorySlug={categorySlug}
+          searchParams={searchParams}
+          locale={locale}
+          content_all={
+            <RendererRows
+              siteSettings={siteSettings}
+              rows={template?.content.rows}
+              editroMode={false}
+              content_all={content_all}
+              pageSlug={pageSlug}
+              categorySlug={categorySlug}
+              searchParams={searchParams}
+              locale={locale}
+              {...rest}
+            />
+          }
+        />
+      </>
     )
   }
 
   return (
-    <RendererRows
-      siteSettings={siteSettings}
-      rows={template?.content.rows}
-      editroMode={false}
-      content_all={content_all}
-      pageSlug={pageSlug}
-      categorySlug={categorySlug}
-      searchParams={searchParams}
-      locale={locale}
-      {...rest}
-    />
+    <>
+      <style>{generateResponsiveCSS(template)}</style>
+      <RendererRows
+        siteSettings={siteSettings}
+        rows={template?.content.rows}
+        editroMode={false}
+        content_all={content_all}
+        pageSlug={pageSlug}
+        categorySlug={categorySlug}
+        searchParams={searchParams}
+        locale={locale}
+        {...rest}
+      />
+    </>
   )
 }
 

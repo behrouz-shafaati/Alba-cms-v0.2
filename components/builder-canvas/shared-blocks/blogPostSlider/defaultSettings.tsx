@@ -1,4 +1,4 @@
 export const blogPostSliderBlockDefaults = {
-  content: [],
+  content: { title: '' },
   settings: {},
 }

@@ -139,7 +139,7 @@ export default function ColumnLayoutCombobox({ value, onChange }: Props) {
                     'rounded-md border p-2 transition focus:outline-none',
                     isActive
                       ? 'ring-2 ring-primary bg-primary/10'
-                      : 'hover:bg-muted/50'
+                      : 'hover:bg-muted/50',
                   )}
                 >
                   {/* Visual Grid */}
@@ -148,10 +148,10 @@ export default function ColumnLayoutCombobox({ value, onChange }: Props) {
                       <div
                         key={i}
                         className={clsx(
-                          'h-full border-r last:border-r-0',
+                          'h-full border-r dark:border-gray-800 last:border-r-0',
                           isActive
                             ? 'bg-primary/70'
-                            : 'bg-foreground/80 dark:bg-foreground/60'
+                            : 'bg-foreground/80 dark:bg-foreground/60',
                         )}
                         style={{ width: `${(c / 12) * 100}%` }}
                       />

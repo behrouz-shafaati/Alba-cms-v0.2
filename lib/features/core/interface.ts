@@ -88,6 +88,8 @@ type QueryFindOne = {
   filters: any
   populate?: string
   saveLog?: boolean
+  projection?: Record<string, 0 | 1>
+  sort?: Record<string, any>
 }
 type Update = {
   filters: any

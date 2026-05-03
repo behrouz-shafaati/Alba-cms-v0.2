@@ -1,24 +1,61 @@
 'use client'
-import { MenuItem } from '@/features/menu/interface'
+import computedStyles from '@/components/builder-canvas/utils/computedStyles'
+import { combineClassNames } from '@/components/builder-canvas/utils/styleUtils'
+import { MenuItem } from '@/lib/features/menu/interface'
+import { cn } from '@/lib/utils'
 import { ChevronDown, ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
+import hasActiveSubMenu from '../utils/hasActiveSubMenu'
 
-export default function MobileMenuList({ items }: { items: MenuItem[] }) {
+export default function MobileMenuList({
+  items,
+  ...props
+}: {
+  items: MenuItem[]
+}) {
+  console.log('#234908723498723 props menu:', props)
+  console.log('#234908723498723 props menu:', props)
+  const { content, pageSlug } = props
   return (
     <div className="flex flex-col gap-4">
-      {(items || []).map((item, index) => (
-        <MobileMenuItem key={index} item={item} />
-      ))}
+      {(items || []).map((item, index) => {
+        const isActive = item.url.endsWith(pageSlug)
+        const isChildActive = hasActiveSubMenu(item.subMenu, pageSlug)
+        return (
+          <MobileMenuItem
+            key={index}
+            item={item}
+            isActive={isActive}
+            activeTextColor={content?.activeTextColor}
+            openMenu={isChildActive}
+            content={content}
+            pageSlug={pageSlug}
+          />
+        )
+      })}
     </div>
   )
 }
 
-function MobileMenuItem({ item }: { item: MenuItem }) {
+function MobileMenuItem({
+  item,
+  isActive,
+  activeTextColor = null,
+  openMenu = false,
+  pageSlug,
+  content,
+}: {
+  item: MenuItem
+  isActive: boolean
+  activeTextColor: any
+  openMenu: boolean
+  pageSlug: string
+  content: { activeTextColor: any }
+}) {
   // const router = useRouter()
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(openMenu)
   const hasSubMenu = item.subMenu && item.subMenu.length > 0
-
   /** Prefetch when menu opens */
   // useEffect(() => {
   //   if (item?.url) {
@@ -35,11 +72,21 @@ function MobileMenuItem({ item }: { item: MenuItem }) {
   //     })
   //   }
   // }, [router])
-
   return item?.url ? (
     <div>
       <div className="flex items-center justify-between">
-        <Link href={item.url} className="font-thin text-sm">
+        <Link
+          href={item.url}
+          className={cn(
+            'font-thin text-sm',
+            isActive
+              ? combineClassNames(
+                  computedStyles({ textColor: activeTextColor }),
+                )
+              : '',
+          )}
+          style={{ ...computedStyles({ textColor: activeTextColor }) }}
+        >
           {item.label}
         </Link>
         {hasSubMenu && (
@@ -53,8 +100,12 @@ function MobileMenuItem({ item }: { item: MenuItem }) {
         )}
       </div>
       {hasSubMenu && open && (
-        <div className="flex flex-col gap-1 mt-4 mr-4">
-          <MobileMenuList items={item.subMenu!} />
+        <div className="flex flex-col gap-1 mt-4 ms-4">
+          <MobileMenuList
+            items={item.subMenu!}
+            content={content}
+            pageSlug={pageSlug}
+          />
         </div>
       )}
     </div>

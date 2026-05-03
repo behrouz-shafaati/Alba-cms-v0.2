@@ -12,10 +12,10 @@ type Props = {
 }
 
 const BORDERS = [
-  { key: 'top', icon: Smartphone, label: 'top' },
-  { key: 'right', icon: Tablet, label: 'right' },
-  { key: 'bottom', icon: Monitor, label: 'bottom' },
-  { key: 'left', icon: Monitor, label: 'left' },
+  { key: 't', icon: Smartphone, label: 'top' },
+  { key: 'r', icon: Tablet, label: 'right' },
+  { key: 'b', icon: Monitor, label: 'bottom' },
+  { key: 'l', icon: Monitor, label: 'left' },
 ]
 
 const borderType = [
@@ -34,11 +34,11 @@ export default function BorderField({ value = {}, onChange }: Props) {
   // مقدار اولیه
   const defaultValue = {
     color: { light: {}, dark: {} },
-    top: 'none',
-    right: 'none',
-    bottom: 'none',
-    left: 'none',
-    width: 1,
+    t: 'none',
+    r: 'none',
+    b: 'none',
+    l: 'none',
+    w: 1,
   }
 
   const data = { ...defaultValue, ...(value || {}) }
@@ -59,10 +59,10 @@ export default function BorderField({ value = {}, onChange }: Props) {
           name="top"
           title="Top"
           placeholder="Top"
-          defaultValue={value?.['top']}
+          defaultValue={value?.['t']}
           options={borderTypeOptions}
           onChange={(val: string) => {
-            update('top', val)
+            update('t', val)
           }}
         />
         <Select
@@ -71,10 +71,10 @@ export default function BorderField({ value = {}, onChange }: Props) {
           name="right"
           title="Right"
           placeholder="Right"
-          defaultValue={value?.['right']}
+          defaultValue={value?.['r']}
           options={borderTypeOptions}
           onChange={(val: string) => {
-            update('right', val)
+            update('r', val)
           }}
         />
       </div>
@@ -85,10 +85,10 @@ export default function BorderField({ value = {}, onChange }: Props) {
           name="bottom"
           title="Bottom"
           placeholder="Bottom"
-          defaultValue={value?.['bottom']}
+          defaultValue={value?.['b']}
           options={borderTypeOptions}
           onChange={(val: string) => {
-            update('bottom', val)
+            update('b', val)
           }}
         />
         <Select
@@ -97,10 +97,10 @@ export default function BorderField({ value = {}, onChange }: Props) {
           name="left"
           title="Left"
           placeholder="Left"
-          defaultValue={value?.['left']}
+          defaultValue={value?.['l']}
           options={borderTypeOptions}
           onChange={(val: string) => {
-            update('left', val)
+            update('l', val)
           }}
         />
       </div>
@@ -108,8 +108,8 @@ export default function BorderField({ value = {}, onChange }: Props) {
         <NumberInput
           name="width"
           title="Width"
-          defaultValue={data?.width}
-          onChange={(e: any) => update('width', e.target.value)}
+          defaultValue={data?.w}
+          onChange={(e: any) => update('w', e.target.value)}
         />
         <ColorPickerPopover
           defaultValue={data?.color}

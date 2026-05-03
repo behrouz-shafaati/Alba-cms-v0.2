@@ -27,6 +27,7 @@ import {
   Underline as UnderlineIcon,
   Undo2,
   Image as ImageIcon,
+  Code,
 } from 'lucide-react'
 import { ToggleGroup, ToggleGroupItem } from '../../ui/toggle-group'
 import { Editor } from '@tiptap/core'
@@ -55,8 +56,8 @@ const MenuBar = ({
   window.underline = underline
   const strike = () => editor.chain().focus().toggleStrike().run()
   window.strike = underline
-  const code = () => editor.chain().focus().toggleCode().run()
-  window.code = code
+  // const code = () => editor.chain().focus().toggleCode().run()
+  // window.code = code
   const clearMarks = () => editor.chain().focus().unsetAllMarks().run()
   window.clearMarks = clearMarks
   const clearNodes = () => editor.chain().focus().clearNodes().run()
@@ -83,6 +84,8 @@ const MenuBar = ({
   window.codeBlock = codeBlock
   const blockQuote = () => editor.chain().focus().toggleBlockquote().run()
   window.blockQuote = blockQuote
+  const code = () => editor.chain().focus().toggleCodeBlock().run()
+  window.code = code
   const horizontalRule = () => editor.chain().focus().setHorizontalRule().run()
   window.horizontalRule = horizontalRule
   const hardBreak = () => editor.chain().focus().setHardBreak().run()
@@ -175,7 +178,7 @@ const MenuBar = ({
                 content: [
                   {
                     type: 'paragraph',
-                    attrs: { dir: 'rtl', textAlign: null },
+                    attrs: { dir: 'auto', textAlign: null },
                     content: [{ type: 'text', text: 'عنوان اول' }],
                   },
                 ],
@@ -185,7 +188,7 @@ const MenuBar = ({
                 content: [
                   {
                     type: 'paragraph',
-                    attrs: { dir: 'rtl', textAlign: null },
+                    attrs: { dir: 'auto', textAlign: null },
                     content: [{ type: 'text', text: 'محتوای اول' }],
                   },
                 ],
@@ -200,7 +203,7 @@ const MenuBar = ({
                 content: [
                   {
                     type: 'paragraph',
-                    attrs: { dir: 'rtl', textAlign: null },
+                    attrs: { dir: 'auto', textAlign: null },
                     content: [{ type: 'text', text: 'عنوان دوم' }],
                   },
                 ],
@@ -210,7 +213,7 @@ const MenuBar = ({
                 content: [
                   {
                     type: 'paragraph',
-                    attrs: { dir: 'rtl', textAlign: null },
+                    attrs: { dir: 'auto', textAlign: null },
                     content: [{ type: 'text', text: 'محتوای دوم' }],
                   },
                 ],
@@ -243,7 +246,7 @@ const MenuBar = ({
                 content: [
                   {
                     type: 'paragraph',
-                    attrs: { dir: 'rtl', textAlign: null },
+                    attrs: { dir: 'auto', textAlign: null },
                     content: [{ type: 'text', text: 'سوال اول' }],
                   },
                 ],
@@ -253,7 +256,7 @@ const MenuBar = ({
                 content: [
                   {
                     type: 'paragraph',
-                    attrs: { dir: 'rtl', textAlign: null },
+                    attrs: { dir: 'auto', textAlign: null },
                     content: [{ type: 'text', text: 'پاسخ سوال اول' }],
                   },
                 ],
@@ -268,7 +271,7 @@ const MenuBar = ({
                 content: [
                   {
                     type: 'paragraph',
-                    attrs: { dir: 'rtl', textAlign: null },
+                    attrs: { dir: 'auto', textAlign: null },
                     content: [{ type: 'text', text: 'سوال دوم' }],
                   },
                 ],
@@ -278,7 +281,7 @@ const MenuBar = ({
                 content: [
                   {
                     type: 'paragraph',
-                    attrs: { dir: 'rtl', textAlign: null },
+                    attrs: { dir: 'auto', textAlign: null },
                     content: [{ type: 'text', text: 'پاسخ سوال دوم' }],
                   },
                 ],
@@ -376,6 +379,8 @@ const MenuBar = ({
     setActive((prev) => ({ ...prev, ...textStyle }))
   })
 
+  console.log('#234 activeStates:', activeStates)
+
   return (
     <>
       <StickyBox className=" z-10 flex flex-row items-center max-w-full gap-1 py-2 overflow-auto bg-white rtl dark:bg-slate-900">
@@ -468,6 +473,9 @@ const MenuBar = ({
             aria-label="Block Quote"
           >
             <Quote />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="code" onClick={code} aria-label="Code">
+            <Code />
           </ToggleGroupItem>
         </ToggleGroup>
         <div className="block w-px h-6 bg-border" />

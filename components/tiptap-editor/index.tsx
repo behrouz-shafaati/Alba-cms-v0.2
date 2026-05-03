@@ -1,6 +1,6 @@
 'use client'
 
-import { useEditor, EditorContent } from '@tiptap/react'
+import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
@@ -14,6 +14,8 @@ import { Heading } from '@tiptap/extension-heading'
 import TextAlign from '@tiptap/extension-text-align'
 import { FileUploadRef } from '../input/file-upload'
 import { FileDetails } from '@/lib/features/file/interface'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import { common, createLowlight } from 'lowlight'
 import DeleteImageWithKey from './extensions/image-delete'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AdSlot } from './extensions/adSlot'
@@ -32,6 +34,7 @@ import { Faq } from './extensions/Faq'
 import { getFiles } from '@/lib/features/file/actions'
 import FileUploadDialog from './component/FileUploadDialog'
 import { TextStyle } from './extensions/text-style'
+import CodeBlockComponent from './node-view/CodeBlockComponent'
 
 interface TiptapEditor {
   name: string
@@ -90,10 +93,13 @@ export default function TiptapEditor({
     }
   }, [content])
 
+  const lowlight = createLowlight(common)
+
   const editor: any = useEditor({
     extensions: [
       StarterKit.configure({
         heading: false, // 👈 اینجا heading داخل StarterKit رو خاموش کن
+        codeBlock: false, // غیرفعال کردن codeBlock پیش‌فرض
       }),
       Image,
       Link.configure({
@@ -127,6 +133,14 @@ export default function TiptapEditor({
       Faq,
       VideoEmbed,
       TextStyle,
+      CodeBlockLowlight.extend({
+        addNodeView() {
+          return ReactNodeViewRenderer(CodeBlockComponent)
+        },
+      }).configure({
+        lowlight,
+        defaultLanguage: 'javascript', // زبان پیش‌فرض
+      }),
     ],
     content: defaultContent,
     onUpdate({ editor }) {

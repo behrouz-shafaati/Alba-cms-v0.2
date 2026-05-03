@@ -20,12 +20,12 @@ const ContentEditor = () => {
         <Label>چینش ستون</Label>
         <ColumnLayoutCombobox
           key={`block-${selectedBlock.id}`} //  باعث میشه فرم کاملاً ری‌ست و رندر بشه
-          value={selectedBlock.settings.sectionColumns}
+          value={selectedBlock.content.colspans}
           onChange={(value) => {
             updateRowColumns(selectedBlock.id as string, value)
-            debouncedUpdate(selectedBlock.id as string, 'settings', {
-              ...selectedBlock?.settings,
-              sectionColumns: value,
+            debouncedUpdate(selectedBlock.id as string, 'content', {
+              ...selectedBlock?.content,
+              colspans: value,
             })
           }}
         />
@@ -35,10 +35,10 @@ const ContentEditor = () => {
       <CheckboxInput
         name="responsiveDesign"
         title="طراحی ریسپانسیو"
-        defaultChecked={selectedBlock?.settings?.responsiveDesign ?? true}
+        defaultChecked={selectedBlock?.content?.responsiveDesign ?? true}
         onChange={(value: boolean) => {
-          debouncedUpdate(selectedBlock?.id as string, 'settings', {
-            ...selectedBlock?.settings,
+          debouncedUpdate(selectedBlock?.id as string, 'content', {
+            ...selectedBlock?.content,
             responsiveDesign: value,
           })
         }}

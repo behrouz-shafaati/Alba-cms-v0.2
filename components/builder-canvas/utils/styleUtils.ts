@@ -1,4 +1,3 @@
-import parseCssStringToObject from '@/lib/utils/parseCssStringToObject'
 import clsx from 'clsx'
 
 type ClassNames = Record<string, string | undefined | null>

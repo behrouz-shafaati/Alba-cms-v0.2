@@ -1,14 +1,12 @@
 'use client'
-import { useActionState, useEffect, useMemo, useState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import roleCtrl from '@/lib/features/role/controller'
 import { createPage, deletePagesAction, updatePage } from '../actions'
 import { Category } from '@/lib/features/category/interface'
 import { Page, PageContent, PageTranslationSchema } from '../interface'
 import BuilderPage from '@/components/builder-page'
 import { useSession } from '@/components/context/SessionContext'
 import authorize from '@/lib/utils/authorize'
-import { Option } from '@/lib/types'
 import { toast } from 'sonner'
 import AccessDenied from '@/components/other/access-denied'
 import { AlertModal } from '@/components/other/modal/alert-modal'
@@ -93,6 +91,7 @@ export const PageForm: React.FC<PageFormProps> = ({
         loading={loading}
       />
       <BuilderPage
+        pageId={page?.id}
         settings={settings}
         title="صفحه ساز"
         submitFormHandler={dispatch}

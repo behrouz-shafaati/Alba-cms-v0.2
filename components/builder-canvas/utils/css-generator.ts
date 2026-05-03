@@ -44,18 +44,19 @@ function handleSpacing(type, val, id, map) {
 
     const v = val[bp]
 
-    const t = v.top ?? 0
-    const r = v.right ?? t
-    const b = v.bottom ?? t
-    const l = v.left ?? r
+    const t = v.t ?? 0
+    const r = v.r ?? t
+    const b = v.b ?? t
+    const l = v.l ?? r
     const unit = v.unit ?? 'px'
 
-    push(
-      map,
-      bp,
-      cls,
-      `${type}:${t}${unit} ${r}${unit} ${b}${unit} ${l}${unit}`,
-    )
+    if (v?.t || v?.r || v?.b || v?.l)
+      push(
+        map,
+        bp,
+        cls,
+        `${type}:${t}${unit} ${r}${unit} ${b}${unit} ${l}${unit}`,
+      )
   }
 }
 
@@ -71,18 +72,19 @@ function handleRadius(val, id, map) {
 
     const v = val[bp]
 
-    const t = v.top ?? 0
-    const r = v.right ?? t
-    const b = v.bottom ?? t
-    const l = v.left ?? r
+    const t = v.t ?? 0
+    const r = v.r ?? t
+    const b = v.b ?? t
+    const l = v.l ?? r
     const unit = v.unit ?? 'px'
 
-    push(
-      map,
-      bp,
-      cls,
-      `border-radius:${t}${unit} ${r}${unit} ${b}${unit} ${l}${unit}`,
-    )
+    if (v?.t || v?.r || v?.b || v?.l)
+      push(
+        map,
+        bp,
+        cls,
+        `border-radius:${t}${unit} ${r}${unit} ${b}${unit} ${l}${unit}`,
+      )
   }
 }
 
@@ -131,8 +133,16 @@ function sanitizeCss(css) {
 /* ----------------------------- */
 /* process properties */
 /* ----------------------------- */
-
+/**
+ *
+ * @param prop property name
+ * @param val the value; object | string
+ * @param id elemt id
+ * @param map
+ * @returns
+ */
 function process(prop, val, id, map) {
+  if (!CSS_WATCH_LIST.has(prop)) return
   const cls = `.b${id}`
 
   if (prop === 'padding') return handleSpacing('padding', val, id, map)
@@ -210,7 +220,10 @@ function collect(node, parentId, map) {
     for (const key in node.content) process(key, node.content[key], id, map)
   }
 
-  for (const key in node) collect(node[key], id, map)
+  for (const key in node) {
+    collect(node[key], id, map)
+    process(key, node[key], id, map)
+  }
 }
 
 /* ----------------------------- */
@@ -251,3 +264,53 @@ export function generateResponsiveCSS(json) {
 
   return css
 }
+
+const CSS_WATCH_LIST = new Set([
+  'css',
+  'width',
+  'height',
+  'minWidth',
+  'maxWidth',
+  'minHeight',
+  'maxHeight',
+  'display',
+  'background',
+  'backgroundColor',
+  'color',
+  'fontSize',
+  'fontWeight',
+  'lineHeight',
+  'padding',
+  'margin',
+  'borderRadius',
+  'paddingTop',
+  'paddingRight',
+  'paddingBottom',
+  'paddingLeft',
+  'marginTop',
+  'marginRight',
+  'marginBottom',
+  'marginLeft',
+  'gap',
+  'rowGap',
+  'columnGap',
+  'flex',
+  'flexGrow',
+  'flexShrink',
+  'flexBasis',
+  'flexDirection',
+  'alignItems',
+  'justifyContent',
+  'alignContent',
+  'position',
+  'top',
+  'right',
+  'bottom',
+  'left',
+  'overflow',
+  'overflowX',
+  'overflowY',
+  'opacity',
+  'zIndex',
+  'textAlign',
+])

@@ -1,0 +1,14 @@
+{
+  "$schema": "./schema.json",
+  "lang": "en",
+  "language": "English",
+  "dir": "ltr",
+  "post": {},
+  "input": {
+    "comboBox": {
+      "loading": "Loading",
+      "notFound": "Not found",
+      "placeholder": "Choose..."
+    }
+  }
+}

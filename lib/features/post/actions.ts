@@ -15,6 +15,8 @@ import extractExcerptFromContentJson from '@/lib/utils/extractExcerptFromContent
 import getTranslation from '@/lib/utils/getTranslation'
 import authorize from '@/lib/utils/authorize'
 import { getSettingsAction } from '../settings/actions'
+import { fa } from 'zod/v4/locales'
+import menuCtrl from '../menu/controller'
 
 const FormSchema = z.object({
   title: z.string({}).nullable(),
@@ -463,4 +465,319 @@ export async function getPostAction({ locale, slug }: getPostActionProp) {
   console.log('#2349 locale: ', locale, ' # slug: ', slug)
   console.log('#23498734 postResult:', postResult)
   return postResult?.data[0] || null
+}
+
+type GetPostNavigationContentActionProp = {
+  locale: string
+  /**
+   * Post slug
+   */
+  slug: string | null
+  /**
+   * Post id
+   */
+  id: string | null
+  menuId: string | null
+  categories: Array<string>
+  usePageCategory: boolean
+  tags: Array<string>
+}
+
+export type PostNavigationContent = {
+  /**
+   * Next post
+   */
+  nex: {
+    title: string
+    url: string
+  } | null
+  /**
+   * Previous post
+   */
+  pre: {
+    title: string
+    url: string
+  } | null
+}
+
+export async function getPostNavigationContentAction(
+  props: GetPostNavigationContentActionProp,
+): Promise<PostNavigationContent | null> {
+  let {
+    locale,
+    slug = null,
+    id = null,
+    menuId = null,
+    categories = [],
+    usePageCategory = false,
+    tags = [],
+  } = props
+  console.log('#234 getPostNavigationAction props:', props)
+  if (!id && !slug)
+    return {
+      nex: { title: 'Next post', link: '#' },
+      pre: { title: 'Previous post', link: '#' },
+    }
+  slug = decodeURIComponent(slug)
+  if (menuId && slug)
+    return getNavigationContentFromMenu({ locale, menuId, slug })
+  if (usePageCategory)
+    return getNavigationFromPostMainCategory({ locale, slug, tags })
+  return getNavigationFromCategoriesTags({ locale, slug, categories, tags })
+}
+
+type getNavigationContentFromMenuProps = {
+  locale: string
+  menuId: string
+  /**
+   * Post slug
+   */
+  slug: string
+}
+type MenuItem = {
+  label: string
+  url: string
+  subMenu: MenuItem[]
+  _id: { $oid: string }
+}
+async function getNavigationContentFromMenu({
+  locale,
+  menuId,
+  slug,
+}: getNavigationContentFromMenuProps): Promise<PostNavigationContent | null> {
+  const query = {
+    filters: { id: menuId, 'translations.locale': locale },
+    projection: {
+      translations: {
+        $filter: {
+          input: '$translations',
+          as: 't',
+          cond: { $eq: ['$$t.locale', locale] },
+        },
+      },
+    },
+  }
+  const menuResult = await menuCtrl.find(query)
+  // تبدیل ساختار تو در تو به لیست صاف
+  const flatList: { title: string; url: string }[] = []
+  function flatten(items: MenuItem[]) {
+    for (const item of items) {
+      flatList.push({ title: item.label, url: item.url })
+      if (item.subMenu && item.subMenu.length > 0) {
+        flatten(item.subMenu)
+      }
+    }
+  }
+
+  flatten(menuResult.data[0].translations[0].items)
+
+  // پیدا کردن index پست فعلی
+  const currentIndex = flatList.findIndex((item) =>
+    item.url.endsWith(`/${slug}`),
+  )
+
+  if (currentIndex === -1) {
+    return null // پست پیدا نشد
+  }
+
+  return {
+    nex: currentIndex < flatList.length - 1 ? flatList[currentIndex + 1] : null,
+    pre: currentIndex > 0 ? flatList[currentIndex - 1] : null,
+  }
+}
+
+type getNavigationFromPostMainCategoryProps = {
+  locale: string
+  /**
+   * Post slug
+   */
+  slug: string
+  /**
+   * Array of tag ids
+   */
+  tags: Array<string>
+}
+async function getNavigationFromPostMainCategory({
+  locale,
+  slug,
+  tags,
+}: getNavigationFromPostMainCategoryProps): Promise<PostNavigationContent | null> {
+  const postQuery = {
+    filters: { slug },
+    projection: {
+      mainCategory: 1,
+      publishedAt: 1,
+      user: 0,
+      author: 0,
+      image: 0,
+      categories: 0,
+      tags: 0,
+    },
+  }
+
+  const currentPost = await postCtrl.findOne(postQuery)
+  if (!currentPost) return { pre: null, nex: null }
+  const mainCategoryId = currentPost?.mainCategory?.id || null
+
+  const baseFilter = {
+    status: 'published',
+    categories: mainCategoryId,
+    ...(tags.length > 0 ? { tags: { $in: tags } } : {}),
+    'translations.locale': locale,
+  }
+
+  const nextQuery = {
+    filters: {
+      ...baseFilter,
+      publishedAt: { $gt: new Date(currentPost.publishedAt) },
+    },
+    sort: { publishedAt: 1 },
+    projection: {
+      slug: 1,
+      mainCategory: 0,
+      user: 0,
+      author: 0,
+      image: 0,
+      categories: 0,
+      tags: 0,
+      translations: {
+        $map: {
+          input: {
+            $filter: {
+              input: '$translations',
+              as: 't',
+              cond: { $eq: ['$$t.locale', locale] },
+            },
+          },
+          as: 'tr',
+          in: {
+            title: '$$tr.title',
+          },
+        },
+      },
+    },
+  }
+
+  const nextPost = await postCtrl.findOne(nextQuery)
+
+  const prevoiusQuery = {
+    ...nextQuery,
+    filters: {
+      publishedAt: { $lt: new Date(currentPost.publishedAt) },
+    },
+    sort: { publishedAt: -1 },
+  }
+  const previousPost = await postCtrl.findOne(prevoiusQuery)
+
+  return {
+    nex: nextPost
+      ? { title: nextPost.translations[0].title, url: nextPost.href }
+      : null,
+    pre: previousPost
+      ? { title: previousPost.translations[0].title, url: previousPost.href }
+      : null,
+  }
+}
+type getNavigationFromCategoriesTagsProps = {
+  locale: string
+  /**
+   * Post slug
+   */
+  slug: string
+  /**
+   * Array of category ids
+   */
+  categories: Array<string>
+  /**
+   * Array of tag ids
+   */
+  tags: Array<string>
+}
+async function getNavigationFromCategoriesTags({
+  locale,
+  slug,
+  categories,
+  tags,
+}: getNavigationFromCategoriesTagsProps): Promise<PostNavigationContent | null> {
+  const postQuery = {
+    filters: { slug },
+    projection: {
+      mainCategory: 1,
+      publishedAt: 1,
+      createdAt: 1,
+      user: 0,
+      author: 0,
+      image: 0,
+      categories: 0,
+      tags: 0,
+    },
+  }
+
+  const currentPost = await postCtrl.findOne(postQuery)
+  if (!currentPost) return { pre: null, nex: null }
+
+  const baseFilter = {
+    status: 'published',
+    ...(categories.length > 0 ? { categories: { $in: categories } } : {}),
+    ...(tags.length > 0 ? { tags: { $in: tags } } : {}),
+    'translations.locale': locale,
+  }
+
+  const nextQuery = {
+    filters: {
+      ...baseFilter,
+      createdAt: { $gt: new Date(currentPost.createdAt) },
+    },
+    sort: { createdAt: 1 },
+    projection: {
+      slug: 1,
+      createdAt: 1,
+      mainCategory: 0,
+      user: 0,
+      author: 0,
+      image: 0,
+      categories: 0,
+      tags: 0,
+      translations: {
+        $map: {
+          input: {
+            $filter: {
+              input: '$translations',
+              as: 't',
+              cond: { $eq: ['$$t.locale', locale] },
+            },
+          },
+          as: 'tr',
+          in: {
+            title: '$$tr.title',
+          },
+        },
+      },
+    },
+  }
+  const nextPost = await postCtrl.findOne(nextQuery)
+
+  const prevoiusQuery = {
+    ...nextQuery,
+    filters: {
+      ...baseFilter,
+      createdAt: { $lt: new Date(currentPost.createdAt) },
+    },
+    sort: { createdAt: -1 },
+    pagination: {
+      page: 1,
+      perPage: 1,
+    },
+  }
+  const previousPostResult = await postCtrl.find(prevoiusQuery)
+  const previousPost = previousPostResult.data[0]
+
+  return {
+    nex: nextPost
+      ? { title: nextPost.translations[0].title, url: nextPost.href }
+      : null,
+    pre: previousPost
+      ? { title: previousPost.translations[0].title, url: previousPost.href }
+      : null,
+  }
 }

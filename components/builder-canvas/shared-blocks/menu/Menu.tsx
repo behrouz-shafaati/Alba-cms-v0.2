@@ -13,7 +13,7 @@ interface MainMenuProps {
   blockData: {
     content: { menuId: string }
     type: 'menu'
-    settings: {}
+    content: {}
   }
   widgetName: string
   menu: MenuType
@@ -36,10 +36,10 @@ function Menu({
     menu?.translations[0] ||
     {}
   const items = translation.items
-  const { settings } = blockData
+  const { content } = blockData
   const { className = '', ...resProps } = props
   let selectedMenu
-  switch (settings?.design) {
+  switch (content?.design) {
     case 'vertical':
       selectedMenu = (
         <VerticalMenu
@@ -51,6 +51,7 @@ function Menu({
           style={{
             ...computedStyles(blockData.styles),
           }}
+          content={content}
           {...resProps}
         />
       )

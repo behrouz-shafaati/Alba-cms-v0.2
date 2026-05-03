@@ -187,7 +187,10 @@ export default class controller {
     //   log.setVariables(payload);
     // }
     try {
-      result = await this.service.findOne(payload.filters, payload.populate)
+      result = await this.service.findOne(payload.filters, payload.populate, {
+        projection: payload.projection ?? {},
+        sort: payload?.sort ?? null,
+      })
       // if (payload.saveLog) {
       //   if (result) log.setResultStatus(true);
       //   else log.setResultStatus(false);

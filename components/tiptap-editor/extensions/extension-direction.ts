@@ -48,7 +48,7 @@ const Direction = Extension.create<DirectionOptions>({
     return {
       types: ['heading', 'paragraph'],
       directions: ['ltr', 'rtl', 'auto'],
-      defaultDirection: 'rtl',
+      defaultDirection: '',
     }
   },
   addGlobalAttributes() {

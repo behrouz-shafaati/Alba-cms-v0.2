@@ -2,10 +2,10 @@
 import { PageContent } from './types'
 import BuilderCanvas from '../builder-canvas'
 import SettingsPanel from './SettingsPanel'
-import { Category } from '@/features/category/interface'
+import { Category } from '@/lib/features/category/interface'
 import { blockRegistry } from './registry/blockRegistry'
 import { blockRegistry as pageBlockregistry } from '../builder-page/registry/blockRegistry'
-import { Template } from '@/features/template/interface'
+import { Template } from '@/lib/features/template/interface'
 
 type BuilderPageProp = {
   title?: string

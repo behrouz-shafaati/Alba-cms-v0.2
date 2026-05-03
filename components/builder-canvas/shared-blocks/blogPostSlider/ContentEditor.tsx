@@ -25,7 +25,7 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
   const { selectedBlock, update } = useBuilderStore()
   const [categoryOptions, setCategoryOptions] = useState<Option[]>([])
   const [tagOptions, setTagOptions] = useState<Option[]>([])
-  const [selectedTags, setSelectedTags] = useState<Option[]>([])
+  // const [selectedTags, setSelectedTags] = useState<Option[]>([])
   useEffect(() => {
     const fetchData = async () => {
       const [allCategories, allTags] = await Promise.all([
@@ -36,7 +36,7 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
         (category: Category) => {
           const translation: CategoryTranslationSchema =
             category?.translations?.find(
-              (t: CategoryTranslationSchema) => t.lang === locale
+              (t: CategoryTranslationSchema) => t.lang === locale,
             ) ||
             category?.translations[0] ||
             {}
@@ -45,13 +45,13 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
             label: createCatrgoryBreadcrumb(category, translation?.title),
             slug: category.slug,
           }
-        }
+        },
       )
 
       const tagOptions: Option[] = allTags.data.map((tag: Tag) => {
         const translation: TagTranslationSchema =
           tag?.translations?.find(
-            (t: TagTranslationSchema) => t.lang === locale
+            (t: TagTranslationSchema) => t.lang === locale,
           ) ||
           tag?.translations[0] ||
           {}
@@ -66,7 +66,7 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
     }
 
     fetchData()
-    setSelectedTags(selectedBlock?.content?.tags ?? [])
+    // setSelectedTags(selectedBlock?.content?.tags ?? [])
   }, [selectedBlock?.content?.tags])
 
   return (

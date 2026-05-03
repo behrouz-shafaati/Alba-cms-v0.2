@@ -28,7 +28,7 @@ const FormSchema = z.object({
  */
 export async function createPage(
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   let newPage = null
   // Validate form fields
@@ -122,7 +122,7 @@ export async function createPage(
 export async function updatePage(
   id: string,
   prevState: FormActionState,
-  formData: FormData
+  formData: FormData,
 ) {
   let cleanedParams = {},
     updatedPage = {}
@@ -146,7 +146,7 @@ export async function updatePage(
     const prevPage = await pageCtrl.findById({ id })
     authorize(
       user.roles,
-      prevPage.user !== user.id ? 'page.edit.any' : 'page.edit.own'
+      prevPage.user !== user.id ? 'page.edit.any' : 'page.edit.own',
     )
     const validatedFields = FormSchema.safeParse(rawValues)
     // If form validation fails, return errors early. Otherwise, continue.
@@ -167,7 +167,7 @@ export async function updatePage(
     const settings = await settingsCtrl.findOne({
       filters: { type: 'site-settings' },
     })
-    if (settings?.id === id) varRevalidatePath = [...varRevalidatePath]
+    if (settings?.id === id) varRevalidatePath = [...varRevalidatePath, '/']
     updatedPage = await pageCtrl.findOneAndUpdate({
       filters: id,
       params: cleanedParams,
@@ -202,6 +202,69 @@ export async function updatePage(
   }
 }
 
+/**
+ *
+ * @param id pageId
+ * @param from origin locale content
+ * @param to destinition locale
+ * @returns void
+ */
+export async function clonePageAction(
+  pageId: string,
+  from: string,
+  to: string,
+) {
+  try {
+    const user = (await getSession())?.user as User
+    const prevPage = await pageCtrl.findById({ id: pageId })
+    authorize(
+      user.roles,
+      prevPage.user !== user.id ? 'page.edit.any' : 'page.edit.own',
+    )
+
+    let varRevalidatePath = [`/${prevPage.slug}`]
+    // if is home page so revalidate home page
+    const settings = await settingsCtrl.findOne({
+      filters: { type: 'site-settings' },
+    })
+    if (settings?.id === pageId) varRevalidatePath = [...varRevalidatePath, '/']
+
+    const originContent = prevPage.translations.find((t) => t.locale == from)
+    const newPage = {
+      ...prevPage,
+      translations: [
+        ...prevPage.translations.filter((t) => t.locale != to),
+        {
+          ...originContent,
+          locale: to,
+        },
+      ],
+    }
+    const updatedPage = await pageCtrl.findOneAndUpdate({
+      filters: pageId,
+      params: newPage,
+    })
+
+    const pathes = await revalidatePathCtrl.getAllPathesNeedRevalidate({
+      feature: 'page',
+      slug: [...varRevalidatePath, '/dashboard/pages'],
+    })
+
+    for (const slug of pathes) {
+      // این تابع باید یا در همین فایل سرور اکشن یا از طریق api فراخوانی شود. پس محلش نباید تغییر کند.
+      revalidatePath(slug)
+    }
+  } catch (error: any) {
+    if (process.env.NODE_ENV === 'development') throw error
+    console.log('Error in update page:', error)
+    return { message: 'خطای پایگاه داده: بروزرسانی برگه ناموفق بود.' }
+  }
+  return {
+    message: 'بروزرسانی با موفقیت انجام شد',
+    success: true,
+  }
+}
+
 export async function deletePagesAction(ids: string[]) {
   try {
     const user = (await getSession())?.user as User
@@ -211,7 +274,7 @@ export async function deletePagesAction(ids: string[]) {
     for (const prevPage of prevPageResult.data) {
       authorize(
         user.roles,
-        prevPage.user !== user.id ? 'page.delete.any' : 'page.delete.own'
+        prevPage.user !== user.id ? 'page.delete.any' : 'page.delete.own',
       )
     }
     const pageResults = await pageCtrl.findAll({
@@ -276,7 +339,7 @@ async function sanitizePageData(validatedFields: any, id?: string | undefined) {
       content,
     },
     ...prevState.translations.filter(
-      (t: PageTranslationSchema) => t.locale != locale
+      (t: PageTranslationSchema) => t.locale != locale,
     ),
   ]
   const params = {

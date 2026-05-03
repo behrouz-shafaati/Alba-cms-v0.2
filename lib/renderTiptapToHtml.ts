@@ -1,11 +1,22 @@
 'use server'
 const jsdom = require('jsdom')
 const { JSDOM } = jsdom
-// let jsdom: typeof import('jsdom') | null = null
+import { createLowlight } from 'lowlight'
+import javascript from 'highlight.js/lib/languages/javascript'
+import typescript from 'highlight.js/lib/languages/typescript'
+import python from 'highlight.js/lib/languages/python'
+import css from 'highlight.js/lib/languages/css'
+import xml from 'highlight.js/lib/languages/xml' // برای HTML
+import plaintext from 'highlight.js/lib/languages/plaintext'
 
-// if (typeof window === 'undefined') {
-//   jsdom = require('jsdom')
-// }
+const lowlight = createLowlight()
+lowlight.register('javascript', javascript)
+lowlight.register('typescript', typescript)
+lowlight.register('python', python)
+lowlight.register('css', css)
+lowlight.register('html', xml)
+lowlight.register('xml', xml)
+lowlight.register('plaintext', plaintext)
 
 import { getTextFromNode } from '@/components/tiptap-editor/utils'
 import { Schema, DOMSerializer, Node as ProseNode } from 'prosemirror-model'
@@ -181,6 +192,36 @@ const nodes = {
         : ['ol', { start: node.attrs.order }, 0]
     },
   },
+  codeBlock: {
+    content: 'text*',
+    group: 'block',
+    code: true,
+    marks: '',
+    defining: true,
+    attrs: {
+      language: { default: null },
+    },
+    parseDOM: [
+      {
+        tag: 'pre',
+        preserveWhitespace: 'full',
+        getAttrs: (el: any) => {
+          return { language: el.getAttribute('language') }
+        },
+      },
+    ],
+    toDOM(node: any) {
+      const language = node.attrs.language || 'plaintext'
+      return [
+        'pre',
+        {
+          class:
+            'p-4 my-4 bg-gray-100 dark:bg-gray-900 rounded-md overflow-x-auto',
+        },
+        ['code', { class: `language-${language}` }, 0],
+      ]
+    },
+  },
   image: {
     inline: true,
 
@@ -258,7 +299,7 @@ const nodes = {
     group: 'inline',
     selectable: false,
     parseDOM: [{ tag: 'hr' }],
-    toDOM: () => ['hr', { style: 'padding-bottom: 16px' }],
+    toDOM: () => ['hr', { style: 'padding-bottom: 32px;margin-top: 32px' }],
   },
   // 👇 تعریف adSlot برای رندر سمت سرور
   adSlot: {
@@ -615,6 +656,12 @@ const marks = {
       return ['s', 0]
     },
   },
+  code: {
+    parseDOM: [{ tag: 'code' }],
+    toDOM() {
+      return ['code', 0]
+    },
+  },
 }
 
 const schema = new Schema({ nodes, marks })
@@ -638,5 +685,63 @@ export async function renderTiptapJsonToHtml(json: any): string {
 
   const container = document.createElement('div')
   container.appendChild(fragment)
+  // اعمال syntax highlighting
+  syntaxCodeHighlighting(container)
   return container.innerHTML
+}
+
+const syntaxCodeHighlighting = (container: any) => {
+  const codeBlocks = container.querySelectorAll('pre code')
+
+  codeBlocks.forEach((codeElement: any) => {
+    const code = codeElement.textContent || ''
+    const classList = codeElement.getAttribute('class') || ''
+    const languageMatch = classList.match(/language-(\w+)/)
+    const language = languageMatch ? languageMatch[1] : 'plaintext'
+
+    // برای plaintext یا زبان‌های ناشناخته، فقط escape کن
+    if (language === 'plaintext' || !language) {
+      codeElement.innerHTML = escapeHtml(code)
+      return
+    }
+
+    try {
+      const result = lowlight.highlight(language, code, { prefix: 'hljs-' })
+      const html = toHtml(result)
+      codeElement.innerHTML = html
+    } catch (error) {
+      // اگر زبان پشتیبانی نشد، escape ساده
+      codeElement.innerHTML = escapeHtml(code)
+    }
+  })
+}
+
+// کمک‌کننده برای escape کردن کاراکترهای HTML
+function escapeHtml(text: string): string {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+// تابع کمکی برای تبدیل AST به HTML
+function toHtml(node: any): string {
+  if (!node) return ''
+
+  if (node.type === 'text') {
+    return escapeHtml(node.value || '')
+  }
+
+  if (node.type === 'element') {
+    const children = (node.children || []).map(toHtml).join('')
+    const className = node.properties?.className?.join(' ') || ''
+
+    if (className) {
+      return `<span class="${className}">${children}</span>`
+    }
+    return children
+  }
+
+  if (node.type === 'root') {
+    return (node.children || []).map(toHtml).join('')
+  }
+
+  return ''
 }

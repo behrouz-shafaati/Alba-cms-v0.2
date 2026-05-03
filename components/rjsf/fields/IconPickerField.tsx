@@ -1,8 +1,15 @@
 'use client'
 
 import IconPicker from '@/components/input/IconPicker'
-import { WidgetProps } from '@rjsf/utils'
+import { FieldProps } from '@rjsf/utils'
 
-export default function IconPickerField({ value, onChange }: WidgetProps) {
-  return <IconPicker name="" defaultValue={value} onChange={onChange} />
+export default function IconPickerField(props: FieldProps) {
+  const { formData, onChange, fieldPathId } = props
+  return (
+    <IconPicker
+      name=""
+      defaultValue={formData}
+      onChange={(val) => onChange(val, fieldPathId.path)}
+    />
+  )
 }

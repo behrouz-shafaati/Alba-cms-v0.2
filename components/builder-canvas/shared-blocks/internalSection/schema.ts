@@ -1,3 +1,5 @@
+import { styleSchema } from '@/components/rjsf/schema/styleSchema '
+
 const blockSchema = {
   type: 'object',
   properties: {
@@ -6,61 +8,7 @@ const blockSchema = {
       title: 'Sticky',
       default: true,
     },
-    display: {
-      type: 'string',
-      title: 'Display',
-      enum: ['flex', 'unset'],
-      default: 'unset',
-      'x-responsive': true,
-    },
-  },
-  dependencies: {
-    display: {
-      oneOf: [
-        {
-          properties: {
-            display: { enum: ['flex'] },
-            flexDirection: {
-              type: 'string',
-              title: 'flex-direction',
-              enum: ['row', 'row-reverse', 'column', 'column-reverse'],
-              default: 'row',
-              'x-responsive': true,
-            },
-            justifyContent: {
-              type: 'string',
-              title: 'justify-content',
-              enum: [
-                'start',
-                'end',
-                'center',
-                'space-between',
-                'space-around',
-                'space-evenly',
-              ],
-              default: 'start',
-            },
-            alignItems: {
-              type: 'string',
-              title: 'align-items',
-              enum: ['stretch', 'center', 'start', 'end'],
-              default: 'stretch',
-            },
-            justifyItems: {
-              type: 'string',
-              title: 'justify-items',
-              enum: ['stretch', 'center', 'start', 'end'],
-              default: 'stretch',
-            },
-          },
-        },
-        {
-          properties: {
-            display: { enum: ['unset'] },
-          },
-        },
-      ],
-    },
+    ...styleSchema.properties,
   },
 }
 

@@ -16,7 +16,6 @@ type BlockProps = {
       href: string
     }
     type: 'image'
-    settings: {}
   } & Block
 } & React.HTMLAttributes<HTMLParagraphElement> // ✅ اجازه‌ی دادن onclick, className و ...
 
@@ -26,8 +25,8 @@ export default function sectionWrapper({
   blockData,
   ...props
 }: BlockProps) {
-  const { sections, settings, styles } = blockData
-  const responsiveDesign = settings?.responsiveDesign ?? true
+  const { sections, content, styles } = blockData
+  const responsiveDesign = content?.responsiveDesign ?? true
 
   const visibility: any = styles?.visibility
   const visibilityClassName = getVisibilityClass(visibility, {

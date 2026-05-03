@@ -1,17 +1,8 @@
 'use client'
+import { ClientLocaleSchema } from '@/lib/i18n/client'
 // providers/locale-provider.tsx
 
 import { LocaleContext } from './locale-context'
-
-export type ClientLocaleSchema = {
-  input: {
-    comboBox: {
-      placeholder: string
-      loading: string
-      notFound: string
-    }
-  }
-}
 
 export function ClientLocaleProvider({
   dictionary,

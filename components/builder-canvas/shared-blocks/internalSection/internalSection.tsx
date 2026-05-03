@@ -31,8 +31,8 @@ export default function InternalSection({
 }: BlockProps) {
   const { content, styles } = blockData
   const classBaseOnResponsiveDesign = responsiveDesign
-    ? `col-span-12 md:col-span-${blockData.width}`
-    : `col-span-${blockData.width}`
+    ? `col-span-12 md:col-span-${blockData.colspan}`
+    : `col-span-${blockData.colspan}`
 
   const visibilityInnerCol: any = styles?.visibility
   const visibilityInnerColClassName = getVisibilityClass(visibilityInnerCol, {
@@ -41,7 +41,7 @@ export default function InternalSection({
   return (
     <div
       data-InternalSection
-      className={`b${blockData.id} relative flex-col ${classBaseOnResponsiveDesign}  ${visibilityInnerColClassName}  ${combineClassNames(computedStyles(styles))}`}
+      className={`b${blockData.id} relative  ${classBaseOnResponsiveDesign}  ${visibilityInnerColClassName}  ${combineClassNames(computedStyles(styles))}`}
       style={{ ...computedStyles(styles), ...computedStyles(content) }}
     >
       {content?.bgMedia && (
@@ -57,7 +57,7 @@ export default function InternalSection({
       {blockData?.blocks?.map((el: any, index: number) => {
         const visibility: any = el.styles?.visibility
         const visibilityClassName = getVisibilityClass(visibility, {
-          display: el?.settings?.display || 'block',
+          display: el?.constValues?.display || 'block',
         })
         return (
           <RenderBlock

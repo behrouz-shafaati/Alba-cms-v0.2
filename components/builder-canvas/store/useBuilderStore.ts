@@ -9,7 +9,7 @@ import findElementById from '../utils/findElementById'
 const defaultColumn = () => ({
   id: objectId(),
   type: 'column',
-  width: 4,
+  colspan: 4,
   blocks: [],
 })
 
@@ -92,7 +92,7 @@ export const useBuilderStore = create<State>((set, get) => ({
                   {
                     id: objectId(),
                     type: 'column',
-                    width: 12,
+                    colspan: 12,
                     blocks: [],
                   },
                 ],
@@ -120,31 +120,31 @@ export const useBuilderStore = create<State>((set, get) => ({
       return { ...state, content: { ...state.content, rows: updated } }
     }),
   updateRowColumns: (containerId, layout) => {
-    const widths = layout.split('-').map(Number)
+    const colspans = layout.split('-').map(Number)
 
-    const rebuildColumns = (oldColumns, widths) => {
+    const rebuildColumns = (oldColumns, colspans) => {
       let index = 0
-      return widths.map((width) => {
+      return colspans.map((colspan) => {
         const old = oldColumns[index]
         index++
         return {
           id: objectId(),
           type: 'column',
-          width,
+          colspan,
           blocks: old?.blocks ? [...old.blocks] : [],
         }
       })
     }
 
-    const rebuildSections = (oldSections, widths) => {
+    const rebuildSections = (oldSections, colspans) => {
       let index = 0
-      return widths.map((width) => {
+      return colspans.map((colspan) => {
         const old = oldSections[index]
         index++
         return {
           id: objectId(),
           type: 'internalSection',
-          width,
+          colspan,
           blocks: old?.blocks ? [...old.blocks] : [],
         }
       })
@@ -156,7 +156,7 @@ export const useBuilderStore = create<State>((set, get) => ({
       if (node.type === 'row' && node.id === containerId) {
         return {
           ...node,
-          columns: rebuildColumns(node.columns, widths),
+          columns: rebuildColumns(node.columns, colspans),
           content: { ...node.content, rowColumns: layout },
         }
       }
@@ -165,12 +165,12 @@ export const useBuilderStore = create<State>((set, get) => ({
       if (node.type === 'internalSectionWrapper' && node.id === containerId) {
         return {
           ...node,
-          sections: rebuildSections(node.sections, widths),
+          sections: rebuildSections(node.sections, colspans),
         }
       }
 
       // otherwise traverse children
-      if (node.type === 'page') {
+      if (node.type === 'page' || node.type === 'template') {
         return {
           ...node,
           rows: node.rows.map(recurse),

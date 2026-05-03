@@ -8,5 +8,11 @@ export const MenuBlockSchema = {
       enum: ['horizontal', 'vertical'],
       default: 'horizontal',
     },
+    activeTextColor: {
+      type: 'object',
+      title: 'رنگ لینک فعال',
+      default: undefined,
+      'x-field': 'ColorField',
+    },
   },
 }

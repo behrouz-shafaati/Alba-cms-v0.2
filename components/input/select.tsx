@@ -73,9 +73,9 @@ export default function Select({
               )
             }}
           >
-            <SelectTrigger className="w-full ps-9">
+            <SelectTrigger className={cn('w-full', icon && 'ps-9')}>
               <SelectValue
-                placeholder={placeholder || `یک ${title} انتخاب کنید`}
+                placeholder={placeholder ?? `یک ${title} انتخاب کنید`}
               />
             </SelectTrigger>
             <SelectContent>

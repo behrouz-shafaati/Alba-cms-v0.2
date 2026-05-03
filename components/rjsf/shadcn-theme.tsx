@@ -13,20 +13,35 @@ import { FourSideBoxField } from './fields/FourSideBoxField'
 import { ShadowWidget } from './widgets/ShadowWidget'
 import { TailwindTextColorPickerWidget } from './widgets/TailwindTextColorPickerWidget'
 import LayoutField from './fields/Layout'
-import CornersRoundField from './fields/CornersRound'
 import ResponsiveVisibilityField from './fields/ResponsiveVisibility'
 import BorderField from './fields/Border'
 import CssEditor from '../ui/css-editor'
-import IconPickerWidget from './fields/IconPickerField'
 import IconPickerField from './fields/IconPickerField'
 import ResponsiveNumberField from './fields/ResponsiveNumberField'
 import CustomFieldTemplate from './templates/CustomFieldTemplate'
+import { ResponsiveSelectField } from './fields/ResponsiveSelectField'
+import FlexSettingsField from './fields/FlexSettingsField'
+import { useBuilderStore } from '../builder-canvas/store/useBuilderStore'
 
-const CustomObjectFieldTemplate = ({ properties }: any) => {
-  return <div>{properties.map((prop: any) => prop.content)}</div>
+function CustomObjectTemplate(props) {
+  const { properties, formData } = props
+  const { device } = useBuilderStore()
+
+  const display = formData?.display
+
+  const isFlex = display?.[device] === 'flex'
+  const isGrid = display?.[device] === 'grid'
+
+  return (
+    <div>
+      {properties.map((p) => {
+        if (p.name === 'flexSettings' && !isFlex) return null
+        // if (p.name === 'grid' && !isGrid) return null
+        return <div key={p.name}>{p.content}</div>
+      })}
+    </div>
+  )
 }
-
-const CustomErrorList = () => null
 
 export const CustomTheme = {
   widgets: {
@@ -40,6 +55,8 @@ export const CustomTheme = {
     SliderWidget,
   },
   fields: {
+    ResponsiveSelectField,
+    FlexSettingsField,
     ResponsiveNumber: ResponsiveNumberField,
     FourSideBoxField: FourSideBoxField,
     ShadowField: (props: FieldProps) => (
@@ -61,41 +78,16 @@ export const CustomTheme = {
         onChange={(val) => props.onChange(val, ['visibility'])}
       />
     ),
-    TextColorField: (props: FieldProps) => {
-      const current = props.formData ?? {}
+    ColorField: (props: FieldProps) => {
+      const { formData, onChange, fieldPathId } = props
+      const current = formData ?? {}
       // وقتی کاربر رنگ انتخاب میکنه
       const handleChange = (val: { light: any; dark: any }) => {
-        console.log('#234234 value in color widget:', val)
-        props.onChange(val, ['textColor'])
+        onChange(val, fieldPathId.path)
       }
-
-      console.log('#234234 value in color current:', current)
       return <ColorWidget value={current} onChange={handleChange} />
     },
-    BackgroundColorField: (props: FieldProps) => {
-      const current = props.formData ?? {}
-      // وقتی کاربر رنگ انتخاب میکنه
-      const handleChange = (val: { light: any; dark: any }) => {
-        props.onChange(val, ['backgroundColor'])
-      }
-
-      return <ColorWidget value={current} onChange={handleChange} />
-    },
-    iconColorField: (props: FieldProps) => {
-      const current = props.formData ?? {}
-      // وقتی کاربر رنگ انتخاب میکنه
-      const handleChange = (val: { light: any; dark: any }) => {
-        props.onChange(val, ['iconColor'])
-      }
-
-      return <ColorWidget value={current} onChange={handleChange} />
-    },
-    IconPickerField: (props: FieldProps) => (
-      <IconPickerField
-        value={props.formData}
-        onChange={(val) => props.onChange(val, ['icon'])}
-      />
-    ),
+    IconPickerField,
     CssField: (props: FieldProps) => {
       const current = props.formData ?? {}
       // وقتی کاربر رنگ انتخاب میکنه
@@ -108,8 +100,7 @@ export const CustomTheme = {
   },
   templates: {
     FieldTemplate: CustomFieldTemplate,
-    ObjectFieldTemplate: CustomObjectFieldTemplate,
-    ErrorListTemplate: CustomErrorList,
+    ObjectFieldTemplate: CustomObjectTemplate,
   },
   validator,
 }

@@ -122,7 +122,10 @@ class controller extends baseController {
           const imageFileData = await fileCtrl.findById({ id: image?.id })
           return {
             type: 'image',
-            attrs: { id: imageFileData.id, srcMedium: imageFileData.srcMedium },
+            attrs: {
+              id: imageFileData?.id,
+              srcMedium: imageFileData?.srcMedium,
+            },
           }
         }
         return block

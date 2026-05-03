@@ -11,6 +11,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Block } from '../../types'
+import computedStyles from '../../utils/computedStyles'
+import { cn } from '@/lib/utils'
+import { combineClassNames } from '../../utils/styleUtils'
 
 type props = {
   blockData: {
@@ -22,14 +25,15 @@ type props = {
 
 export default function ModeToggle({ blockData, ...props }: props) {
   const { setTheme } = useTheme()
-
+  const { id, content, styles } = blockData
   return (
     <DropdownMenu dir="rtl">
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
           size="icon"
-          className={` ${blockData?.classNames?.manualInputs}`}
+          className={cn(`b${id}`, combineClassNames(computedStyles(styles)))}
+          style={{ ...computedStyles(styles) }}
         >
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
