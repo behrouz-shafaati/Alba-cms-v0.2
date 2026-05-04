@@ -8,13 +8,24 @@ import { useBuilderStore } from '../builder-canvas/store/useBuilderStore'
 import { Template } from '@/lib/features/template/interface'
 import { Option } from '@/lib/types'
 import Combobox from '../input/combobox'
+import { ContentLanguageTabs } from '../input/ContentLanguageTabs'
+import { cloneTemplateAction } from '@/lib/features/template/actions'
 
 type SettingsPanelProp = {
+  templateId: string
+  siteSettings: any
   allTemplates: Template[]
   allCategories: Category[]
+  locale: string
 }
 
-function SettingsPanel({ allCategories, allTemplates }: SettingsPanelProp) {
+function SettingsPanel({
+  templateId,
+  siteSettings,
+  allCategories,
+  allTemplates,
+  locale,
+}: SettingsPanelProp) {
   const { update, getJson } = useBuilderStore()
   const document = JSON.parse(getJson())
   const debouncedUpdate = useDebouncedCallback(
@@ -45,8 +56,14 @@ function SettingsPanel({ allCategories, allTemplates }: SettingsPanelProp) {
       value: 'deactive',
     },
   ]
+
+  const clone = async (from: string, to: string) => {
+    const result = await cloneTemplateAction(templateId, from, to)
+    if (result?.success) window.location.reload()
+  }
   return (
     <>
+      <ContentLanguageTabs settings={siteSettings} clone={clone} />
       <Text
         title="عنوان قالب"
         name="title"
@@ -62,7 +79,7 @@ function SettingsPanel({ allCategories, allTemplates }: SettingsPanelProp) {
         defaultValue={JSON.parse(getJson()).parent || 'none'}
         options={parentTemplatesOptions}
         placeholder="قالب والد"
-        onChange={(e) => debouncedUpdate(null, 'parent', e.target.value)}
+        onChange={(option) => debouncedUpdate(null, 'parent', option.value)}
       />
       <TemplateTypeSettings allCategories={allCategories} />
       <Select

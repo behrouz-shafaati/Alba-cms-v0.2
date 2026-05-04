@@ -1,9 +1,21 @@
 import mongoose, { model, Schema } from 'mongoose'
 import { TemplateSchema } from './interface'
 
+const TemplateTranslationSchema = new Schema(
+  {
+    locale: { type: String, required: true }, // "fa", "en", "de", ...
+    title: { type: String, required: true },
+    content: {
+      type: Schema.Types.Mixed, // whole page structure as JSON
+      required: true,
+    },
+    description: { type: String, default: '' },
+  },
+  { _id: false },
+)
+
 const templateSchema = new Schema<TemplateSchema>(
   {
-    title: { type: String, required: false },
     parent: {
       type: Schema.Types.ObjectId,
       ref: 'template',
@@ -15,19 +27,16 @@ const templateSchema = new Schema<TemplateSchema>(
       default: null,
       required: true,
     },
-    content: {
-      type: Schema.Types.Mixed, // whole Template structure as JSON
-      required: true,
-    },
     templateFor: [{ type: String, required: false, unique: false }],
     status: {
       type: String,
       enum: ['deactive', 'active'],
       default: 'active',
     },
+    translations: [TemplateTranslationSchema], // 👈 لیست ترجمه‌ها
     deleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 )
 
 const transform = (doc: any, ret: any, options: any) => {

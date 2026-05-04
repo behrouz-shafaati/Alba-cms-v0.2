@@ -28,9 +28,11 @@ type Props = {
 export default async function PostPage({ locale, postSlug, slugs }: Props) {
   const [post, template, siteSettings] = await Promise.all([
     getPostAction({ locale, slug: postSlug }), // از cache میاد اگه قبلاً در metadata گرفته شده
-    templateCtrl.getTemplate({ slug: 'post' }),
+    templateCtrl.getTemplate({ slug: 'post', locale }),
     getSettingsAction(),
   ])
+
+  console.log('$$#5345 post:', post)
 
   if (!post) {
     notFound()
@@ -108,7 +110,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
         {writeJsonLd()}
         <>
           <RendererTemplate
-            template={template}
+            template={{ content: template?.translations[0].content || {} }}
             siteSettings={siteSettings}
             pageSlug={postSlug}
             categorySlug={post?.mainCategory?.slug || null}

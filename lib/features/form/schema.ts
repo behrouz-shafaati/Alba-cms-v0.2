@@ -1,12 +1,6 @@
 import mongoose, { model, Schema } from 'mongoose'
 import { FormSchema } from './interface'
 
-const MultiLangString = {
-  type: Map,
-  of: String,
-  default: {},
-}
-
 const FieldSchema = new Schema(
   {
     name: { type: String, required: true }, // name فیلد در HTML
@@ -26,37 +20,37 @@ const FieldSchema = new Schema(
     },
     options: [String], // برای select یا radio
     required: { type: Boolean, default: false },
-    label: MultiLangString,
-    placeholder: MultiLangString,
-    description: MultiLangString,
-    defaultValue: MultiLangString,
+    label: String,
+    placeholder: String,
+    description: String,
+    defaultValue: String,
   },
   { _id: false },
 )
-
-const TranslationSchema = new Schema(
+const FormTranslationSchema = new Schema(
   {
     locale: { type: String, required: true }, // "fa", "en", "de", ...
+    title: { type: String, required: true },
+    content: {
+      type: Schema.Types.Mixed, // whole form structure as JSON
+      required: true,
+    },
+    fields: [FieldSchema],
     successMessage: { type: String, default: '' },
+    description: { type: String, default: '' },
   },
   { _id: false },
 )
 
 const formSchema = new Schema<FormSchema>(
   {
-    title: { type: String, required: false },
     user: {
       type: Schema.Types.ObjectId,
       ref: 'user',
       default: null,
       required: true,
     },
-    content: {
-      type: Schema.Types.Mixed, // whole page structure as JSON
-      required: true,
-    },
-    fields: [FieldSchema],
-    translations: [TranslationSchema],
+    translations: [FormTranslationSchema],
     status: {
       type: String,
       enum: ['deactive', 'active'],

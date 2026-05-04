@@ -97,13 +97,25 @@ class controller extends baseController {
    * @returns
    */
 
-  async getTemplate({ slug }: getTemplateProp) {
+  async getTemplate({ slug, locale }: getTemplateProp) {
     let categoriesTemplateResult
     if (slug == '') return null
+    const projection = {
+      translations: {
+        $filter: {
+          input: '$translations',
+          as: 't',
+          cond: { $eq: ['$$t.locale', locale] },
+        },
+      },
+    }
     switch (slug) {
       case 'archive': // آرشیو مطالب
         const [archiveTemplateResult] = await Promise.all([
-          this.find({ filters: { templateFor: 'archive', status: 'active' } }),
+          this.find({
+            filters: { templateFor: 'archive', status: 'active' },
+            projection,
+          }),
         ])
         if (archiveTemplateResult.data[0] != undefined)
           return archiveTemplateResult.data[0]
@@ -112,6 +124,7 @@ class controller extends baseController {
         ;[categoriesTemplateResult] = await Promise.all([
           this.find({
             filters: { templateFor: 'categories', status: 'active' },
+            projection,
           }),
         ])
         if (categoriesTemplateResult.data[0] != undefined)
@@ -119,34 +132,49 @@ class controller extends baseController {
         break
       case 'blog': // وبلاگ
         const [blogTemplateResult] = await Promise.all([
-          this.find({ filters: { templateFor: 'blog', status: 'active' } }),
+          this.find({
+            filters: { templateFor: 'blog', status: 'active' },
+            projection,
+          }),
         ])
         if (blogTemplateResult.data[0] != undefined)
           return blogTemplateResult.data[0]
         break
       case 'post': // مطلب تکی
         const [postTemplateResult] = await Promise.all([
-          this.find({ filters: { templateFor: 'post', status: 'active' } }),
+          this.find({
+            filters: { templateFor: 'post', status: 'active' },
+            projection,
+          }),
         ])
         if (postTemplateResult.data[0] != undefined)
           return postTemplateResult.data[0]
         break
       case 'author': // مطلب تکی
         const [authorTemplateResult] = await Promise.all([
-          this.find({ filters: { templateFor: 'author', status: 'active' } }),
+          this.find({
+            filters: { templateFor: 'author', status: 'active' },
+            projection,
+          }),
         ])
         if (authorTemplateResult.data[0] != undefined)
           return authorTemplateResult.data[0]
         break
       case 'search': // مطلب تکی
         const [templateResult] = await Promise.all([
-          this.find({ filters: { templateFor: 'search', status: 'active' } }),
+          this.find({
+            filters: { templateFor: 'search', status: 'active' },
+            projection,
+          }),
         ])
         if (templateResult.data[0] != undefined) return templateResult.data[0]
         break
       case 'account': // مطلب تکی
         const [accountTemplateResult] = await Promise.all([
-          this.find({ filters: { templateFor: 'account', status: 'active' } }),
+          this.find({
+            filters: { templateFor: 'account', status: 'active' },
+            projection,
+          }),
         ])
         if (accountTemplateResult.data[0] != undefined)
           return accountTemplateResult.data[0]
@@ -176,6 +204,7 @@ class controller extends baseController {
           ;[categoriesTemplateResult] = await Promise.all([
             this.find({
               filters: { templateFor: 'categories', status: 'active' },
+              projection,
             }),
           ])
           if (categoriesTemplateResult.data[0] != undefined)
@@ -185,7 +214,10 @@ class controller extends baseController {
 
     // در غیر این صورت قالب عمومی سایت برگردد
     const [allPageTemplateResult] = await Promise.all([
-      this.find({ filters: { templateFor: 'allPages', status: 'active' } }),
+      this.find({
+        filters: { templateFor: 'allPages', status: 'active' },
+        projection,
+      }),
     ])
     if (allPageTemplateResult.data[0] != undefined)
       return allPageTemplateResult.data[0]
@@ -200,6 +232,7 @@ class controller extends baseController {
           templateFor: `category-${cat.id}`,
           status: 'active',
         },
+        projection,
       }),
     ])
     if (
@@ -208,38 +241,6 @@ class controller extends baseController {
     )
       return categoryTemplateResult.data[0]
     return templateCtrl.getCategoryTemplate(cat.parent)
-  }
-
-  /**
-   * تولید اسلاگ یکتا با بررسی دیتابیس
-   */
-  async generateUniqueTemplateSlug(
-    params: { slug: string; title: string },
-    templateId: string = ''
-  ): Promise<object> {
-    const baseSlug =
-      params.slug != '' && params.slug != null
-        ? slugify(params.slug)
-        : slugify(params.title)
-    // if it is update and slug doesn't change remove slug from parameters
-    if (templateId !== '') {
-      const findedTemplateBySlug = await templateCtrl.findOne({
-        filters: { slug: baseSlug },
-      })
-      if (findedTemplateBySlug && findedTemplateBySlug.id == templateId) {
-        const { slug, ...rest } = params
-        return rest
-      }
-    }
-
-    // if it is new template need to generate new slug
-    let slug = baseSlug
-    let count = 1
-    while (await templateCtrl.existSlug(slug)) {
-      slug = `${baseSlug}-${count}`
-      count++
-    }
-    return { ...params, slug }
   }
 
   async deactiveTemplateFor({
@@ -260,6 +261,7 @@ class controller extends baseController {
 }
 
 type getTemplateProp = {
+  locale: string
   slug:
     | 'allPages'
     | 'blog'

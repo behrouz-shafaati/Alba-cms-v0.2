@@ -6,10 +6,14 @@ import { getSettingsAction } from '@/lib/features/settings/actions'
 
 interface PageProps {
   params: Promise<{ id: string }>
+  searchParams: {
+    locale?: string
+  }
 }
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params, searchParams }: PageProps) {
   const resolvedParams = await params
   const { id } = resolvedParams
+  const resolvedSearchParams = await searchParams
   let page = null,
     allTemplates,
     allCategories,
@@ -41,9 +45,13 @@ export default async function Page({ params }: PageProps) {
     ])
   }
 
+  const localedFallback = settings.language?.siteDefault
+  const locale = resolvedSearchParams.locale ?? localedFallback
+  console.log('#2866 locale in server page:', locale)
   return (
     <>
       <Form
+        key={locale}
         settings={settings}
         initialData={page}
         allCategories={allCategories.data}

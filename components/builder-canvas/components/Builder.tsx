@@ -153,7 +153,6 @@ export default function Builder({
       formRef.current.requestSubmit() // بهترین راه
     }
   }
-  console.log('$2376 content:', content)
   return (
     <>
       <style id="445588">{generateResponsiveCSS(content)}</style>

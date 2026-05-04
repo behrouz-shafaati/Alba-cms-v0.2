@@ -19,18 +19,11 @@ type BuilderPageProp = {
   locale: string
 }
 
-const defaultInitialValue = {
-  title: '',
-  type: 'page',
-  status: 'published',
-  rows: [],
-}
-
 export default function BuilderPage({
   pageId,
   settings,
   title = 'صفحه ساز',
-  initialContent = defaultInitialValue,
+  initialContent,
   name = 'contentJson',
   submitFormHandler,
   allTemplates,

@@ -161,7 +161,7 @@ export async function updatePage(
     const params = await sanitizePageData(validatedFields, id)
 
     cleanedParams = await generateUniquePageSlug(params, id)
-    console.log('#cleanedParams in update:', cleanedParams)
+    console.log('#2345435 cleanedParams in update:', cleanedParams)
     let varRevalidatePath = [`/${cleanedParams?.slug || params.slug}`]
     // if is home page so revalidate home page
     const settings = await settingsCtrl.findOne({
@@ -198,13 +198,12 @@ export async function updatePage(
   return {
     message: 'بروزرسانی با موفقیت انجام شد',
     success: true,
-    values: { ...updatedPage, translation: cleanedParams?.translations[0] },
+    values: { ...updatedPage, translation: { content } },
   }
 }
 
 /**
- *
- * @param id pageId
+ * @param id page id
  * @param from origin locale content
  * @param to destinition locale
  * @returns void

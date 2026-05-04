@@ -50,7 +50,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   const localedFallback = settings.language?.siteDefault
   const locale = resolvedSearchParams.locale ?? localedFallback
-  console.log('#239845766 locale in server page:', locale)
+
   return (
     <>
       <PageForm

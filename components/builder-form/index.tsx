@@ -5,6 +5,8 @@ import SettingsPanel from './SettingsPanel'
 import { blockRegistry } from './registry/blockRegistry'
 
 type BuilderPageProp = {
+  formId: string
+  settings: any
   title?: string
   name: string
   submitFormHandler: (prevState: any, formData: FormData) => Promise<any>
@@ -13,6 +15,8 @@ type BuilderPageProp = {
 }
 
 export default function BuilderForm({
+  formId,
+  settings,
   title = 'فرم ساز',
   initialContent,
   name = 'contentJson',
@@ -23,7 +27,14 @@ export default function BuilderForm({
     <BuilderCanvas
       title={title}
       name={name}
-      settingsPanel={<SettingsPanel />}
+      Header={null}
+      SettingsPanel={
+        <SettingsPanel
+          formId={formId}
+          siteSettings={settings}
+          locale={locale}
+        />
+      }
       submitFormHandler={submitFormHandler}
       initialContent={{ ...initialContent }}
       newBlocks={blockRegistry}

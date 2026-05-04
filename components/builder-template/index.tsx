@@ -8,6 +8,8 @@ import { blockRegistry as pageBlockregistry } from '../builder-page/registry/blo
 import { Template } from '@/lib/features/template/interface'
 
 type BuilderPageProp = {
+  templateId: string
+  settings: any
   title?: string
   name: string
   submitFormHandler: (prevState: any, formData: FormData) => Promise<any>
@@ -18,6 +20,8 @@ type BuilderPageProp = {
 }
 
 export default function BuilderTemplate({
+  templateId,
+  settings,
   title = 'قالب ساز',
   initialContent,
   name = 'contentJson',
@@ -26,15 +30,18 @@ export default function BuilderTemplate({
   allCategories,
   locale,
 }: BuilderPageProp) {
-  console.log('#0000 initialContent:', initialContent)
   return (
     <BuilderCanvas
       title={title}
       name={name}
-      settingsPanel={
+      Header={null}
+      SettingsPanel={
         <SettingsPanel
+          templateId={templateId}
+          siteSettings={settings}
           allCategories={allCategories}
           allTemplates={allTemplates}
+          locale={locale}
         />
       }
       submitFormHandler={submitFormHandler}

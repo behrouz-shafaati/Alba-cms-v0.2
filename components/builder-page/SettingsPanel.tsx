@@ -25,7 +25,7 @@ function SettingsPanel({
   locale,
 }: SettingsPanelProp) {
   const { update, getJson } = useBuilderStore()
-  const document = JSON.parse(getJson())
+  // const document = JSON.parse(getJson())
   const debouncedUpdate = useDebouncedCallback(
     (id, key, form) => update(id, key, form),
     400,
@@ -50,7 +50,6 @@ function SettingsPanel({
   return (
     <>
       <ContentLanguageTabs settings={siteSettings} clone={clone} />
-      {/* <input type="text" name="lang" className="hidden" value="fa" readOnly /> */}
       <Text
         title="عنوان"
         name="title"

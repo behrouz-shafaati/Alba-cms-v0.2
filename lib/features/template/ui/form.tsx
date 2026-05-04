@@ -17,6 +17,8 @@ import AccessDenied from '@/components/other/access-denied'
 import authorize from '@/lib/utils/authorize'
 import { toast } from 'sonner'
 import { Option } from '@/lib/types'
+import getTranslation from '@/lib/utils/getTranslation'
+import { PageTranslationSchema } from '../../page/interface'
 
 export const IMG_MAX_LIMIT = 3 //MB
 
@@ -37,7 +39,7 @@ const defaultInitialValue = {
 export const Form: React.FC<TemplateFormProps> = ({
   allTemplates,
   allCategories,
-  initialData: Template,
+  initialData: template,
   settings,
 }) => {
   const searchParams = useSearchParams()
@@ -47,34 +49,41 @@ export const Form: React.FC<TemplateFormProps> = ({
   const canCreate = authorize(userRoles, 'template.create')
   const canEdit = authorize(
     userRoles,
-    Template?.user !== user?.id ? 'template.edit.any' : 'template.edit.own',
+    template?.user !== user?.id ? 'template.edit.any' : 'template.edit.own',
   )
-  const [defaultValue, setDefaultValue] = useState(defaultInitialValue)
-  const [templateFor, setTemplateFor] = useState<string | null>(null)
-  const [showTemplateBuilder, setShowTemplateBuilder] = useState(!!Template)
-  const initialState = { message: null, errors: {} }
-  const actionHandler = Template
-    ? updateTemplate.bind(null, String(Template.id))
-    : createTemplate
-  const [state, dispatch] = useActionState(actionHandler as any, initialState)
-  const roleOptions: Option[] = roleCtrl.getRoles().map((role) => ({
-    label: role.title,
-    value: role.slug,
-  }))
 
   const localedFallback = settings.language?.siteDefault
 
   const locale = searchParams.get('locale') ?? localedFallback
 
-  const params = useParams()
+  const translation: PageTranslationSchema = getTranslation({
+    translations: template?.translations,
+    locale,
+  })
+  const initialActionState = {
+    message: null,
+    errors: {},
+    values: { ...template, translation },
+  }
+
+  const [defaultValue, setDefaultValue] = useState(defaultInitialValue)
+  const [templateFor, setTemplateFor] = useState<string | null>(null)
+  const [showTemplateBuilder, setShowTemplateBuilder] = useState(!!template)
+  const actionHandler = template
+    ? updateTemplate.bind(null, String(template.id))
+    : createTemplate
+  const [state, dispatch] = useActionState(
+    actionHandler as any,
+    initialActionState,
+  )
+  const roleOptions: Option[] = roleCtrl.getRoles().map((role) => ({
+    label: role.title,
+    value: role.slug,
+  }))
+
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [imgLoading, setImgLoading] = useState(false)
-  const title = Template ? 'ویرایش قالب' : 'افزودن قالب'
-  const description = Template ? 'ویرایش قالب' : 'افزودن قالب'
-  const toastMessage = Template ? 'قالب بروزرسانی شد' : 'قالب اضافه شد'
-  const action = Template ? 'ذخیره تغییرات' : 'ذخیره'
 
   const handleTemplateConfirm = (section: string) => {
     console.log('✅ کاربر انتخاب کرد:', section)
@@ -87,7 +96,7 @@ export const Form: React.FC<TemplateFormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true)
-      deleteTemplatesAction([String(Template?.id)])
+      deleteTemplatesAction([String(template?.id)])
       router.replace('/dashboard/templates')
     } catch (error: any) {}
   }
@@ -111,7 +120,7 @@ export const Form: React.FC<TemplateFormProps> = ({
       />
       {/* <div className="flex items-center justify-between">
         {/* <Heading title={title} description={description} /> * /}
-        {Template && (
+        {template && (
           <Button
             disabled={loading}
             variant="destructive"
@@ -131,16 +140,18 @@ export const Form: React.FC<TemplateFormProps> = ({
       )}
       {showTemplateBuilder && (
         <BuilderTemplate
+          templateId={template?.id}
+          settings={settings}
           title="قالب ساز"
           name="contentJson"
           submitFormHandler={dispatch}
           allTemplates={allTemplates}
           allCategories={allCategories}
-          {...(Template
+          {...(template || state?.values?.translation?.content
             ? {
                 initialContent: {
-                  ...Template.content,
-                  status: Template.status,
+                  ...state?.values?.translation?.content,
+                  status: state?.values?.status,
                 },
               }
             : { initialContent: defaultValue })}

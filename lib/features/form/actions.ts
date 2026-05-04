@@ -197,6 +197,68 @@ export async function updateForm(
   }
 }
 
+/**
+ * @param id form id
+ * @param from origin locale content
+ * @param to destinition locale
+ * @returns void
+ */
+export async function cloneFormAction(
+  formId: string,
+  from: string,
+  to: string,
+) {
+  try {
+    const user = (await getSession())?.user as User
+    const prevForm = await formCtrl.findById({ id: formId })
+    authorize(
+      user.roles,
+      prevForm.user !== user.id ? 'form.edit.any' : 'form.edit.own',
+    )
+
+    // let varRevalidatePath = [`/${prevPage.slug}`]
+    // // if is home page so revalidate home page
+    // const settings = await settingsCtrl.findOne({
+    //   filters: { type: 'site-settings' },
+    // })
+    // if (settings?.id === formId) varRevalidatePath = [...varRevalidatePath, '/']
+
+    const originContent = prevForm.translations.find((t) => t.locale == from)
+    const newPage = {
+      ...prevForm,
+      translations: [
+        ...prevForm.translations.filter((t) => t.locale != to),
+        {
+          ...originContent,
+          locale: to,
+        },
+      ],
+    }
+    const updatedPage = await formCtrl.findOneAndUpdate({
+      filters: formId,
+      params: newPage,
+    })
+
+    // const pathes = await revalidatePathCtrl.getAllPathesNeedRevalidate({
+    //   feature: 'form',
+    //   slug: [...varRevalidatePath, '/dashboard/pages'],
+    // })
+
+    // for (const slug of pathes) {
+    //   // این تابع باید یا در همین فایل سرور اکشن یا از طریق api فراخوانی شود. پس محلش نباید تغییر کند.
+    //   revalidatePath(slug)
+    // }
+  } catch (error: any) {
+    if (process.env.NODE_ENV === 'development') throw error
+    console.log('Error in update page:', error)
+    return { message: 'خطای پایگاه داده: بروزرسانی برگه ناموفق بود.' }
+  }
+  return {
+    message: 'بروزرسانی با موفقیت انجام شد',
+    success: true,
+  }
+}
+
 export async function deleteFormAction(ids: string[]) {
   try {
     const user = (await getSession())?.user as User

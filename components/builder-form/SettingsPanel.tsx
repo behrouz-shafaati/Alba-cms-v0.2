@@ -4,12 +4,18 @@ import { useDebouncedCallback } from 'use-debounce'
 import Select from '../input/select'
 import { useBuilderStore } from '../builder-canvas/store/useBuilderStore'
 import TextArea from '../input/textArea'
+import { cloneFormAction } from '@/lib/features/form/actions'
+import { ContentLanguageTabs } from '../input/ContentLanguageTabs'
 
-type SettingsPanelProp = {}
+type SettingsPanelProp = {
+  formId: string
+  siteSettings: any
+  locale: string
+}
 
-function SettingsPanel({}: SettingsPanelProp) {
+function SettingsPanel({ formId, siteSettings, locale }: SettingsPanelProp) {
   const { update, getJson } = useBuilderStore()
-  const document = JSON.parse(getJson())
+  // const document = JSON.parse(getJson())
   const debouncedUpdate = useDebouncedCallback(
     (id, key, form) => update(id, key, form),
     400,
@@ -25,8 +31,15 @@ function SettingsPanel({}: SettingsPanelProp) {
       value: 'deactive',
     },
   ]
+
+  const clone = async (from: string, to: string) => {
+    const result = await cloneFormAction(formId, from, to)
+    if (result?.success) window.location.reload()
+  }
+
   return (
     <>
+      <ContentLanguageTabs settings={siteSettings} clone={clone} />
       <Text
         title="عنوان فرم"
         name="title"

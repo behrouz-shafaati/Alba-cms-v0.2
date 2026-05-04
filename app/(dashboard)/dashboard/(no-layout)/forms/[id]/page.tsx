@@ -1,14 +1,19 @@
 import { notFound } from 'next/navigation'
 import { Form } from '@/lib/features/form/ui/form'
-import templatePartCtrl from '@/lib/features/form/controller'
+import formCtrl from '@/lib/features/form/controller'
 import { getSettingsAction } from '@/lib/features/settings/actions'
 
 interface PageProps {
   params: Promise<{ id: string }>
+  searchParams: {
+    locale?: string
+  }
 }
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params, searchParams }: PageProps) {
   const resolvedParams = await params
   const { id } = resolvedParams
+  const resolvedSearchParams = await searchParams
+
   let settings,
     page = null
   let pageBreadCrumb = {
@@ -18,7 +23,7 @@ export default async function Page({ params }: PageProps) {
   if (id !== 'create') {
     ;[settings, page] = await Promise.all([
       getSettingsAction(),
-      templatePartCtrl.findById({ id }),
+      formCtrl.findById({ id }),
     ])
 
     if (!page) {
@@ -31,9 +36,12 @@ export default async function Page({ params }: PageProps) {
   } else {
     ;[settings] = await Promise.all([getSettingsAction()])
   }
+
+  const localedFallback = settings.language?.siteDefault
+  const locale = resolvedSearchParams.locale ?? localedFallback
   return (
     <>
-      <Form initialData={page} settings={settings} />
+      <Form key={locale} initialData={page} settings={settings} />
     </>
   )
 }

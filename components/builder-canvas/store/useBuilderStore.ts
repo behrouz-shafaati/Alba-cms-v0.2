@@ -252,6 +252,11 @@ export const useBuilderStore = create<State>((set, get) => ({
               ...node,
               rows: node.rows.map(recurse).filter(Boolean), // حذف null
             }
+          case 'template':
+            return {
+              ...node,
+              rows: node.rows.map(recurse).filter(Boolean), // حذف null
+            }
 
           case 'row':
             return {
