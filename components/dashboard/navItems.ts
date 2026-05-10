@@ -191,17 +191,17 @@ export default function getNavItems({ locale, dictionary }: Props) {
       ],
     },
     {
-      slug: 'section',
-      title: t?.feature?.section?.title || 'Sections',
-      href: '/dashboard/sections',
+      slug: 'templateSegment',
+      title: t?.feature?.templateSegment?.title || 'Template Segment',
+      href: '/dashboard/templateSegments',
       icon: 'Layers',
       label: '',
       authorized: ['template.view.any', 'template.view.own'],
       sub: [
         {
           slug: 'createSection',
-          title: t?.feature?.section?.create || 'Add section',
-          href: '/dashboard/sections/create',
+          title: t?.feature?.templateSegment?.create || 'Add Segment',
+          href: '/dashboard/templateSegments/create',
           icon: 'Plus',
           label: '',
           authorized: ['template.create'],

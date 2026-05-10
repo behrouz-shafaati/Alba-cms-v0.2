@@ -1,8 +1,8 @@
 import { DataTable } from '@/components/other/ui/data-table'
 import { Heading } from '@/components/other/ui/heading'
 import { LinkButton } from '@/components/other/ui/link-button'
-import templatePartCtrl from '@/lib/features/section/controller'
-import { Section } from '@/lib/features/section/interface'
+import templateSegmentCtrl from '@/lib/features/templateSegment/controller'
+import { Section } from '@/lib/features/templateSegment/interface'
 import { Plus } from 'lucide-react'
 import { columns } from './columns'
 import { QueryResponse } from '@/lib/features/core/interface'
@@ -26,7 +26,7 @@ export default async function SectionTable({
     filters = { ...filters, user: user.id }
   }
   const canCreate = authorize(user.roles, 'template.create', false)
-  const findResult: QueryResponse<Section> = await templatePartCtrl.find({
+  const findResult: QueryResponse<Section> = await templateSegmentCtrl.find({
     filters,
     pagination: { page, perPage: 6 },
   })
@@ -41,7 +41,7 @@ export default async function SectionTable({
         {canCreate && (
           <LinkButton
             className="text-xs md:text-sm"
-            href="/dashboard/sections/create"
+            href="/dashboard/templateSegments/create"
           >
             <Plus className="ml-2 h-4 w-4" /> افزودن قطعه قالب
           </LinkButton>

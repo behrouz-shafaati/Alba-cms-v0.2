@@ -7,11 +7,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Section } from '@/lib/features/section/interface'
+import { Section } from '@/lib/features/templateSegment/interface'
 import { Edit, MoreHorizontal, Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { deleteSectionAction } from '../../actions'
+import { deleteTemplateSegmentAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
 import authorize from '@/lib/utils/authorize'
 
@@ -38,7 +38,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   const onConfirm = async () => {
     setLoading(true)
-    deleteSectionAction([data.id])
+    deleteTemplateSegmentAction([data.id])
     router.refresh()
     setOpen(false)
     setLoading(false)
@@ -66,7 +66,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
           {canEdit && (
             <DropdownMenuItem
-              onClick={() => router.push(`/dashboard/sections/${data.id}`)}
+              onClick={() =>
+                router.push(`/dashboard/templateSegments/${data.id}`)
+              }
             >
               <Edit className="ml-2 h-4 w-4" /> بروزرسانی
             </DropdownMenuItem>

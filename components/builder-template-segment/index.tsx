@@ -3,24 +3,36 @@ import SettingsPanel from './SettingsPanel'
 import { blockRegistry } from './registry/blockRegistry'
 
 type BuilderHeadreProps = {
+  templateSegmentId: string
+  settings: any
   name: string
   submitFormHandler: (prevState: any, formData: FormData) => Promise<any>
   initialContent?: any
   locale: string
 }
 
-const BuilderTemplatePart = ({
+const BuilderTemplateSegment = ({
+  templateSegmentId,
+  settings,
   name = 'contentJson',
   submitFormHandler,
   initialContent,
   locale,
 }: BuilderHeadreProps) => {
+  console.log('#234 initialContent in BuilderTemplateSegment:', initialContent)
   return (
     <BuilderCanvas
-      title="سربرگ ساز"
+      title="قطعه قالب ساز"
       name={name}
+      Header={null}
       initialContent={initialContent}
-      settingsPanel={<SettingsPanel />}
+      SettingsPanel={
+        <SettingsPanel
+          templateSegmentId={templateSegmentId}
+          siteSettings={settings}
+          locale={locale}
+        />
+      }
       submitFormHandler={submitFormHandler}
       newBlocks={blockRegistry}
       locale={locale}
@@ -28,4 +40,4 @@ const BuilderTemplatePart = ({
   )
 }
 
-export default BuilderTemplatePart
+export default BuilderTemplateSegment

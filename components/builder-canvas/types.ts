@@ -48,7 +48,7 @@ export type Block = {
     | 'form'
     | 'product'
     | 'custom'
-    | 'templatePart'
+    | 'templateSegment'
     | 'button'
     | 'adSlot'
     | 'internalSection'
@@ -103,9 +103,9 @@ export type BlockDefinitionType<
   /**
    * In all canves expect
    */
-  notTemplateFor?: Array<'form' | 'page' | 'templatePart' | 'template'>
+  notTemplateFor?: Array<'form' | 'page' | 'templateSegment' | 'template'>
   /**
    * Just in canves
    */
-  templateFor?: Array<'form' | 'page' | 'templatePart' | 'template'>
+  templateFor?: Array<'form' | 'page' | 'templateSegment' | 'template'>
 }

@@ -5,7 +5,7 @@ import { templateBlockDefaults } from './defaultSettings'
 import { ContentEditor } from './ContentEditor'
 
 export const SectionBlockDef = {
-  type: 'templatePart',
+  type: 'templateSegment',
   label: 'قطعه قالب',
   showInBlocksList: true,
   Renderer: TemplateBlock,

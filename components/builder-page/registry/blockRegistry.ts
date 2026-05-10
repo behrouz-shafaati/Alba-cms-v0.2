@@ -3,7 +3,7 @@
 import { SectionBlockDef } from '../blocks/template-part'
 
 export const blockRegistry = {
-  templatePart: SectionBlockDef,
+  templateSegment: SectionBlockDef,
   // ...
 }
 

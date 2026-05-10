@@ -1,5 +1,5 @@
 import { BreadCrumb } from '@/components/other/breadcrumb'
-import Table from '@/lib/features/section/ui/table'
+import Table from '@/lib/features/templateSegment/ui/table'
 const breadcrumbItems = [{ title: 'سربرگ ها', link: '/dashboard/pages' }]
 
 interface Props {

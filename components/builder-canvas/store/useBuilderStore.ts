@@ -170,7 +170,11 @@ export const useBuilderStore = create<State>((set, get) => ({
       }
 
       // otherwise traverse children
-      if (node.type === 'page' || node.type === 'template') {
+      if (
+        node.type === 'page' ||
+        node.type === 'template' ||
+        node.type === 'templateSegment'
+      ) {
         return {
           ...node,
           rows: node.rows.map(recurse),
@@ -247,11 +251,8 @@ export const useBuilderStore = create<State>((set, get) => ({
 
         // هر نوع node را جدا بررسی می‌کنیم
         switch (node.type) {
+          case 'templateSegment':
           case 'page':
-            return {
-              ...node,
-              rows: node.rows.map(recurse).filter(Boolean), // حذف null
-            }
           case 'template':
             return {
               ...node,

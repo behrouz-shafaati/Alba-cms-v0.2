@@ -3,7 +3,7 @@ import { AlertModal } from '@/components/other/modal/alert-modal'
 import { Button } from '@/components/ui/button'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
-import { deleteSectionAction } from '../../actions'
+import { deleteTemplateSegmentAction } from '../../actions'
 import { useRouter } from 'next/navigation'
 import { useSession } from '@/components/context/SessionContext'
 import authorize from '@/lib/utils/authorize'
@@ -34,7 +34,7 @@ export default function GroupAction({ table, items }: GroupActionProps) {
   const onDelete = async () => {
     try {
       setLoading(true)
-      await deleteSectionAction(items.map((i) => i.id))
+      await deleteTemplateSegmentAction(items.map((i) => i.id))
       router.refresh()
       table.resetRowSelection()
       setOpen(false)

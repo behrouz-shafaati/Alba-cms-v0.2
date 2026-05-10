@@ -3,9 +3,9 @@
 
 import { useBuilderStore } from '@/components/builder-canvas/store/useBuilderStore'
 import Combobox from '@/components/input/combobox'
-import { getAllSections } from '@/lib/features/section/actions'
-import { Template } from '@/features/template/interface'
-import { Option } from '@/types'
+import { getAllTemplateSegments } from '@/lib/features/templateSegment/actions'
+import { Template } from '@/lib/features/template/interface'
+import { Option } from '@/lib/types'
 import { useEffect, useState } from 'react'
 
 type Props = {
@@ -19,7 +19,7 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [allTemplates] = await Promise.all([getAllSections()])
+      const [allTemplates] = await Promise.all([getAllTemplateSegments()])
       const templateOptions: Option[] = allTemplates.data.map(
         (template: Template) => ({
           value: String(template.id),

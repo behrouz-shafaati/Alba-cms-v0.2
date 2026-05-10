@@ -5,7 +5,7 @@ import SettingsPanel from './SettingsPanel'
 import { Category } from '@/lib/features/category/interface'
 import { blockRegistry } from './registry/blockRegistry'
 import Header from './Header'
-// import { blockRegistry as templatePartBlockregistry } from '../builder-template-part/registry/blockRegistry'
+// import { blockRegistry as templateSegmentBlockregistry } from '../builder-template-part/registry/blockRegistry'
 
 type BuilderPageProp = {
   pageId: string
@@ -48,7 +48,7 @@ export default function BuilderPage({
       initialContent={initialContent}
       newBlocks={{ ...blockRegistry }}
       locale={locale}
-      // newBlocks={{ ...blockRegistry, ...templatePartBlockregistry }}
+      // newBlocks={{ ...blockRegistry, ...templateSegmentBlockregistry }}
     />
   )
 }

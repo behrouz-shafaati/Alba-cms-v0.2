@@ -2,7 +2,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { CellAction } from './cell-action'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Section } from '@/lib/features/section/interface'
+import { Section } from '@/lib/features/templateSegment/interface'
 import { Status } from '@/components/other/Status'
 
 export const columns: ColumnDef<Section>[] = [

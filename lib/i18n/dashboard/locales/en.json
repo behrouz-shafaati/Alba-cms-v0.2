@@ -200,7 +200,10 @@
       }
     },
     "template": { "title": "Templates", "create": "Add template" },
-    "section": { "title": "Sections", "create": "Add section" },
+    "templateSegment": {
+      "title": "Template segments",
+      "create": "Add segment"
+    },
     "setting": {
       "title": "Settings",
       "success": "Settings saved successfully.",

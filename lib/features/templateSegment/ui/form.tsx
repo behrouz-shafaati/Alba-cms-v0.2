@@ -1,10 +1,14 @@
 'use client'
 import { useActionState, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { createForm, deleteFormAction, updateForm } from '../actions'
+import {
+  createTemplateSegment,
+  deleteTemplateSegmentAction,
+  updateTemplateSegment,
+} from '../actions'
 import { AlertModal } from '@/components/other/modal/alert-modal'
-import BuilderForm from '@/components/builder-form'
-import { Form as FormType, FromTranslation } from '../interface'
+import BuilderTemplateSegment from '@/components/builder-template-segment'
+import { Section, TemplateSegmentTranslation } from '../interface'
 import { useSession } from '@/components/context/SessionContext'
 import AccessDenied from '@/components/other/access-denied'
 import authorize from '@/lib/utils/authorize'
@@ -13,58 +17,74 @@ import getTranslation from '@/lib/utils/getTranslation'
 
 export const IMG_MAX_LIMIT = 3
 
-interface FormProps {
-  initialData: FormType | null
+interface SectionFormProps {
+  initialData: Section | null
   settings: any
 }
 
-export const Form: React.FC<FormProps> = ({ initialData: form, settings }) => {
+export const Form: React.FC<SectionFormProps> = ({
+  initialData: templateSegment,
+  settings,
+}) => {
   const searchParams = useSearchParams()
   const { user } = useSession()
   const userRoles = user?.roles || []
 
-  const canCreate = authorize(userRoles, 'form.create')
+  const canCreate = authorize(userRoles, 'template.create')
   const canEdit = authorize(
     userRoles,
-    form?.user !== user?.id ? 'form.edit.any' : 'form.edit.own',
+    templateSegment?.user !== user?.id
+      ? 'template.edit.any'
+      : 'template.edit.own',
   )
 
   const localedFallback = settings.language?.siteDefault
 
   const locale = searchParams.get('locale') ?? localedFallback
-  const translation: FromTranslation = getTranslation({
-    translations: form?.translations,
+  const translation: TemplateSegmentTranslation = getTranslation({
+    translations: templateSegment?.translations,
     locale,
   })
+
+  console.log('#234098 locale:', locale)
+
   const initialState = {
     message: null,
     errors: {},
-    values: { ...form, translation },
+    values: { ...templateSegment, translation },
   }
 
-  const actionHandler = form
-    ? updateForm.bind(null, String(form.id))
-    : createForm
+  const actionHandler = templateSegment
+    ? updateTemplateSegment.bind(null, String(templateSegment.id))
+    : createTemplateSegment
   const [state, dispatch] = useActionState(actionHandler as any, initialState)
 
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const defaultInitialValue = {
+    title: '',
+    type: 'templateSegment',
+    status: 'active',
+    rows: [],
+  }
+
   const onDelete = async () => {
     try {
       setLoading(true)
-      deleteFormAction([String(form?.id)])
-      router.replace('/dashboard/forms')
+      deleteTemplateSegmentAction([String(templateSegment?.id)])
+      router.replace('/dashboard/templateSegments')
     } catch (error: any) {}
   }
 
   useEffect(() => {
+    console.log('#299 templateSegment state:', state)
     if (state?.message && state.message !== null)
       if (state?.success) toast.success(state.message)
       else toast.error(state.message)
     if (state?.success && state?.isCreatedJustNow) {
-      router.replace(`/dashboard/forms/${state?.values?.id}`)
+      router.replace(`/dashboard/templateSegments/${state?.values?.id}`)
     }
   }, [state])
   if (!canCreate && !canEdit) return <AccessDenied />
@@ -76,21 +96,19 @@ export const Form: React.FC<FormProps> = ({ initialData: form, settings }) => {
         onConfirm={onDelete}
         loading={loading}
       />
-      <BuilderForm
-        formId={form?.id}
+      <BuilderTemplateSegment
+        templateSegmentId={templateSegment?.id}
         settings={settings}
-        title="فرم ساز"
         name="contentJson"
         submitFormHandler={dispatch}
-        {...(form || state?.values?.translation?.content
+        {...(templateSegment || state?.values?.translation?.content
           ? {
               initialContent: {
                 ...state?.values?.translation?.content,
               },
             }
           : {
-              // initialContent: { type: 'form', templateFor: ['form'], rows: [] },
-              initialContent: { type: 'form', rows: [] },
+              initialContent: defaultInitialValue,
             })}
         locale={locale}
       />

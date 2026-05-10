@@ -2,13 +2,13 @@
 import React from 'react'
 import { Block } from '../../../builder-canvas/types'
 import { Section } from './Template'
-import { getSection } from '@/lib/features/section/actions'
+import { getTemplateSegment } from '@/lib/features/templateSegment/actions'
 
 type Props = {
   widgetName: string
   blockData: {
     id: string
-    type: 'templatePart'
+    type: 'templateSegment'
     content: {
       templateId: string
     }
@@ -26,7 +26,9 @@ export default async function TemplateBlock({
   ...props
 }: Props) {
   const { content } = blockData
-  const [template] = await Promise.all([getSection(content?.templateId)])
+  const [template] = await Promise.all([
+    getTemplateSegment(content?.templateId),
+  ])
   return (
     <Section
       template={template}

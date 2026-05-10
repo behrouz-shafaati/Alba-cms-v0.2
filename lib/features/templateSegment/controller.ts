@@ -1,18 +1,17 @@
 import { Create, Id, QueryFind, Update } from '@/lib/features/core/interface'
 import baseController from '@/lib/features/core/controller'
-import templatePartSchema from './schema'
-import templatePartService from './service'
-import settingsCtrl from '../settings/controller'
+import templateSegmentSchema from './schema'
+import templateSegmentService from './service'
 
 class controller extends baseController {
   /**
    * constructor function for controller.
    *
    * @remarks
-   * This method is part of the templatePartController class extended of the main parent class baseController.
+   * This method is part of the templateSegmentController class extended of the main parent class baseController.
    *
-   * @param service - templatePartService
-   *templatePartCtrl
+   * @param service - templateSegmentService
+   *templateSegmentCtrl
    * @beta
    */
   constructor(service: any) {
@@ -71,7 +70,7 @@ class controller extends baseController {
   }
 }
 
-const templatePartCtrl = new controller(
-  new templatePartService(templatePartSchema),
+const templateSegmentCtrl = new controller(
+  new templateSegmentService(templateSegmentSchema),
 )
-export default templatePartCtrl
+export default templateSegmentCtrl

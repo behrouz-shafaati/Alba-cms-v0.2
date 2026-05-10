@@ -48,7 +48,7 @@ const RenderBlock = async ({
           </>
         )
     }
-    if (item.type === 'templatePart') {
+    if (item.type === 'templateSegment') {
       return (
         <>
           <Component

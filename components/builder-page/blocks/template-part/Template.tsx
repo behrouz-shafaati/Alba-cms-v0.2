@@ -10,7 +10,7 @@ type TemplateProps = {
   template: TemplateType
   blockData: {
     id: string
-    type: 'templatePart'
+    type: 'templateSegment'
     content: {
       templateId: string
     }

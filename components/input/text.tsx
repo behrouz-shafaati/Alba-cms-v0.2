@@ -48,6 +48,7 @@ export default function Text({
       </Label>
       <div className="relative">
         <Input
+          key={`${defaultValue}-${value}`}
           onChange={onChange}
           {...(value !== undefined ? { value } : {})}
           id={id || name}

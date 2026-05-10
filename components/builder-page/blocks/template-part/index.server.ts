@@ -1,5 +1,5 @@
 import TemplateBlock from './TemplateBlock'
 
-export const serverRendertemplatePartDef = {
+export const serverRendertemplateSegmentDef = {
   Renderer: TemplateBlock,
 }

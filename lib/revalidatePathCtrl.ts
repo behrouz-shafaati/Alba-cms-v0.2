@@ -9,7 +9,7 @@ export type RevalidatePathProp = {
     | 'postComment'
     | 'page'
     | 'template'
-    | 'templatePart'
+    | 'templateSegment'
     | 'menu'
     | 'settings'
     | 'tag'
@@ -76,7 +76,7 @@ class controller {
       case 'menu':
       case 'category':
       case 'template':
-      case 'templatePart':
+      case 'templateSegment':
       case 'form':
       case 'settings': {
         finalPathes = [...(await this.getAllPaths()), ...pathes]

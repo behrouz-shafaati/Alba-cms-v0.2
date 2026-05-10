@@ -2,15 +2,14 @@
 // کامپوننت نمایشی بلاک
 import React, { useEffect, useState } from 'react'
 import { Block } from '../../../builder-canvas/types'
-import { Section } from './Template'
-import { getSection } from '@/lib/features/section/actions'
+import { getTemplateSegment } from '@/lib/features/templateSegment/actions'
 import EmptyBlock from '@/components/builder-canvas/components/EmptyBlock'
 
 type TemplateBlockEditorProps = {
   widgetName: string
   blockData: {
     id: string
-    type: 'templatePart'
+    type: 'templateSegment'
     content: {
       templateId: string
     }
@@ -33,7 +32,9 @@ export default function TemplateBlockEditor({
   const { content } = blockData
   useEffect(() => {
     const fetchData = async () => {
-      const [template] = await Promise.all([getSection(content?.templateId)])
+      const [template] = await Promise.all([
+        getTemplateSegment(content?.templateId),
+      ])
       setTemplate(template)
     }
 

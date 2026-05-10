@@ -4,7 +4,7 @@ import {
   Row as TemplateRowComponent,
   Column as TemplateColumnComponent,
   Block as TemplateBlockComponent,
-} from '@/components/builder-section/types'
+} from '@/components/builder-template-segment/types'
 
 export type TemplateContent = TemplateContentComponent
 
