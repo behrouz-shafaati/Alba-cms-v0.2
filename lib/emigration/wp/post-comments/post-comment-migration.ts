@@ -47,7 +47,7 @@ export default class PostCommentMigration {
 
   constructor(
     connectionData: { baseUrl: string; apiKey: string },
-    options: MigrationOptions
+    options: MigrationOptions,
   ) {
     this.newBaseUrl = options.newBaseUrl
     this.oldDomain = connectionData.baseUrl.replace(/\/+$/, '')
@@ -86,7 +86,7 @@ export default class PostCommentMigration {
 
     // اضافه کردن failed ها برای retry
     const failedIds = await this.logService.getFailedWpIds(
-      this.options.maxRetries
+      this.options.maxRetries,
     )
 
     const idsToProcess = [...new Set([...pendingIds, ...failedIds])]
@@ -103,7 +103,7 @@ export default class PostCommentMigration {
         success,
         failed,
         skipped,
-        errors
+        errors,
       )
     }
 
@@ -112,7 +112,7 @@ export default class PostCommentMigration {
       const batchIds = idsToProcess.slice(i, i + this.options.batchSize)
       const batchNumber = Math.floor(i / this.options.batchSize) + 1
       const totalBatches = Math.ceil(
-        idsToProcess.length / this.options.batchSize
+        idsToProcess.length / this.options.batchSize,
       )
 
       // دریافت اطلاعات دیدگاه‌ها از WP
@@ -124,7 +124,7 @@ export default class PostCommentMigration {
           if (this.options.verbose) {
             process.stdout.write(`\r  دریافت از WP: ${completed}/${total}`)
           }
-        }
+        },
       )
 
       if (this.options.verbose) {
@@ -139,7 +139,7 @@ export default class PostCommentMigration {
 
           // مهاجرت دیدگاه
           console.log(
-            `start post migrate with id ${wpPostComment?.wpId} and post_id ${wpPostComment?.post_wpId}`
+            `start post migrate with id ${wpPostComment?.wpId} and post_id ${wpPostComment?.post_wpId}`,
           )
           const result = await this.migrateOnePostComment(wpPostComment)
 
@@ -156,7 +156,7 @@ export default class PostCommentMigration {
         } else {
           await this.logService.logFailure(
             wpId,
-            postCommentOrError?.message || '_no_message_'
+            postCommentOrError?.message || '_no_message_',
           )
           errors.push({ wpId, error: postCommentOrError.message })
           failed++
@@ -171,7 +171,7 @@ export default class PostCommentMigration {
       success,
       failed,
       skipped,
-      errors
+      errors,
     )
     this.logger(result)
 
@@ -187,7 +187,7 @@ export default class PostCommentMigration {
     success: number,
     failed: number,
     skipped: number,
-    errors: Array<{ wpId: number; error: string }>
+    errors: Array<{ wpId: number; error: string }>,
   ): MigrationRunResult {
     const finishedAt = new Date()
     return {
@@ -206,7 +206,7 @@ export default class PostCommentMigration {
    * نگاشت وضعیت دیدگاه‌ از وردپرس به Alba
    */
   mapToAlbaPostCommentStatus(
-    wpPostCommentStatus: WpPostCommentStatus
+    wpPostCommentStatus: WpPostCommentStatus,
   ): PostCommentStatus {
     const mapping: Record<WpPostCommentStatus, PostCommentStatus> = {
       approved: 'approved',
@@ -220,7 +220,7 @@ export default class PostCommentMigration {
    * بررسی وجود postComment در MongoDB
    */
   private async checkExisting(
-    wpPostComment: WpPostComment
+    wpPostComment: WpPostComment,
   ): Promise<{ exists: boolean; mongoId?: string; reason?: string }> {
     // بررسی با wpId (اگر قبلاً منتقل شده)
     const byWpId = await postCommentCtrl.findOne({
@@ -242,7 +242,7 @@ export default class PostCommentMigration {
    */
   // example input :
   private async transformWpPostComment(
-    wpPostComment: WpPostComment
+    wpPostComment: WpPostComment,
   ): Promise<Partial<PostComment | null>> {
     const postStatus = this.mapToAlbaPostCommentStatus(wpPostComment.status)
     const imageMigeration = new WPImageMigrationHelper()
@@ -265,7 +265,7 @@ export default class PostCommentMigration {
     if (contentJson.success && this.newBaseUrl != '') {
       contentJson = replaceLinksInDocument(
         contentJson.document,
-        linkReplacerConfig
+        linkReplacerConfig,
       )
     }
     // console.log('# html constnet before conver: ', contentJson)
@@ -299,12 +299,12 @@ export default class PostCommentMigration {
 
     const excerpt = extractExcerptFromContentJson(
       JSON.stringify(contentJson),
-      50
+      50,
     )
 
     const translations = [
       {
-        lang: 'fa', // "fa", "en", "de", ...
+        locale: this.options.locale, // "fa", "en", "de", ...
         excerpt: excerpt || '',
         contentJson: JSON.stringify(contentJson) || {},
       },
@@ -333,7 +333,7 @@ export default class PostCommentMigration {
    * مهاجرت یک دیدگاه
    */
   private async migrateOnePostComment(
-    wpPostComment: WpPostComment
+    wpPostComment: WpPostComment,
   ): Promise<MigrationResult> {
     //   const metadata = this.buildMetadata(wpPostComment)
     const metadata = wpPostComment
@@ -346,7 +346,7 @@ export default class PostCommentMigration {
           await this.logService.logSkipped(
             wpPostComment.wpId,
             existing.reason || 'already exists',
-            wpPostComment
+            wpPostComment,
           )
           return {
             wpId: wpPostComment.wpId,
@@ -378,7 +378,7 @@ export default class PostCommentMigration {
         }
       }
       newPostComment = await postCommentCtrl.create({
-        params: { ...postPayload, locale: 'fa' },
+        params: postPayload,
       })
 
       const mongoId = newPostComment.id.toString()
@@ -397,7 +397,7 @@ export default class PostCommentMigration {
       await this.logService.logFailure(
         wpPostComment?.wpId,
         errorMessage,
-        metadata
+        metadata,
       )
 
       this.logger(`✗ Failed: ${wpPostComment.wpId} - ${errorMessage}`)

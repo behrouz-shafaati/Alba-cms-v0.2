@@ -9,6 +9,7 @@ import { getDirection } from '@/lib/i18n/utils/getDirection'
 import { ModeToggle } from '@/components/theme-mode-toggle/ModeToggle'
 import { LocaleProvider } from '@/components/context/locale-provider'
 import { SupportedLanguage } from '@/lib/types'
+import { Suspense } from 'react'
 
 // const geistSans = Geist({
 //   variable: '--font-geist-sans',
@@ -29,7 +30,7 @@ type Props = {
   children: React.ReactNode
   params: Promise<{ locale: string }>
 }
-export default async function Layout({ children, params }: Props) {
+const Layout_ = async ({ children, params }: Props) => {
   const { locale } = await params
   console.log('#234 locale:', locale)
   const resolvedLocale = (await resolveLocale({ locale })) as SupportedLanguage
@@ -38,7 +39,7 @@ export default async function Layout({ children, params }: Props) {
   return (
     <html lang={resolvedLocale} dir={dir}>
       <body>
-        <ServerProviders>
+        <ServerProviders locale={locale}>
           <main className=" ">
             <header className="p-2">
               <ModeToggle />
@@ -49,5 +50,13 @@ export default async function Layout({ children, params }: Props) {
         <Toaster />
       </body>
     </html>
+  )
+}
+
+export default async function Layout({ children, params }: Props) {
+  return (
+    <Suspense fallback="loading auth layout...">
+      <Layout_ params={params}>{children}</Layout_>
+    </Suspense>
   )
 }

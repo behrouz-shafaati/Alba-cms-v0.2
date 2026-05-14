@@ -9,10 +9,10 @@ import { combineClassNames } from '../builder-canvas/utils/styleUtils'
 
 type Props = {
   toc: HeadingItem[]
-  defaultOpen: boolean
-  accordion: boolean
-  title: string
-  activeTextColor: any
+  defaultOpen?: boolean
+  accordion?: boolean
+  title?: string
+  activeTextColor?: any
 }
 
 type Heading = {
@@ -22,12 +22,17 @@ type Heading = {
   children: Heading[]
 }
 
+type RenderTreeProps = {
+  items: HeadingItem[]
+  activeTextColor: any
+}
+
 // تابع استخراج id ها خارج از کامپوننت
 function getAllIds(items: Heading[]): string[] {
   return items.flatMap((item) => [item.id, ...getAllIds(item.children)])
 }
 
-function RenderTree(items: HeadingItem[], activeTextColor: any) {
+function RenderTree({ items, activeTextColor }: RenderTreeProps) {
   const [activeId, setActiveId] = useState<string>('')
 
   useEffect(() => {
@@ -61,7 +66,7 @@ function RenderTree(items: HeadingItem[], activeTextColor: any) {
 
   const renderHeading = (heading: Heading) => {
     const isActive = activeId === heading.id
-    const paddingLeft = `${(heading.level - 2) * 12}px`
+    const paddingInlineStart = `${(heading.level - 2) * 12}px`
     return (
       <div key={heading.id}>
         <Link
@@ -74,7 +79,7 @@ function RenderTree(items: HeadingItem[], activeTextColor: any) {
               : ''
           }`}
           style={{
-            paddingLeft,
+            paddingInlineStart,
             ...computedStyles({ textColor: activeTextColor }),
           }}
           onClick={(e) => {
@@ -159,13 +164,17 @@ export default function TableOfContents({
           transition: 'height 0.3s ease',
         }}
       >
-        <div className="p-4 pt-0">{RenderTree(toc, activeTextColor)}</div>
+        <div className="p-4 pt-0">
+          <RenderTree items={toc} activeTextColor={activeTextColor} />
+        </div>
       </div>
     </nav>
   ) : (
     <nav data-tabel-of-content>
       <span>{title}</span>
-      <div>{RenderTree(toc, activeTextColor)}</div>
+      <div>
+        <RenderTree items={toc} activeTextColor={activeTextColor} />
+      </div>
     </nav>
   )
 }

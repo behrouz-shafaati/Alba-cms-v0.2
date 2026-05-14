@@ -8,10 +8,7 @@ import {
   testWPConnectionAction,
 } from '../actions/user-migration-actions'
 import { decodeUnicodeMessage } from '@/lib/utils/decode-unicode'
-import {
-  startConvertHtymlToJson,
-  startTaxonomyMigration,
-} from '../actions/taxonomy-migration-actions'
+import { startTaxonomyMigration } from '../actions/taxonomy-migration-actions'
 import { startPostMigration } from '../posts/post-migration-actions'
 import { startPostCommentMigration } from '../post-comments/post-comment-migration-actions'
 import authorize from '@/lib/utils/authorize'
@@ -21,12 +18,17 @@ import Text from '@/components/input/text'
 import { LoadingButton as Button } from '@/components/ui/loading-button'
 import { FormActionState } from '@/lib/types'
 import { useLocale } from '@/hooks/useLocale'
+import { LANGUAGES } from '@/lib/i18n/languages'
+import Combobox from '@/components/input/combobox'
 
 interface SettingsFormProps {
   settings: Settings
 }
-
 export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
+  const { locales: siteLocales } = settings.language
+  const localeOptions = LANGUAGES.filter((locale) =>
+    siteLocales.includes(locale.value),
+  )
   const _t = useLocale()
   const t = _t.feature.setting.wpEmigration
   const { user } = useSession()
@@ -49,7 +51,6 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
 
     const result = await testWPConnectionAction(state, formData)
     setState(result)
-    console.log('handleTestConnection result :', result)
     setLoading(false)
   }
   const handleStartEmigration = async (e: React.FormEvent) => {
@@ -103,25 +104,6 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
     })
     setState((s) => ({ ...s, ...result }))
     console.log('handleStart post comments Emigration result :', result)
-    setLoading(false)
-  }
-
-  const handleTestHtmlToTipTap = async (e: React.FormEvent) => {
-    setLoading(true)
-    e.preventDefault()
-
-    const formData = new FormData(formRef.current!)
-    formData.append('newBaseUrl', window.location.origin)
-
-    const result = await startConvertHtymlToJson(formData)
-    setState((s) => ({ ...s, ...result }))
-
-    console.log('ConvertHtymlToJson result:', result)
-    console.log(
-      'ConvertHtymlToJson result jsonContent:',
-      JSON.parse(result?.data?.jsonContent)
-    )
-
     setLoading(false)
   }
 
@@ -179,6 +161,17 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
               state={state}
               icon={<Server className="w-4 h-4" />}
               description=""
+            />
+            <Combobox
+              title={t?.contentLanguage?.title || 'Content language'}
+              name="locale"
+              defaultValue={state?.values?.siteDefault || null}
+              options={localeOptions}
+              placeholder={
+                t?.siteDefacontentLanguageult?.placeholder ||
+                'Select your content language...'
+              }
+              state={state}
             />
           </div>
           <div className="flex flex-row gap-2">

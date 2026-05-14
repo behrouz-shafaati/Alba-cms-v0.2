@@ -320,6 +320,10 @@
           "title": "New site address",
           "description": "If you change the domain by filling in this field, the internal links will change to the new domain. If the domain is not going to change, leave this field blank."
         },
+        "contentLanguage": {
+          "title": "Content language",
+          "placeholder": "Select your content language..."
+        },
         "testBtn": "Connection test",
         "userBtn": "Starting user migration",
         "taxoBtn": "Taxonomy migration begins",

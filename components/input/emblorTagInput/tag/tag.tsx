@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from '../ui/button'
-import { cn } from '../utils'
+import { cn } from '@/lib/utils'
 import {
   TagInputProps,
   TagInputStyleClassesProps,
@@ -72,7 +72,7 @@ export const tagVariants = cva(
       animation: 'fadeIn',
       textStyle: 'normal',
     },
-  }
+  },
 )
 
 export type TagProps = {
@@ -129,7 +129,7 @@ export const Tag: React.FC<TagProps> = ({
           'cursor-pointer': draggable,
           'ring-ring ring-offset-2 ring-2 ring-offset-background': isActiveTag,
         },
-        tagClasses?.body
+        tagClasses?.body,
       )}
       onClick={() => onTagClick?.(tagObj)}
     >
@@ -144,7 +144,7 @@ export const Tag: React.FC<TagProps> = ({
         disabled={disabled}
         className={cn(
           `py-1 px-3 h-full hover:bg-transparent`,
-          tagClasses?.closeButton
+          tagClasses?.closeButton,
         )}
       >
         <svg

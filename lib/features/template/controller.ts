@@ -272,6 +272,7 @@ type getTemplateProp = {
     | 'author'
     | 'account'
     | 'search'
+    | 'author'
 }
 
 const templateCtrl = new controller(new templateService(templateSchema))

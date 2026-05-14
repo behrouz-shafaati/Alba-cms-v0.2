@@ -1,5 +1,5 @@
 import { BreadCrumb } from '@/components/other/breadcrumb'
-import React from 'react'
+import React, { Suspense } from 'react'
 import campaignCtrl from '@/lib/features/campaign/controller'
 import { notFound } from 'next/navigation'
 import { CampaignForm } from '@/lib/features/campaign/ui/campaign-form'
@@ -9,7 +9,8 @@ import categoryCtrl from '@/lib/features/category/controller'
 interface PageProps {
   params: Promise<{ id: string }>
 }
-export default async function Page({ params }: PageProps) {
+
+const Page_ = async ({ params }: PageProps) => {
   const locale = 'fa' //  from formData
   const resolvedParams = await params
   const { id } = resolvedParams
@@ -58,5 +59,13 @@ export default async function Page({ params }: PageProps) {
         />
       </div>
     </>
+  )
+}
+
+export default async function Page({ params }: PageProps) {
+  return (
+    <Suspense fallback="loading ad campain page...">
+      <Page_ params={params} />
+    </Suspense>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 // import { Command, CommandList, CommandItem, CommandGroup, CommandEmpty } from '../ui/command';
 import { TagInputStyleClassesProps, type Tag as TagType } from './tag-input'
-import { cn } from '../utils'
+import { cn } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
 
@@ -54,14 +54,14 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
     if (!triggerContainerRef.current || !triggerRef.current) return
     setPopoverContentTop(
       triggerContainerRef.current?.getBoundingClientRect().bottom -
-        triggerRef.current?.getBoundingClientRect().bottom
+        triggerRef.current?.getBoundingClientRect().bottom,
     )
   }, [tags])
 
   // Close the popover when clicking outside of it
   useEffect(() => {
     const handleOutsideClick = (
-      event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent
+      event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent,
     ) => {
       if (
         isPopoverOpen &&
@@ -96,7 +96,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
   const handleInputFocus = (
     event:
       | React.FocusEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLTextAreaElement>
+      | React.FocusEvent<HTMLTextAreaElement>,
   ) => {
     if (triggerContainerRef.current) {
       const { width } = triggerContainerRef.current.getBoundingClientRect()
@@ -117,7 +117,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
   const handleInputBlur = (
     event:
       | React.FocusEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLTextAreaElement>
+      | React.FocusEvent<HTMLTextAreaElement>,
   ) => {
     setInputFocused(false)
 
@@ -137,13 +137,13 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
       case 'ArrowUp':
         event.preventDefault()
         setSelectedIndex((prevIndex) =>
-          prevIndex <= 0 ? autocompleteOptions.length - 1 : prevIndex - 1
+          prevIndex <= 0 ? autocompleteOptions.length - 1 : prevIndex - 1,
         )
         break
       case 'ArrowDown':
         event.preventDefault()
         setSelectedIndex((prevIndex) =>
-          prevIndex === autocompleteOptions.length - 1 ? 0 : prevIndex + 1
+          prevIndex === autocompleteOptions.length - 1 ? 0 : prevIndex + 1,
         )
         break
       case 'Enter':
@@ -195,14 +195,14 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
       onFocus: handleInputFocus,
       onBlur: handleInputBlur,
       ref: inputRef,
-    }
+    },
   )
 
   return (
     <div
       className={cn(
         'flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground',
-        classStyleProps?.command
+        classStyleProps?.command,
       )}
     >
       <Popover
@@ -225,7 +225,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
               role="combobox"
               className={cn(
                 `hover:bg-transparent ${!inlineTags ? 'mr-auto' : ''}`,
-                classStyleProps?.popoverTrigger
+                classStyleProps?.popoverTrigger,
               )}
               onClick={() => {
                 setIsPopoverOpen(!isPopoverOpen)
@@ -269,7 +269,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
           <div
             className={cn(
               'max-h-[300px] overflow-y-auto overflow-x-hidden',
-              classStyleProps?.commandList
+              classStyleProps?.commandList,
             )}
             style={{
               minHeight: '68px',
@@ -282,7 +282,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
                 role="group"
                 className={cn(
                   'overflow-y-auto overflow-hidden p-1 text-foreground',
-                  classStyleProps?.commandGroup
+                  classStyleProps?.commandGroup,
                 )}
                 style={{
                   minHeight: '68px',
@@ -302,7 +302,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
                       className={cn(
                         'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent',
                         isSelected && 'bg-accent text-accent-foreground',
-                        classStyleProps?.commandItem
+                        classStyleProps?.commandItem,
                       )}
                       data-value={option.text}
                       onClick={() => toggleTag(option)}

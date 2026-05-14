@@ -144,6 +144,7 @@ export interface MigrationOptions {
   verbose: boolean
   maxRetries: number
   skipExisting: boolean
+  locale: string
 }
 
 // نتیجه مهاجرت یک کاربر

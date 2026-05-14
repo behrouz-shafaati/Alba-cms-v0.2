@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Category } from '@/lib/features/category/interface'
 import { Status } from '@/components/other/Status'
 import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import getTranslation from '@/lib/utils/getTranslation'
 
 export const getPostCategoryColumns = (
   dictionary: DashboardLocaleSchema,
@@ -32,7 +33,9 @@ export const getPostCategoryColumns = (
   {
     header: dictionary.feature.category.title,
     accessorFn: (row) => {
-      return row.translations?.find((t) => t.locale === locale)?.title ?? ''
+      return (
+        getTranslation({ translations: row.translations, locale })?.title ?? ''
+      )
     },
   },
   {

@@ -239,7 +239,7 @@ export async function getAllCategoriesSlimAction({
   locale = 'fa',
 }: {
   payload?: { filters: any }
-  locale?: 'fa'
+  locale?: string
 }) {
   const cacheKy = ['category', stableHash(payload), locale]
   try {

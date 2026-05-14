@@ -1,21 +1,24 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { User } from '@/features/user/interface'
-import { getTranslation } from '@/lib/utils'
+import { User } from '@/lib/features/user/interface'
 import { Post } from '../../interface'
-import Pagination from '@/components/ui/pagination'
 import PostHorizontalCard from '@/components/builder-canvas/shared-blocks/postList/designs/card/ArticalHorizontalCard'
+import getTranslation from '@/lib/utils/getTranslation'
+import Pagination from '@/components/other/ui/pagination'
 
 type Props = {
   user: User
+  locale: string
   postResult: {
     data: Post[]
     totalPages: number
   }
 }
 
-export default function AuthorPage({ user, postResult }: Props) {
-  const translation = getTranslation({ translations: user.translations })
-  console.log('dsfdf sdfpostResult', postResult)
+export default function DefaultAuthorPage({ user, postResult, locale }: Props) {
+  const translation = getTranslation({
+    translations: user.translations,
+    locale,
+  })
   const postItems = postResult.data.map((post) => {
     return (
       <PostHorizontalCard

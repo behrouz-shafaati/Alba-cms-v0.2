@@ -3,7 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { TagInputStyleClassesProps, type Tag as TagType } from './tag-input'
 import { TagList, TagListProps } from './tag-list'
 import { Button } from '../ui/button'
-import { cn } from '../utils'
+import { cn } from '@/lib/utils'
 
 type TagPopoverProps = {
   children: React.ReactNode
@@ -49,7 +49,7 @@ export const TagPopover: React.FC<TagPopoverProps> = ({
         setPopoverWidth(triggerContainerRef.current.offsetWidth)
         setSideOffset(
           triggerContainerRef.current.offsetWidth -
-            triggerRef?.current?.offsetWidth
+            triggerRef?.current?.offsetWidth,
         )
       }
     }
@@ -63,7 +63,7 @@ export const TagPopover: React.FC<TagPopoverProps> = ({
   // Close the popover when clicking outside of it
   useEffect(() => {
     const handleOutsideClick = (
-      event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent
+      event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent,
     ) => {
       if (
         isPopoverOpen &&
@@ -99,7 +99,7 @@ export const TagPopover: React.FC<TagPopoverProps> = ({
   const handleInputFocus = (
     event:
       | React.FocusEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLTextAreaElement>
+      | React.FocusEvent<HTMLTextAreaElement>,
   ) => {
     // Only set inputFocused to true if the popover is already open.
     // This will prevent the popover from opening due to an input focus if it was initially closed.
@@ -114,7 +114,7 @@ export const TagPopover: React.FC<TagPopoverProps> = ({
   const handleInputBlur = (
     event:
       | React.FocusEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLTextAreaElement>
+      | React.FocusEvent<HTMLTextAreaElement>,
   ) => {
     setInputFocused(false)
 
@@ -150,7 +150,7 @@ export const TagPopover: React.FC<TagPopoverProps> = ({
             role="combobox"
             className={cn(
               `hover:bg-transparent`,
-              classStyleProps?.popoverClasses?.popoverTrigger
+              classStyleProps?.popoverClasses?.popoverTrigger,
             )}
             onClick={() => setIsPopoverOpen(!isPopoverOpen)}
           >
@@ -177,7 +177,7 @@ export const TagPopover: React.FC<TagPopoverProps> = ({
         ref={popoverContentRef}
         className={cn(
           `w-full space-y-3`,
-          classStyleProps?.popoverClasses?.popoverContent
+          classStyleProps?.popoverClasses?.popoverContent,
         )}
         style={{
           ...(!rtl

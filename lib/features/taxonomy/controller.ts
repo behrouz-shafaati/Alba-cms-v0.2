@@ -109,7 +109,7 @@ export default class taxonomyController extends baseController {
     locale,
   }: {
     payload: QueryFind
-    locale: 'fa'
+    locale: string
   }): Promise<QueryResponse<any>> {
     const result = await super.findAll({
       ...payload,

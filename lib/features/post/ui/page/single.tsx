@@ -30,7 +30,7 @@ const DefaultSinglePageBlog = ({
   breadcrumbItems,
   post,
   siteSettings,
-  locale = 'fa',
+  locale,
   readingDuration,
   tableOfContent = null,
   comments = null,
@@ -38,6 +38,7 @@ const DefaultSinglePageBlog = ({
 }: props) => {
   const translation: PostTranslationSchema = getTranslation({
     translations: post?.translations,
+    locale,
   })
 
   return (

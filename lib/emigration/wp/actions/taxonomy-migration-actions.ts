@@ -50,13 +50,14 @@ interface LogsResult {
 export async function startTaxonomyMigration(
   prevState: State,
   formData: FormData,
-  options?: Partial<MigrationOptions>
+  options?: Partial<MigrationOptions>,
 ): Promise<ActionResponse<MigrationRunResult>> {
   const values: { baseUrl: string; apiKey: string } =
     Object.fromEntries(formData)
   try {
     const migration = new TaxonomyMigration(values, {
       verbose: true,
+      locale: values.locale,
       ...options,
     })
 
@@ -81,7 +82,7 @@ export async function startTaxonomyMigration(
 // ========================
 
 export async function dryRunUserMigration(
-  options?: Partial<MigrationOptions>
+  options?: Partial<MigrationOptions>,
 ): Promise<ActionResponse<MigrationRunResult>> {
   try {
     const migration = createUserMigration({
@@ -109,7 +110,7 @@ export async function dryRunUserMigration(
 // ========================
 
 export async function retryFailedUsers(
-  options?: Partial<MigrationOptions>
+  options?: Partial<MigrationOptions>,
 ): Promise<ActionResponse<MigrationRunResult>> {
   try {
     const migration = createUserMigration({
@@ -205,7 +206,7 @@ export async function resetFailedToPending(): Promise<
 // ========================
 
 export async function resetUserMigration(
-  wpId: number
+  wpId: number,
 ): Promise<ActionResponse<{ reset: boolean }>> {
   try {
     const reset = await wpEmigrationCtrl.resetToPending(wpId)

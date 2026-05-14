@@ -7,6 +7,7 @@ import pageCtrl from '@/lib/features/page/controller'
 type props = { locale?: string | null }
 
 export default async function HomePage({ locale = null }: props) {
+  'use cache'
   const siteSettings: Settings = (await getSettings()) as Settings
 
   const [homePage] = await Promise.all([pageCtrl?.getHomePage()])

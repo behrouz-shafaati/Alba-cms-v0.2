@@ -5,7 +5,11 @@ import { QueryResponse } from '@/lib/features/core/interface'
 import { getPostCommentsForClient } from '@/lib/features/post-comment/actions'
 import { PostComment } from '@/lib/features/post-comment/interface'
 import PostCommentListLazy from '@/lib/features/post-comment/ui/list/PostCommentListLazy'
-import { getPostAction } from '@/lib/features/post/actions'
+import {
+  getPostAction,
+  getPostLocalesAction,
+  getSlimPostAction,
+} from '@/lib/features/post/actions'
 import { PostTranslationSchema } from '@/lib/features/post/interface'
 import DefaultSinglePageBlog from '@/lib/features/post/ui/page/single'
 import {
@@ -19,6 +23,9 @@ import calculateReadingTime from '@/lib/utils/calculateReadingTime'
 import { generateTableOfContents } from '@/lib/utils/generateTableOfContents'
 import getTranslation from '@/lib/utils/getTranslation'
 import { notFound } from 'next/navigation'
+import TableOfContents from '@/components/post/table-of-contents'
+import { LinkAlba } from '@/components/other/link-alba'
+import PostLocalesList from '@/components/post/locales'
 
 type Props = {
   slugs: string[]
@@ -26,15 +33,21 @@ type Props = {
   locale: string
 }
 export default async function PostPage({ locale, postSlug, slugs }: Props) {
+  console.log('$$#s5345 postSlug:', postSlug)
   const [post, template, siteSettings] = await Promise.all([
-    getPostAction({ locale, slug: postSlug }), // از cache میاد اگه قبلاً در metadata گرفته شده
+    getSlimPostAction({ locale, slug: postSlug }), // از cache میاد اگه قبلاً در metadata گرفته شده
     templateCtrl.getTemplate({ slug: 'post', locale }),
     getSettingsAction(),
   ])
 
   console.log('$$#5345 post:', post)
+  console.log('$$#5345 template:', template)
 
   if (!post) {
+    const postLocales = await getPostLocalesAction({ slug: postSlug })
+    console.log('$$#53sddf45 postLocales:', postLocales)
+    if (postLocales)
+      return <PostLocalesList dontExistLocale={locale} post={postLocales} />
     notFound()
   }
 
@@ -49,9 +62,9 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
   })
 
   // تبدیل contentJson به متن ساده
-  const json = JSON.parse(translation?.contentJson)
+  const pareseContentJson = JSON.parse(translation?.contentJson)
   const plainText =
-    json.content
+    pareseContentJson.content
       ?.filter((block: any) => block.type === 'paragraph')
       ?.map((block: any) =>
         block.content?.map((c: any) => c.text || '').join(''),
@@ -67,7 +80,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
   }
 
   // ساخت TOC سمت سرور
-  const toc = generateTableOfContents(JSON.parse(translation?.contentJson))
+  const toc = generateTableOfContents(pareseContentJson)
   const breadcrumbItems = buildBreadcrumbsArray(post, locale)
 
   const postSchema = generatePostSchema({ post, locale })
@@ -108,7 +121,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
     return (
       <>
         {writeJsonLd()}
-        <>
+        <div data-post-content>
           <RendererTemplate
             template={{ content: template?.translations[0].content || {} }}
             siteSettings={siteSettings}
@@ -123,7 +136,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
                 post={post}
                 breadcrumbItems={breadcrumbItems}
                 readingDuration={readingDuration}
-                tableOfContent={toc}
+                tableOfContent={<TableOfContents toc={toc} />}
                 comments={
                   <PostCommentListLazy
                     post={post}
@@ -154,7 +167,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
             content_post_content={
               <RenderedHtml contentJson={translation?.contentJson} />
             }
-            content_post_tablecontent={toc}
+            content_post_tablecontent={<TableOfContents toc={toc} />}
             content_post_comments={
               <PostCommentListLazy
                 post={post}
@@ -163,21 +176,21 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
             }
             content_post_comment_form={{ post }}
           />
-        </>
+        </div>
       </>
     )
 
   return (
     <>
       {writeJsonLd()}
-      <>
+      <div data-post-content>
         <DefaultSinglePageBlog
           // searchParams={resolvedSearchParams}
           post={post}
           siteSettings={siteSettings}
           breadcrumbItems={breadcrumbItems}
           readingDuration={readingDuration}
-          tableOfContent={toc}
+          tableOfContent={<TableOfContents toc={toc} />}
           comments={
             <PostCommentListLazy
               post={post}
@@ -186,7 +199,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
           }
           locale={locale}
         />
-      </>
+      </div>
     </>
   )
 }

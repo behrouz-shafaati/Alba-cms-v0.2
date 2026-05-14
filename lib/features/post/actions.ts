@@ -345,7 +345,7 @@ export const getSlimPostsForPostListAction = async ({
   payload: QueryFind
   locale?: string
 }): Promise<QueryResult> => {
-  const cacheKey = ['posts', locale]
+  const cacheKey = ['posts', locale + JSON.stringify(payload)]
 
   return unstable_cache(
     async () => {
@@ -465,6 +465,66 @@ export async function getPostAction({ locale, slug }: getPostActionProp) {
   console.log('#2349 locale: ', locale, ' # slug: ', slug)
   console.log('#23498734 postResult:', postResult)
   return postResult?.data[0] || null
+}
+export async function getSlimPostAction({ locale, slug }: getPostActionProp) {
+  // 'use cache'
+  slug = decodeURIComponent(slug)
+  const postResult = await postCtrl.find({
+    filters: { slug, 'translations.locale': locale },
+    projection: {
+      slug: 1,
+      status: 1,
+      type: 1,
+      publishedAt: 1,
+      createdAt: 1,
+      updatedAt: 1,
+      translations: {
+        $filter: {
+          input: '$translations',
+          as: 't',
+          cond: { $eq: ['$$t.locale', locale] },
+        },
+      },
+    },
+  })
+  console.log('#2349 Slim locale: ', locale, ' # slug: ', slug)
+  console.log('#23498734 Slim postResult:', postResult)
+  return postResult?.data[0] || null
+}
+
+type getPostLocalesActionProp = {
+  slug: string
+}
+export async function getPostLocalesAction({ slug }: getPostLocalesActionProp) {
+  // 'use cache'
+  slug = decodeURIComponent(slug)
+  const postResult = await postCtrl.find({
+    filters: { slug },
+    projection: {
+      slug: 1,
+      mainCategory: 1,
+      user: 0,
+      author: 0,
+      image: 0,
+      categories: 0,
+      tags: 0,
+      translations: {
+        $map: {
+          input: '$translations',
+          as: 'tr',
+          in: {
+            title: '$$tr.title',
+            locale: '$$tr.locale',
+          },
+        },
+      },
+    },
+  })
+  console.log('#2349 slug: ', slug)
+  console.log('#232498734 locales postResult:', postResult)
+  if (!postResult?.data[0]) return null
+  const { mainCategory, ...post } = postResult?.data[0]
+  return post
 }
 
 type GetPostNavigationContentActionProp = {

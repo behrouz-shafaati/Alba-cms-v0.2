@@ -5,8 +5,8 @@ import { getDashboardDictionary } from '@/lib/i18n/dashboard'
 import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 import { SupportedLanguage } from '@/lib/types'
 
-export const dynamic = 'force-static'
 import localFont from 'next/font/local'
+import { Suspense } from 'react'
 
 const iransans = localFont({
   src: [
@@ -28,7 +28,7 @@ const iransans = localFont({
   ],
   variable: '--font-iransans',
 })
-export default async function Home() {
+const Page_ = async () => {
   const resolvedLocale = (await resolveLocale({
     locale: '',
   })) as SupportedLanguage
@@ -38,9 +38,21 @@ export default async function Home() {
   return (
     <html lang={resolvedLocale} dir={dir}>
       <body className={`antialiased ${iransans.className}`}>
-        <ClientProviders>
+        <ClientProviders locale={resolvedLocale}>
           <HomePage locale={resolvedLocale} />
         </ClientProviders>
+      </body>
+    </html>
+  )
+}
+
+export default async function Page() {
+  return (
+    <html lang="en" dir="ltr">
+      <body className={`antialiased ${iransans.className}`}>
+        <Suspense fallback="loading Home page...">
+          <Page_ />
+        </Suspense>
       </body>
     </html>
   )

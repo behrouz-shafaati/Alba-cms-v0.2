@@ -48,6 +48,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  cacheComponents: true,
 }
 
 const withBundleAnalyzer = bundleAnalyzer({

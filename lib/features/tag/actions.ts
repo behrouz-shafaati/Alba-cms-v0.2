@@ -237,7 +237,7 @@ export async function getAllTagsSlimAction({
   locale = 'fa',
 }: {
   payload?: { filters: any }
-  locale?: 'fa'
+  locale?: string
 }) {
   const cacheKy = ['tag', stableHash(payload), locale]
   try {

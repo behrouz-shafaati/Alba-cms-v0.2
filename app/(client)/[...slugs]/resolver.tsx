@@ -1,13 +1,19 @@
 import { SupportedLanguage } from '@/lib/types'
 import PageOrPost from './PostOrPage'
 import HomePage from '@/components/HomePage'
+import AuthorPage from './(author)/page'
+import ArchivePage from './(archive)/page'
 
 type Props = {
   slugs: string[]
   locale: SupportedLanguage
+  searchParams: Promise<{
+    query?: string
+    page?: string
+  }>
 }
 
-const PageResolver = ({ locale, slugs }: Props) => {
+const PageResolver = ({ locale, slugs, searchParams }: Props) => {
   const firstSlug = slugs?.[0] || null
   const secendSlug = slugs?.[1] || null
   const finalSlug = slugs[slugs.length - 1]
@@ -21,6 +27,22 @@ const PageResolver = ({ locale, slugs }: Props) => {
       return <HomePage locale={locale} />
     case 'install':
       return <h1>Install page</h1>
+    case 'author':
+      return (
+        <AuthorPage
+          locale={locale}
+          searchParams={searchParams}
+          userName={secendSlug as string}
+        />
+      )
+    case 'archive':
+      return (
+        <ArchivePage
+          locale={locale}
+          searchParams={searchParams}
+          slugs={slugs}
+        />
+      )
     default:
       return <PageOrPost locale={locale} slugs={slugs} pageSlug={finalSlug} />
   }

@@ -45,7 +45,7 @@ interface LogsResult {
 
 export async function testWPConnectionAction(
   prevState: State,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResponse<TestConnectionResult>> {
   const values = Object.fromEntries(formData)
   try {
@@ -77,7 +77,7 @@ export async function testWPConnectionAction(
 export async function startUserMigration(
   prevState: State,
   formData: FormData,
-  options?: Partial<MigrationOptions>
+  options?: Partial<MigrationOptions>,
 ): Promise<ActionResponse<MigrationRunResult>> {
   const values: { baseUrl: string; apiKey: string } =
     Object.fromEntries(formData)
@@ -108,7 +108,7 @@ export async function startUserMigration(
 // ========================
 
 export async function dryRunUserMigration(
-  options?: Partial<MigrationOptions>
+  options?: Partial<MigrationOptions>,
 ): Promise<ActionResponse<MigrationRunResult>> {
   try {
     const migration = createUserMigration({
@@ -136,7 +136,7 @@ export async function dryRunUserMigration(
 // ========================
 
 export async function retryFailedUsers(
-  options?: Partial<MigrationOptions>
+  options?: Partial<MigrationOptions>,
 ): Promise<ActionResponse<MigrationRunResult>> {
   try {
     const migration = createUserMigration({
@@ -232,7 +232,7 @@ export async function resetFailedToPending(): Promise<
 // ========================
 
 export async function resetUserMigration(
-  wpId: number
+  wpId: number,
 ): Promise<ActionResponse<{ reset: boolean }>> {
   try {
     const reset = await wpEmigrationCtrl.resetToPending(wpId)

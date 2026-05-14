@@ -5,6 +5,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  userCtrl
+  userCtrl //to initial load
   return <> {children} </>
 }

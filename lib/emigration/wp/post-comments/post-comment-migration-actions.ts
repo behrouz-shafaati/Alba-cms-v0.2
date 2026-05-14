@@ -48,7 +48,7 @@ interface LogsResult {
 export async function startPostCommentMigration(
   prevState: State,
   formData: FormData,
-  options?: Partial<MigrationOptions>
+  options?: Partial<MigrationOptions>,
 ): Promise<ActionResponse<MigrationRunResult>> {
   const values: {
     baseUrl: string
@@ -60,6 +60,7 @@ export async function startPostCommentMigration(
     const migration = new PostCommentMigration(values, {
       newBaseUrl: values.newDomain,
       verbose: true,
+      locale: values.locale,
       ...options,
     })
 
@@ -84,7 +85,7 @@ export async function startPostCommentMigration(
 // ========================
 
 export async function dryRunUserMigration(
-  options?: Partial<MigrationOptions>
+  options?: Partial<MigrationOptions>,
 ): Promise<ActionResponse<MigrationRunResult>> {
   try {
     const migration = createUserMigration({
@@ -112,7 +113,7 @@ export async function dryRunUserMigration(
 // ========================
 
 export async function retryFailedUsers(
-  options?: Partial<MigrationOptions>
+  options?: Partial<MigrationOptions>,
 ): Promise<ActionResponse<MigrationRunResult>> {
   try {
     const migration = createUserMigration({
@@ -208,7 +209,7 @@ export async function resetFailedToPending(): Promise<
 // ========================
 
 export async function resetUserMigration(
-  wpId: number
+  wpId: number,
 ): Promise<ActionResponse<{ reset: boolean }>> {
   try {
     const reset = await wpEmigrationCtrl.resetToPending(wpId)
@@ -248,7 +249,7 @@ export async function clearAllMigrationLogs(): Promise<
 }
 
 export async function startConvertHtymlToJson(
-  htmlContent: string
+  htmlContent: string,
 ): Promise<ActionResponse<{ jsonContent: string }>> {
   const imageMigeration = new WPImageMigrationHelper()
   const converter = new HtmlToTiptapConverter({

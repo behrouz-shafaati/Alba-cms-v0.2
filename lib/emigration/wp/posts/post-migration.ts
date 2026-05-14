@@ -40,7 +40,7 @@ export default class PostMigration {
 
   constructor(
     connectionData: { baseUrl: string; apiKey: string },
-    options: MigrationOptions
+    options: MigrationOptions,
   ) {
     this.newBaseUrl = options.newBaseUrl
     this.oldDomain = connectionData.baseUrl.replace(/\/+$/, '')
@@ -78,7 +78,7 @@ export default class PostMigration {
 
     // اضافه کردن failed ها برای retry
     const failedIds = await this.logService.getFailedWpIds(
-      this.options.maxRetries
+      this.options.maxRetries,
     )
 
     const idsToProcess = [...new Set([...pendingIds, ...failedIds])]
@@ -95,7 +95,7 @@ export default class PostMigration {
         success,
         failed,
         skipped,
-        errors
+        errors,
       )
     }
 
@@ -104,7 +104,7 @@ export default class PostMigration {
       const batchIds = idsToProcess.slice(i, i + this.options.batchSize)
       const batchNumber = Math.floor(i / this.options.batchSize) + 1
       const totalBatches = Math.ceil(
-        idsToProcess.length / this.options.batchSize
+        idsToProcess.length / this.options.batchSize,
       )
 
       // دریافت اطلاعات پست ها از WP
@@ -116,7 +116,7 @@ export default class PostMigration {
           if (this.options.verbose) {
             process.stdout.write(`\r  دریافت از WP: ${completed}/${total}`)
           }
-        }
+        },
       )
 
       if (this.options.verbose) {
@@ -130,7 +130,7 @@ export default class PostMigration {
 
           // مهاجرت تاکسونومی
           console.log(
-            `start post migrate with id ${wpPost?.wpId} and type ${wpPost?.post_type}`
+            `start post migrate with id ${wpPost?.wpId} and type ${wpPost?.post_type}`,
           )
           const result = await this.migrateOnePost(wpPost)
 
@@ -147,7 +147,7 @@ export default class PostMigration {
         } else {
           await this.logService.logFailure(
             wpId,
-            postOrError?.message || '_no_message_'
+            postOrError?.message || '_no_message_',
           )
           errors.push({ wpId, error: postOrError.message })
           failed++
@@ -162,7 +162,7 @@ export default class PostMigration {
       success,
       failed,
       skipped,
-      errors
+      errors,
     )
     this.logger(result)
 
@@ -178,7 +178,7 @@ export default class PostMigration {
     success: number,
     failed: number,
     skipped: number,
-    errors: Array<{ wpId: number; error: string }>
+    errors: Array<{ wpId: number; error: string }>,
   ): MigrationRunResult {
     const finishedAt = new Date()
     return {
@@ -215,7 +215,7 @@ export default class PostMigration {
    * بررسی وجود taxonomy در MongoDB
    */
   private async checkExisting(
-    wpPost: WpPost
+    wpPost: WpPost,
   ): Promise<{ exists: boolean; mongoId?: string; reason?: string }> {
     // بررسی با slug
     const bySlug = await postCtrl.findOne({
@@ -272,7 +272,7 @@ export default class PostMigration {
     if (contentJson?.success && this.newBaseUrl != '') {
       contentJson = replaceLinksInDocument(
         contentJson?.document,
-        linkReplacerConfig
+        linkReplacerConfig,
       )
     }
     contentJson = sanitizeTipTapContent(contentJson?.document ?? contentJson)
@@ -281,7 +281,7 @@ export default class PostMigration {
     if (wpPost?.featured_image?.url) {
       image = await imageMigeration.migrateImage(
         wpPost?.featured_image?.url,
-        wpPost?.featured_image?.alt
+        wpPost?.featured_image?.alt,
       )
     }
 
@@ -332,7 +332,7 @@ export default class PostMigration {
 
     const translations = [
       {
-        lang: 'fa', // "fa", "en", "de", ...
+        locale: this.options.locale, // "fa", "en", "de", ...
         title: wpPost?.title,
         seoTitle: wpPost?.seo?.title || '',
         excerpt,
@@ -375,7 +375,7 @@ export default class PostMigration {
           await this.logService.logSkipped(
             wpPost.wpId,
             existing.reason || 'already exists',
-            wpPost
+            wpPost,
           )
           return {
             wpId: wpPost.wpId,
@@ -400,7 +400,7 @@ export default class PostMigration {
       const postPayload = await this.transformWpPost(wpPost)
 
       newPost = await postCtrl.create({
-        params: { ...postPayload, locale: 'fa' },
+        params: postPayload,
       })
 
       const mongoId = newPost.id.toString()

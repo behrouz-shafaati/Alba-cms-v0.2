@@ -9,6 +9,7 @@ type Props = {
   locale: string
 }
 export default async function PageOrPost({ locale, pageSlug, slugs }: Props) {
+  'use cache'
   let isPost = false,
     isPage = false,
     pageResult,
