@@ -14,12 +14,14 @@ import { useState } from 'react'
 import { deleteUsersAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
 import authorize from '@/lib/utils/authorize'
+import { useLocale } from '@/hooks/useLocale'
 
 interface CellActionProps {
   data: User
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const dictionary = useLocale()
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const router = useRouter()
@@ -65,12 +67,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
                 <DropdownMenuItem
                   onClick={() => router.push(`/dashboard/users/${data.id}`)}
                 >
-                  <Edit className="ml-2 h-4 w-4" /> بروزرسانی
+                  <Edit className="me-1 h-4 w-4" /> {dictionary.shared.update}
                 </DropdownMenuItem>
               )}
               {canDelete && (
                 <DropdownMenuItem onClick={() => setOpen(true)}>
-                  <Trash className="ml-2 h-4 w-4" /> حذف
+                  <Trash className="me-1 h-4 w-4" /> {dictionary.shared.delete}
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>

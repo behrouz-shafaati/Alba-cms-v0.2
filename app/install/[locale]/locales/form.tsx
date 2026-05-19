@@ -30,7 +30,7 @@ export default function SetLocalesForm() {
   )
 
   const nextHref =
-    locale != '' ? `/install/${locale}/finish` : `/install/en/finish`
+    locale != '' ? `/install/${locale}/admin` : `/install/en/admin`
 
   const handleNext = async () => {
     setLoading(true)

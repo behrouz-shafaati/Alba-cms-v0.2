@@ -5,8 +5,10 @@ import Form from './Form'
 import { getForms } from '@/lib/features/form/actions'
 import RendererRows from '../../../builder-canvas/pageRenderer/RenderRows'
 import { FormTranslationSchema } from '@/lib/features/form/interface'
+import getTranslation from '@/lib/utils/getTranslation'
 
 type FormBlockProps = {
+  locale: string
   widgetName: string
   blockData: {
     content: { formId: string }
@@ -16,11 +18,11 @@ type FormBlockProps = {
 } & React.HTMLAttributes<HTMLParagraphElement> // ✅ اجازه‌ی دادن onclick, className و ...
 
 export default async function FormBlock({
+  locale,
   widgetName,
   blockData,
   ...props
 }: FormBlockProps) {
-  const locale = 'fa'
   const { content } = blockData
 
   const result = await getForms({
@@ -29,13 +31,17 @@ export default async function FormBlock({
 
   const form = result.data?.[0] ?? null
 
-  const translation: FormTranslationSchema =
-    form?.translations?.find((t: FormTranslationSchema) => t.lang === locale) ||
-    form?.translations[0] ||
-    {}
+  const translation: FormTranslationSchema = getTranslation({
+    translations: form?.translations,
+    locale,
+  })
 
   const formContent = (
-    <RendererRows rows={form?.content?.rows} editroMode={false} {...props} />
+    <RendererRows
+      rows={translation?.content?.rows}
+      editroMode={false}
+      {...props}
+    />
   )
 
   // فقط داده‌ی ساده به Form پاس بده

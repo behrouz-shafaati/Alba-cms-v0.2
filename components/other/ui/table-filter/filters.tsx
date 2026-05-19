@@ -1,7 +1,7 @@
 import { Input } from '@/components/ui/input'
 import { Table } from '@tanstack/react-table'
 import { useDebouncedCallback } from 'use-debounce'
-import ComboboxInput from '@/components/ui/combobox-input'
+import ComboboxInput from '@/components/input/combobox'
 import CheckboxInput from '@/components/input/checkbox'
 import { useUrlFilter } from '@/hooks/use-url-filter'
 import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
@@ -18,7 +18,7 @@ export function Filters<T>({ table, dictianory }: FiltersProps<T>) {
     setFilter(name, value ?? null)
   }, 500)
   return (
-    <div className="flex gap-4 flex-wrap">
+    <div className="flex flex-row gap-4 ">
       {table.getAllColumns().map((column) => {
         const config = column.columnDef.meta?.filterConfig
         if (!config) return null
@@ -43,7 +43,7 @@ export function Filters<T>({ table, dictianory }: FiltersProps<T>) {
               <ComboboxInput
                 key={column.id}
                 name="templateFor"
-                value={filterValue ?? ''}
+                defaultValue={filterValue ?? ''}
                 {...(config.options ? { options: config.options } : {})}
                 {...(config.fetchOptions
                   ? { fetchOptions: config.fetchOptions }

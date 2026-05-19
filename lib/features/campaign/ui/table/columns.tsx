@@ -4,8 +4,12 @@ import { CellAction } from './cell-action'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Campaign } from '@/lib/features/campaign/interface'
 import { Status } from '@/components/other/Status'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
-export const columns: ColumnDef<Campaign>[] = [
+export const getColumns = (
+  dictionary: DashboardLocaleSchema,
+  locale: string,
+): ColumnDef<Campaign>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -26,13 +30,28 @@ export const columns: ColumnDef<Campaign>[] = [
     enableHiding: false,
   },
   {
-    header: 'نام',
+    header: dictionary.feature.adCampaign.title,
     accessorKey: 'title',
   },
   {
     accessorKey: 'status',
-    header: 'وضعیت',
+    header: dictionary.feature.adCampaign.status,
     cell: ({ row }) => <Status row={row} />,
+    meta: {
+      filterConfig: {
+        type: 'select',
+        options: [
+          { label: dictionary.feature.adCampaign.active, value: 'active' },
+          {
+            label: dictionary.feature.adCampaign.scheduled,
+            value: 'scheduled',
+          },
+          { label: dictionary.feature.adCampaign.draft, value: 'draft' },
+          { label: dictionary.feature.adCampaign.inactive, value: 'inactive' },
+          { label: dictionary.feature.adCampaign.ended, value: 'ended' },
+        ],
+      },
+    },
   },
   {
     id: 'actions',

@@ -14,10 +14,6 @@ import formCtrl from '../form/controller'
 import { Form } from '../form/interface'
 import authorize from '@/lib/utils/authorize'
 
-const FormSubmissionSchema = z.object({
-  contentJson: z.string({}),
-})
-
 /**
  * Creates a FormSubmission with the given form data.
  *
@@ -29,7 +25,6 @@ export async function createFormSubmission(
   prevState: State,
   formData: FormData,
 ) {
-  const locale = 'fa'
   let newFormSubmission = null
   const values = Object.fromEntries(formData)
   try {
@@ -260,7 +255,7 @@ async function sanitizeFormSubmissionData(
   const searchText = Object.values(formInputValues).join(' ')
 
   const FormSubmissionTranslation = {
-    lang: locale,
+    locale,
     values: formInputValues,
     searchText,
   }
@@ -276,7 +271,7 @@ async function sanitizeFormSubmissionData(
   translations = [
     FormSubmissionTranslation,
     ...prevState.translations.filter(
-      (t: PostTranslationSchema) => t.lang != locale,
+      (t: PostTranslationSchema) => t.locale != locale,
     ),
   ]
   const params = {

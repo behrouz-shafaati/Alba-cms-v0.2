@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { deleteTagsAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
 import authorize from '@/lib/utils/authorize'
+import { useLocale } from '@/hooks/useLocale'
 
 interface CellActionProps {
   data: Tag
@@ -23,6 +24,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const router = useRouter()
+  const dictionary = useLocale()
 
   const { user } = useSession()
   const userRoles = user?.roles || []
@@ -70,12 +72,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <DropdownMenuItem
               onClick={() => router.push(`/dashboard/tags/${data.id}`)}
             >
-              <Edit className="ml-2 h-4 w-4" /> بروزرسانی
+              <Edit className="me-1 h-4 w-4" /> {dictionary.shared.update}
             </DropdownMenuItem>
           )}
           {canDelete && (
             <DropdownMenuItem onClick={() => setOpen(true)}>
-              <Trash className="ml-2 h-4 w-4" /> حذف
+              <Trash className="me-1 h-4 w-4" /> {dictionary.shared.delete}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

@@ -4,8 +4,13 @@ import { CellAction } from './cell-action'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Section } from '@/lib/features/templateSegment/interface'
 import { Status } from '@/components/other/Status'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import getTranslation from '@/lib/utils/getTranslation'
 
-export const columns: ColumnDef<Section>[] = [
+export const getColumns = (
+  dictionary: DashboardLocaleSchema,
+  locale: string,
+): ColumnDef<Section>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -26,17 +31,29 @@ export const columns: ColumnDef<Section>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'title',
-    header: 'عنوان',
-  },
-  {
-    accessorKey: 'type',
-    header: 'نوع',
+    header: dictionary.feature.templateSegment.title,
+    accessorFn: (row) => {
+      return (
+        getTranslation({ translations: row.translations, locale })?.title ?? ''
+      )
+    },
   },
   {
     accessorKey: 'status',
-    header: 'وضعیت',
+    header: dictionary.feature.templateSegment.status,
     cell: ({ row }) => <Status row={row} />,
+    meta: {
+      filterConfig: {
+        type: 'select',
+        options: [
+          { label: dictionary.feature.templateSegment.active, value: 'active' },
+          {
+            label: dictionary.feature.templateSegment.deactive,
+            value: 'deactive',
+          },
+        ],
+      },
+    },
   },
   {
     id: 'actions',

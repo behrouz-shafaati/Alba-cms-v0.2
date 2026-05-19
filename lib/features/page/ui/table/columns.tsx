@@ -4,8 +4,13 @@ import { CellAction } from './cell-action'
 import { Page } from '@/lib/features/page/interface'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Status } from '@/components/other/Status'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import getTranslation from '@/lib/utils/getTranslation'
 
-export const columns: ColumnDef<Page>[] = [
+export const getColumns = (
+  dictionary: DashboardLocaleSchema,
+  locale: string,
+): ColumnDef<Page>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -26,16 +31,26 @@ export const columns: ColumnDef<Page>[] = [
     enableHiding: false,
   },
   {
-    header: 'عنوان',
+    header: dictionary.feature.page.title,
     accessorFn: (row) => {
-      const locale = 'fa' // یا از context/state
-      return row.translations?.find((t) => t.locale === locale)?.title ?? ''
+      return (
+        getTranslation({ translations: row.translations, locale })?.title ?? ''
+      )
     },
   },
   {
     accessorKey: 'status',
-    header: 'وضعیت',
+    header: dictionary.feature.page.status,
     cell: ({ row }) => <Status row={row} />,
+    meta: {
+      filterConfig: {
+        type: 'select',
+        options: [
+          { label: dictionary.feature.page.published, value: 'published' },
+          { label: dictionary.feature.page.draft, value: 'draft' },
+        ],
+      },
+    },
   },
   {
     id: 'actions',

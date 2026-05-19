@@ -20,7 +20,7 @@ export type FormSubmissionTranslationSchema = {
   /**
    * زبان متن
    */
-  lang: string // "fa", "en", "de", ...
+  locale: string // "fa", "en", "de", ...
   /**
    * مقادیر دریافتی
    */

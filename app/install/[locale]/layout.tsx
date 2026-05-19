@@ -3,13 +3,12 @@ import type { Metadata } from 'next'
 import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 import '@/app/globals.css'
 import { ServerProviders } from '@/components/context/ServerProviders'
-import { getInstallDictionary } from '@/lib/i18n/install'
 import { Toaster } from '@/components/ui/sonner'
-import { getDirection } from '@/lib/i18n/utils/getDirection'
 import { ModeToggle } from '@/components/theme-mode-toggle/ModeToggle'
 import { LocaleProvider } from '@/components/context/locale-provider'
-import { SupportedLanguage } from '@/lib/types'
 import { Suspense } from 'react'
+import { getSettingsAction } from '@/lib/features/settings/actions'
+import { redirect } from 'next/navigation'
 
 // const geistSans = Geist({
 //   variable: '--font-geist-sans',
@@ -33,9 +32,10 @@ type Props = {
 const Layout_ = async ({ children, params }: Props) => {
   const { locale } = await params
   console.log('#234 locale:', locale)
-  const resolvedLocale = (await resolveLocale({ locale })) as SupportedLanguage
-  const dictionary = getInstallDictionary(resolvedLocale)
-  const dir = getDirection(resolvedLocale)
+  const { resolvedLocale, dictionary, dir } = await resolveLocale({
+    locale,
+    scope: 'install',
+  })
   return (
     <html lang={resolvedLocale} dir={dir}>
       <body>
@@ -54,6 +54,8 @@ const Layout_ = async ({ children, params }: Props) => {
 }
 
 export default async function Layout({ children, params }: Props) {
+  const settings = await getSettingsAction()
+  if (settings.appInstalled) redirect('/')
   return (
     <Suspense fallback="loading auth layout...">
       <Layout_ params={params}>{children}</Layout_>

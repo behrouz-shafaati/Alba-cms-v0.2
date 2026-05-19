@@ -5,55 +5,47 @@ import { User } from '@/lib/features/user/interface'
 import formCtrl from '@/lib/features/form/controller'
 import FormSubmissionClientTable from './FormSubmissionClientTable'
 import authorize from '@/lib/utils/authorize'
+import { Form } from '@/lib/features/form/interface'
+import getTranslation from '@/lib/utils/getTranslation'
 
-interface CategoriesTableProps {
-  formId: string
-  query: string
+interface Props {
+  form: Form
+  filters: {
+    query?: string
+  }
   page: number
+  locale: string
 }
 
 export default async function FormSubmissionTable({
-  formId,
-  query,
+  form,
+  filters,
   page,
-}: CategoriesTableProps) {
-  let filters = { query }
+  locale,
+}: Props) {
   const user = (await getSession())?.user as User
   if (!authorize(user.roles, 'formSubmission.view.any')) {
     filters = { ...filters, user: user.id }
   }
   const canCreate = authorize(user.roles, 'formSubmission.create')
 
-  const [formSubmissionResult, form] = await Promise.all([
+  const [formSubmissionResult] = await Promise.all([
     formSubmissionCtrl.find({
       filters,
       pagination: { page, perPage: 6 },
     }),
-    formCtrl.findById({ id: formId }),
   ])
 
+  const translation = getTranslation({
+    translations: form.translations,
+    locale,
+  })
+
   return (
-    <>
-      <div className="flex items-start justify-between">
-        <Heading
-          title={`پیام‌های دریافتی ${form.title} (${
-            formSubmissionResult?.totalDocuments || 0
-          })`}
-          description={`مدیریت  پیام‌های دریافتی فرم ${form.title}`}
-        />
-        {/* {canCreate && (
-          <LinkButton
-            className="text-xs md:text-sm"
-            href="/dashboard/formSubmissions/create"
-          >
-            <Plus className="ml-2 h-4 w-4" /> افزودن فرم
-          </LinkButton>
-        )} */}
-      </div>
-      <FormSubmissionClientTable
-        fields={form?.fields}
-        response={formSubmissionResult}
-      />
-    </>
+    <FormSubmissionClientTable
+      formTranslation={translation}
+      findResult={formSubmissionResult}
+      locale={locale}
+    />
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 import { useSearchParams } from 'next/navigation'
 import { MenuForm } from './menu-form'
+import getTranslation from '@/lib/utils/getTranslation'
 
 interface MenuFormProps {
   initialData: any | null
@@ -16,17 +17,16 @@ export const MenuFormTranslation: React.FC<MenuFormProps> = ({
 
   const locale = searchParams.get('locale') ?? localedFallback
 
-  const translation: any =
-    menu?.translations?.find((t: any) => t.locale === locale) ||
-    menu?.translations[0] ||
-    {}
+  const translation: any = getTranslation({
+    translations: menu?.translations,
+    locale,
+  })
   const initialState = {
     message: null,
     errors: {},
     values: { ...menu, translation },
   }
 
-  console.log('#234 locale in form tran:', locale)
   return (
     <MenuForm
       initialState={initialState}

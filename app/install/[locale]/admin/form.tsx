@@ -1,4 +1,5 @@
 'use client'
+import { ContentLanguageTabs } from '@/components/input/ContentLanguageTabs'
 import Password from '@/components/input/password'
 import Text from '@/components/input/text'
 import { LoadingButton } from '@/components/ui/loading-button'
@@ -12,7 +13,11 @@ import { useRouter } from 'next/navigation'
 import { useActionState, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
-export default function CreateSuperAdminForm() {
+type Props = {
+  settings: any
+}
+
+export default function CreateSuperAdminForm({ settings }: Props) {
   const initialState: FormActionState = {
     message: null,
     errors: {},
@@ -29,7 +34,7 @@ export default function CreateSuperAdminForm() {
   )
 
   const nextHref =
-    locale != '' ? `/install/${locale}/locales` : `/install/en/locales`
+    locale != '' ? `/install/${locale}/finish` : `/install/en/finish`
 
   const handleNext = async () => {
     setLoading(true)
@@ -48,7 +53,7 @@ export default function CreateSuperAdminForm() {
   return (
     <div className="flex flex-col gap-4">
       <form ref={formRef} action={dispatch} className="space-y-2">
-        <input type="hidden" value={t.lang} name="locale" />
+        <ContentLanguageTabs settings={settings} />
         {/* First Name */}
         <Text
           title={t.user.fName.title}

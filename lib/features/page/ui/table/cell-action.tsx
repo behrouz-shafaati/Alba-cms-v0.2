@@ -14,12 +14,14 @@ import { deletePagesAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
 import authorize from '@/lib/utils/authorize'
 import { AlertModal } from '@/components/other/modal/alert-modal'
+import { useLocale } from '@/hooks/useLocale'
 
 interface CellActionProps {
   data: Page
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const dictionary = useLocale()
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const router = useRouter()
@@ -29,11 +31,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   const canEdit = authorize(
     userRoles,
-    data?.user !== user?.id ? 'page.edit.any' : 'page.edit.own'
+    data?.user !== user?.id ? 'page.edit.any' : 'page.edit.own',
   )
   const canDelete = authorize(
     userRoles,
-    data?.user !== user?.id ? 'page.delete.any' : 'page.delete.own'
+    data?.user !== user?.id ? 'page.delete.any' : 'page.delete.own',
   )
 
   const onConfirm = async () => {
@@ -68,12 +70,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <DropdownMenuItem
               onClick={() => router.push(`/dashboard/pages/${data.id}`)}
             >
-              <Edit className="ml-2 h-4 w-4" /> بروزرسانی
+              <Edit className="me-1 h-4 w-4" /> {dictionary.shared.update}
             </DropdownMenuItem>
           )}
           {canDelete && (
             <DropdownMenuItem onClick={() => setOpen(true)}>
-              <Trash className="ml-2 h-4 w-4" /> حذف
+              <Trash className="me-1 h-4 w-4" /> {dictionary.shared.delete}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

@@ -10,9 +10,14 @@ import ReplayCOmmentButtonLazy from '../replay-Button-lazy'
 interface CommentItemProps {
   postComment: PostComment
   depth?: number
+  dictionary: any
 }
 
-export function PostCommentItem({ postComment, depth = 0 }: CommentItemProps) {
+export function PostCommentItem({
+  postComment,
+  depth = 0,
+  dictionary,
+}: CommentItemProps) {
   // const [showReplies, setShowReplies] = useState(true)
   const showReplies = true
 
@@ -36,7 +41,7 @@ export function PostCommentItem({ postComment, depth = 0 }: CommentItemProps) {
               {postComment.author?.name || 'ناشناس'}
             </span>
             <span className="text-xs font-thin text-gray-500">
-              {timeAgo(postComment.createdAt)}
+              {timeAgo(postComment.createdAt, dictionary)}
             </span>
           </div>
         </div>
@@ -65,6 +70,7 @@ export function PostCommentItem({ postComment, depth = 0 }: CommentItemProps) {
               key={`${reply._id}_${idx}`}
               postComment={reply}
               depth={depth + 1}
+              dictionary={dictionary}
             />
           ))}
         </div>

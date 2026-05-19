@@ -10,6 +10,7 @@ export function getInstallDictionary(
   locale: SupportedLanguage | undefined,
 ): InstallLocaleSchema {
   const DEFAULT_LANGUAGE = 'en'
+  // const fa: InstallLocaleSchema = dictionaries.fa
   if (locale === undefined) locale = DEFAULT_LANGUAGE
   return dictionaries[locale] ?? dictionaries.en
 }

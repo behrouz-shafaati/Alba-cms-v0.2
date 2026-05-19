@@ -11,17 +11,17 @@ import { useLocale } from '@/hooks/useLocale'
 type Props = {
   locale: string
   findResult: QueryResponse<any>
-  refetchDataUrl: string
   GroupAction: any
   canCreate: boolean
+  refetchDataUrl: string
 }
 
 export function ClientPostTable({
   locale,
   findResult,
-  refetchDataUrl,
   GroupAction,
   canCreate,
+  refetchDataUrl,
 }: Props) {
   const dictionary = useLocale()
   const columns = getColumns(dictionary, locale)

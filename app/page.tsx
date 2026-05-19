@@ -48,12 +48,8 @@ const Page_ = async () => {
 
 export default async function Page() {
   return (
-    <html lang="en" dir="ltr">
-      <body className={`antialiased ${iransans.className}`}>
-        <Suspense fallback="loading Home page...">
-          <Page_ />
-        </Suspense>
-      </body>
-    </html>
+    <Suspense fallback="loading Home page...">
+      <Page_ />
+    </Suspense>
   )
 }

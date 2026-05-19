@@ -4,6 +4,15 @@
   "language": "English",
   "dir": "ltr",
   "post": {},
+  "shared": {
+    "rightNow": "right now",
+    "minutesAgo": "minute(s) ago",
+    "hoursAgo": "hour(s) ago",
+    "daysAgo": "day(s) ago",
+    "monthsAgo": "month(s) ago",
+    "yearsAgo": "year(s) ago",
+    "yearsAnd": "year(s) and"
+  },
   "input": {
     "comboBox": {
       "loading": "Loading",

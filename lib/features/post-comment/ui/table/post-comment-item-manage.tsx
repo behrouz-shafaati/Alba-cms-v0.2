@@ -16,6 +16,7 @@ import { useSession } from '@/components/context/SessionContext'
 import getTranslation from '@/lib/utils/getTranslation'
 import timeAgo from '@/lib/utils/timeAgo'
 import authorize from '@/lib/utils/authorize'
+import { useLocale } from '@/hooks/useLocale'
 
 interface CommentItemProps {
   postComment: PostComment
@@ -25,12 +26,11 @@ export function PostCommentItemManage({
   postComment,
   depth = 0,
 }: CommentItemProps) {
+  const dictionary = useLocale()
   const { user } = useSession()
 
   const canModerate = authorize(user?.roles || [], 'postComment.moderate.any')
   const { buildUrlWithParams } = useUpdatedUrl()
-  const [showReplayForm, setShowReplayForm] = useState(false)
-  const [showReplies, setShowReplies] = useState(true)
   const { replayTo, setReplayTo } = usePostCommentStore()
   const content = getTranslation({
     translations: postComment.translations,
@@ -61,14 +61,15 @@ export function PostCommentItemManage({
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <span className="font-semibold">
-              {postComment.author?.name || 'ناشناس'}
+              {postComment.author?.name ||
+                dictionary.feature.postComment.unknown}
             </span>
             <span className="text-sm text-gray-500">
-              {timeAgo(postComment.createdAt)}
+              {timeAgo(postComment.createdAt, dictionary)}
             </span>
           </div>
           <div
-            className="mt-1 text-gray-700 dark:text-gray-200"
+            className="mt-1 text-gray-700 dark:text-gray-200 break-all wrap-break-word whitespace-normal"
             dangerouslySetInnerHTML={{ __html: content.contentJson }}
           />
 
@@ -86,7 +87,7 @@ export function PostCommentItemManage({
                 className="flex gap-1"
                 onClick={() => setReplayTo(postComment)}
               >
-                <Reply size={16} /> پاسخ
+                <Reply size={16} /> {dictionary.feature.postComment.replay}
               </Button>
               <Button
                 size="sm"
@@ -102,7 +103,8 @@ export function PostCommentItemManage({
                   })
                 }
               >
-                <CheckCircle size={16} /> پذیرفتن
+                <CheckCircle size={16} />
+                {dictionary.feature.postComment.accept}
               </Button>
               <Button
                 size="sm"
@@ -119,7 +121,7 @@ export function PostCommentItemManage({
                   })
                 }
               >
-                <XCircle size={16} /> نپذیرفتن
+                <XCircle size={16} /> {dictionary.feature.postComment.reject}
               </Button>
               <Button
                 size="sm"
@@ -136,7 +138,7 @@ export function PostCommentItemManage({
                   })
                 }
               >
-                <Trash size={16} /> حذف
+                <Trash size={16} /> {dictionary.feature.postComment.delete}
               </Button>
             </div>
           )}

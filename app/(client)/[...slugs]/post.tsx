@@ -139,6 +139,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
                 tableOfContent={<TableOfContents toc={toc} />}
                 comments={
                   <PostCommentListLazy
+                    locale={locale}
                     post={post}
                     postCommentsResult={postCommentsResult}
                   />
@@ -170,6 +171,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
             content_post_tablecontent={<TableOfContents toc={toc} />}
             content_post_comments={
               <PostCommentListLazy
+                locale={locale}
                 post={post}
                 postCommentsResult={postCommentsResult}
               />
@@ -193,6 +195,7 @@ export default async function PostPage({ locale, postSlug, slugs }: Props) {
           tableOfContent={<TableOfContents toc={toc} />}
           comments={
             <PostCommentListLazy
+              locale={locale}
               post={post}
               postCommentsResult={postCommentsResult}
             />

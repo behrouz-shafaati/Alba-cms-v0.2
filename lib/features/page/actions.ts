@@ -322,7 +322,7 @@ async function sanitizePageData(validatedFields: any, id?: string | undefined) {
   let prevState = { translations: [] }
   if (id) {
     prevState = await pageCtrl.findById({ id })
-    console.log('#prevState 098776 :', prevState)
+    // console.log('#prevState 098776 :', prevState)
   }
   const session = (await getSession()) as Session
 
@@ -330,7 +330,7 @@ async function sanitizePageData(validatedFields: any, id?: string | undefined) {
   // Create the page
   const content = JSON.parse(validatedFields.data.contentJson)
   const locale = validatedFields.data.locale
-  console.log('#45897 content in sandigo:', content)
+  // console.log('#45897 content in sandigo:', content)
   const translations = [
     {
       locale,

@@ -1,29 +1,20 @@
-import { DataTable } from '@/components/ui/data-table'
-import { Heading } from '@/components/ui/heading'
-import FormSubmissionCtrl from '@/features/form-submission/controller'
-import { columns } from './table/columns'
-import { QueryResponse } from '@/lib/entity/core/interface'
-import { FormSubmission } from '../../form-submission/interface'
-import { LinkButton } from '@/components/ui/link-button'
 import formCtrl from '../controller'
+import { Heading } from '@/components/other/ui/heading'
+import { DataTable } from '@/components/other/ui/data-table'
+import { getColumns } from './table/columns'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
 interface FormTableProps {
-  refetchDataUrl?: string
-  filters: {
-    status?: 'read' | 'unread'
-    query?: string
-    post?: string
-  }
-  page?: number
+  locale: string
+  dictionary: DashboardLocaleSchema
+  findResult: any
 }
 
-export default async function LastForms({ filters, page = 1 }: FormTableProps) {
-  const findResult: QueryResponse<FormSubmission> =
-    await FormSubmissionCtrl.find({
-      filters,
-      pagination: { page, perPage: 4 },
-    })
-
+export default async function LastForms({
+  locale,
+  dictionary,
+  findResult,
+}: FormTableProps) {
   const formWithUnreadSubmissionIds = []
 
   for (const formSubmission of findResult.data) {
@@ -45,7 +36,7 @@ export default async function LastForms({ filters, page = 1 }: FormTableProps) {
         <>
           <DataTable
             searchTitle="جستجو ..."
-            columns={columns}
+            columns={getColumns(dictionary, locale)}
             response={formResult}
             showSearch={false}
             showFilters={false}

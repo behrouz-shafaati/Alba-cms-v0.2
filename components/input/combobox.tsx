@@ -77,9 +77,11 @@ export default function Combobox({
   }, [query, options, fetchOptions, name])
   return (
     <div className="mb-4">
-      <label htmlFor={name} className="mb-2 block text-sm font-medium">
-        {title}
-      </label>
+      {title && (
+        <label htmlFor={name} className="mb-2 block text-sm font-medium">
+          {title}
+        </label>
+      )}
       <div className="relative">
         <div className=" top-16">
           <ComboboxInput

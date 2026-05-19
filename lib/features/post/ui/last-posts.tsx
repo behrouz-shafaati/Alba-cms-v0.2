@@ -1,23 +1,22 @@
-import { DataTable } from '@/components/ui/data-table'
-import { Heading } from '@/components/ui/heading'
-import { LinkButton } from '@/components/ui/link-button'
-import PostCtrl from '@/features/post/controller'
+'use client'
 import { Plus } from 'lucide-react'
-import { columns } from './table/columns'
-import { QueryResponse } from '@/lib/entity/core/interface'
-import { Post } from '../interface'
+import { Heading } from '@/components/other/ui/heading'
+import { LinkButton } from '@/components/other/ui/link-button'
+import { DataTable } from '@/components/other/ui/data-table'
+import { getColumns } from './table/columns'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
 interface PostTableProps {
-  query: string
-  page: number
+  locale: string
+  dictionary: DashboardLocaleSchema
+  findResult: any
 }
 
-export default async function LastPosts({ query, page }: PostTableProps) {
-  const findResult: QueryResponse<Post> = await PostCtrl.find({
-    filters: { query },
-    pagination: { page, perPage: 6 },
-  })
-
+export default function LastPosts({
+  locale,
+  dictionary,
+  findResult,
+}: PostTableProps) {
   return (
     <>
       <div className="flex items-start justify-between">
@@ -31,7 +30,7 @@ export default async function LastPosts({ query, page }: PostTableProps) {
       </div>
       <DataTable
         searchTitle="جستجو ..."
-        columns={columns}
+        columns={getColumns(dictionary, locale)}
         response={findResult}
         showFilters={false}
         showPagination={false}

@@ -31,7 +31,6 @@ export default async function Page({ params, searchParams }: PageProps) {
       templateCtrl.findAll({}),
       categoryCtrl.findAll({}),
     ])
-    console.log('#239845766 allCategories:', allCategories)
 
     if (!page) {
       notFound()

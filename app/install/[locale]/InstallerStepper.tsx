@@ -11,8 +11,8 @@ export default function InstallerSteper({ currentStep }: Props) {
   const installSteps = [
     { key: 'dashboard_lang', title: t.installer.steps.dashboard_lang.title },
     { key: 'variables', title: t.installer.steps.variables.title },
-    { key: 'admin', title: t.installer.steps.admin.title },
     { key: 'locales', title: t.installer.steps.suported_lang.title },
+    { key: 'admin', title: t.installer.steps.admin.title },
     { key: 'finish', title: t.installer.steps.finish.title },
   ]
 

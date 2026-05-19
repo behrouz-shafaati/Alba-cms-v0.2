@@ -4,18 +4,21 @@ import { notFound } from 'next/navigation'
 import { MenuTranslationSchema } from '@/lib/features/menu/interface'
 import { getSettingsAction } from '@/lib/features/settings/actions'
 import { MenuFormTranslation } from '@/lib/features/menu/ui/menu-form-translation'
+import { User } from '@/lib/features/user/interface'
+import { getSession } from '@/lib/auth/get-session'
+import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 
 interface PageProps {
   params: Promise<{ id: string }>
 }
 export default async function Page({ params }: PageProps) {
-  const locale = 'fa'
+  const user = (await getSession())?.user as User
   const resolvedParams = await params
   const { id } = resolvedParams
-
+  const { resolvedLocale: locale, dictionary } = await resolveLocale({ user })
   let menu = null
   let pageBreadCrumb = {
-    title: 'افزودن',
+    title: dictionary.feature.menu.create,
     link: '/dashboard/menus/create',
   }
   if (id !== 'create') {
@@ -39,7 +42,7 @@ export default async function Page({ params }: PageProps) {
   const [settings] = await Promise.all([getSettingsAction()])
 
   const breadcrumbItems = [
-    { title: 'دسته ها', link: '/dashboard/menus' },
+    { title: dictionary.feature.menu.title, link: '/dashboard/menus' },
     pageBreadCrumb,
   ]
   return (

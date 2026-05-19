@@ -6,11 +6,14 @@ import {
   Id,
   QueryFind,
   QueryFindById,
+  QueryFindOne,
 } from '@/lib/features/core/interface'
 import { z } from 'zod'
 import shippingAddressCtrl from '../shippingAddress/controller'
 import generateHumanId from './utils/generateUsername'
-
+import { getSettings } from '../settings/controller'
+import getTranslation from '@/lib/utils/getTranslation'
+type FindOneProps = QueryFindOne & { locale: string }
 class controller extends coreController {
   /**
    * constructor function for controller.
@@ -104,6 +107,22 @@ class controller extends coreController {
         },
       ])
     }
+    if (payload.params.userName) {
+      foundUser = await this.findOne({
+        filters: { userName: payload.params.userName },
+      })
+      if (foundUser) {
+        throw new z.ZodError([
+          {
+            code: 'invalid_type',
+            expected: 'string',
+            received: 'number',
+            path: ['userName'],
+            message: 'نام کاربری تکراری است.',
+          },
+        ])
+      }
+    }
 
     const user = await super.create(payload)
     return user
@@ -165,6 +184,22 @@ class controller extends coreController {
     }
     return false
   }
+  async isDuplicateUsername({
+    username = null,
+    throwError = true,
+  }: {
+    username: string | null
+    throwError?: boolean
+  }) {
+    let foundUser = await this.findOne({
+      filters: { userName: username },
+    })
+    if (!!foundUser) {
+      if (throwError) throw new Error('DuplicateUsername')
+      return true
+    }
+    return false
+  }
 
   async setEmailIsVerified(email: string) {
     await this.findOneAndUpdate({
@@ -194,6 +229,19 @@ class controller extends coreController {
       filters: userId,
       params: { password, passwordNeedsReset: false },
     })
+  }
+
+  async findOne({ locale, ...payload }: FindOneProps = { locale: null }) {
+    const foundedUser = await super.findOne(payload)
+    const languageSettings = await getSettings({ key: 'language' })
+    const _locale = locale ? locale : languageSettings?.siteDefault
+    const t = getTranslation({
+      translations: foundedUser?.translations,
+      locale: _locale,
+    })
+    return foundedUser
+      ? { ...foundedUser, name: `${t?.firstName}  ${t?.lastName}` }
+      : null
   }
 }
 

@@ -13,6 +13,7 @@ import { useSession } from '@/components/context/SessionContext'
 import Modal from '@/components/other/modal/modal'
 import authorize from '@/lib/utils/authorize'
 import getTranslation from '@/lib/utils/getTranslation'
+import { useLocale } from '@/hooks/useLocale'
 
 interface CellActionProps {
   data: FormSubmission
@@ -20,7 +21,7 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data, formFields }) => {
-  const locale = 'fa'
+  const dictionary = useLocale()
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const [openDetails, setOpenDetails] = useState(false)
@@ -67,7 +68,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, formFields }) => {
           key={f.id}
           className="flex flex-row gap-2 p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded"
         >
-          <div>{f.label?.[locale]}:</div>
+          <div>{f.label}:</div>
           <div className="font-light leading-relaxed">
             {translation.values[f.name]}
           </div>
@@ -79,7 +80,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, formFields }) => {
           variant="outline"
           onClick={handleCloseDetails}
         >
-          بستن
+          {dictionary.shared.close}
         </Button>
       </div>
     </div>
@@ -96,7 +97,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, formFields }) => {
       )}
       <Modal
         size={'large'}
-        title={'جزييات فرم'}
+        title={dictionary.feature.form.formDetails}
         description={''}
         isOpen={openDetails}
         onCloseModal={handleCloseDetails}
@@ -104,13 +105,17 @@ export const CellAction: React.FC<CellActionProps> = ({ data, formFields }) => {
       />
       <div className="flex flex-row items-center">
         <Button
-          title="مشاهده"
+          title={dictionary.feature.form.view}
           variant="ghost"
           onClick={() => setOpenDetails(true)}
         >
           <Eye className=" h-4 w-4" />
         </Button>
-        <Button title="حذف" variant="ghost" onClick={() => setOpen(true)}>
+        <Button
+          title={dictionary.feature.form.delete}
+          variant="ghost"
+          onClick={() => setOpen(true)}
+        >
           <Trash className=" h-4 w-4" />
         </Button>
       </div>

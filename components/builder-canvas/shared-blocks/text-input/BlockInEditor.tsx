@@ -3,8 +3,8 @@
 import React, { ElementType } from 'react'
 import { Block } from '@/components/builder-canvas/types'
 import Text from '@/components/input/text'
-import IconRenderer from '@/components/builder-canvas/components/DynamicLucideIcon'
 import computedStyles from '../../utils/computedStyles'
+import IconRender from '../../components/IconRender'
 
 type BlockInEditorProps = {
   widgetName: string
@@ -34,18 +34,18 @@ export const BlockInEditor = ({
       {...props}
     >
       <Text
-        title={settings?.title?.[locale] || ''}
-        placeholder={settings?.placeholder?.[locale] || ''}
-        defaultValue={settings?.defaultValue?.[locale] || ''}
+        title={content?.title?.[locale] || ''}
+        placeholder={content?.placeholder?.[locale] || ''}
+        defaultValue={content?.defaultValue?.[locale] || ''}
         name={id}
         id={id}
-        {...(settings?.icon
+        {...(content?.icon
           ? {
-              icon: <IconRenderer name={settings.icon} className={`w-5 h-5`} />,
+              icon: <IconRender icon={content.icon} className={`w-5 h-5`} />,
             }
           : {})}
-        description={settings?.description?.[locale] || ''}
-        required={settings?.required || false}
+        description={content?.description?.[locale] || ''}
+        required={content?.required || false}
       />
     </div>
   )

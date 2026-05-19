@@ -53,11 +53,12 @@ export function DashboardNav({
     return null
   }
 
+  console.log('##234234 user:', user)
   const renderLink = ({ sub, authorized, ...rest }: SidebarNavItem) => {
     // check permisions
     let canViewLink = false
     for (const permission of authorized || []) {
-      if (authorize(user?.roles || [], permission)) canViewLink = true
+      if (authorize(user?.roles || [], permission, false)) canViewLink = true
     }
     if (authorized === undefined || authorized?.length == 0) canViewLink = true
     if (!canViewLink) return null
@@ -88,7 +89,7 @@ export function DashboardNav({
     <div
       data-collapsed={isCollapsed}
       className={cn(
-        'group border-b bg-background py-2 transition-[max-height,padding] duration-500 data-[collapsed=true]:py-2 md:border-none'
+        'group border-b bg-background py-2 transition-[max-height,padding] duration-500 data-[collapsed=true]:py-2 md:border-none',
       )}
     >
       <TooltipProvider delayDuration={0}>
@@ -139,8 +140,8 @@ function NavLink({
           size: 'sm',
         }),
         'h-12 !justify-start text-wrap rounded-none px-6',
-        subLink && 'h-10 w-full border-l border-l-slate-500 px-2',
-        className
+        subLink && 'h-10 w-full border-s border-s-slate-500 px-2',
+        className,
       )}
       aria-current={checkActiveNav(href) ? 'page' : undefined}
     >
@@ -176,7 +177,7 @@ function NavLinkDropdown({
         type="reset"
         className={cn(
           buttonVariants({ variant: 'ghost', size: 'sm' }),
-          'group h-12 w-full justify-between rounded-none px-0'
+          'group h-12 w-full justify-between rounded-none px-0',
         )}
       >
         <NavLink
@@ -189,7 +190,7 @@ function NavLinkDropdown({
         />
         <span
           className={cn(
-            'transition-all group-data-[state="open"]:-rotate-180 me-8'
+            'transition-all group-data-[state="open"]:-rotate-180 me-8',
           )}
         >
           <ChevronDown strokeWidth={1} />
@@ -225,7 +226,7 @@ function NavLinkIcon({ title, icon, label, href }: NavLinkProps) {
               variant: checkActiveNav(href) ? 'secondary' : 'ghost',
               size: 'icon',
             }),
-            'h-12 w-12'
+            'h-12 w-12',
           )}
         >
           {renderIcon(icon)}

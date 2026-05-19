@@ -50,7 +50,7 @@ export default async function CategoryTable({
             className="text-xs md:text-sm"
             href="/dashboard/categories/create"
           >
-            <Plus className="ml-2 h-4 w-4" />{' '}
+            <Plus className="me-2 h-4 w-4" />{' '}
             {dictionary.feature.category.create}
           </LinkButton>
         )}

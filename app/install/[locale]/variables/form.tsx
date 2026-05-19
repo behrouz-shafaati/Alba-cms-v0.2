@@ -21,7 +21,7 @@ export default function SetDatabaseForm() {
   const [disableButton, setDisableButton] = useState(true)
 
   const nextHref =
-    locale != '' ? `/install/${locale}/admin` : `/install/en/admin`
+    locale != '' ? `/install/${locale}/locales` : `/install/en/locales`
 
   useEffect(() => {
     const checkVariables = async () => {

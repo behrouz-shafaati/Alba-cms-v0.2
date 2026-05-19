@@ -40,7 +40,17 @@
     "read": "Read",
     "unread": "Unread",
     "uknown": "Uknown",
-    "character": "character"
+    "character": "character",
+    "close": "Close",
+    "hello": "Hello",
+
+    "rightNow": "right now",
+    "minutesAgo": "minute(s) ago",
+    "hoursAgo": "hour(s) ago",
+    "daysAgo": "day(s) ago",
+    "monthsAgo": "month(s) ago",
+    "yearsAgo": "year(s) ago",
+    "yearsAnd": "year(s) and"
   },
   "input": {
     "combobox": {
@@ -56,7 +66,7 @@
       "posts": "Posts",
       "title": "Posts",
       "create": "Add post",
-      "description": "Post management",
+      "description": "Posts management",
       "status": "Status",
       "published": "Published",
       "draft": "Draft",
@@ -85,10 +95,37 @@
         "submit": "Save"
       }
     },
-    "postComment": { "title": "Comments" },
+    "postComment": {
+      "title": "Comments",
+      "description": "Post comments management",
+      "status": "Status",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "unknown": "Unknown",
+      "replay": "Replay",
+      "accept": "Accept",
+      "reject": "Reject",
+      "delete": "Delete"
+    },
     "user": {
       "title": "Users",
+      "description": "users management",
       "create": "Add user",
+      "edit": "Edit user",
+      "name": "Name",
+      "username": {
+        "title": "Username",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "roles": {
+        "title": "Role(s)",
+        "description": "",
+        "placeholder": "Select user roles...",
+        "required_error": ""
+      },
       "fName": {
         "title": "First Name",
         "description": "",
@@ -113,9 +150,15 @@
         "placeholder": "",
         "required_error": ""
       },
+      "about": {
+        "title": "About user",
+        "description": "Brief introduction of the user...",
+        "placeholder": "",
+        "required_error": ""
+      },
       "password": {
         "title": "Password",
-        "description": "",
+        "description": "If you want to change the user's password, fill in this field.",
         "placeholder": "",
         "required_error": ""
       },
@@ -172,10 +215,47 @@
         "image": "Featured tag image"
       }
     },
-    "menu": { "title": "Menus", "create": "Add menu" },
-    "page": { "title": "Pages", "create": "Add page" },
-    "adCampaign": { "title": "AD Campaign", "create": "Add campaign" },
-    "form": { "title": "Forms", "create": "Add form" },
+    "menu": {
+      "title": "Menus",
+      "description": "menus management",
+      "create": "Add menu",
+      "edit": "Edit menu",
+      "addItem": "Add item"
+    },
+    "page": {
+      "title": "Pages",
+      "description": "pages management",
+      "create": "Add page",
+      "status": "Status",
+      "published": "Published",
+      "draft": "Draft"
+    },
+    "adCampaign": {
+      "title": "AD Campaigns",
+      "description": "AD Campaigns management",
+      "create": "Add campaign",
+      "status": "Status",
+      "draft": "Draft",
+      "scheduled": "Scheduled",
+      "active": "Active",
+      "inactive": "Inactive",
+      "ended": "Ended"
+    },
+    "form": {
+      "title": "Forms",
+      "description": "Forms management",
+      "create": "Add form",
+      "status": "Status",
+      "active": "Active",
+      "deactive": "Deactive",
+      "read": "Read",
+      "unread": "Unread",
+      "inboxMessages": "Inbox messages",
+      "inboxMessagesDes": "Managing incoming form",
+      "formDetails": "Form Details",
+      "view": "View",
+      "delete": "Delete"
+    },
     "file": {
       "title": "Files",
       "dropHere": "Drop files here...",
@@ -199,10 +279,22 @@
         "delete": "Error deleting file."
       }
     },
-    "template": { "title": "Templates", "create": "Add template" },
+    "template": {
+      "title": "Templates",
+      "create": "Add template",
+      "description": "Templates management",
+      "templateFor": "Template for",
+      "status": "Status",
+      "active": "Active",
+      "deactive": "Deactive"
+    },
     "templateSegment": {
       "title": "Template segments",
-      "create": "Add segment"
+      "description": "Template segments management",
+      "create": "Add segment",
+      "status": "Status",
+      "active": "Active",
+      "deactive": "Deactive"
     },
     "setting": {
       "title": "Settings",

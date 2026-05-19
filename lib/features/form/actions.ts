@@ -63,7 +63,7 @@ export async function createForm(
     }
 
     const params = await sanitizeFormData(validatedFields)
-
+    console.log('#2343 params:', params)
     // Create the Form
     newForm = await formCtrl.create({
       params,
@@ -320,14 +320,15 @@ async function sanitizeFormData(validatedFields: any, id?: string | undefined) {
     ),
     {
       locale: content?.locale || 'fa',
+      title: content?.title,
+      fields,
+      content,
       successMessage: content?.successMessage,
+      description: content?.successMessage || '',
     },
   ]
 
   const params = {
-    content,
-    title: content.title,
-    fields,
     translations: formTranslations,
     status: content.status,
     user,

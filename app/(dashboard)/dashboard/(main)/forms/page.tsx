@@ -1,9 +1,8 @@
 import { BreadCrumb } from '@/components/other/breadcrumb'
-import Table from '@/lib/features/form/ui/table'
-const breadcrumbItems = [
-  { title: 'داشبورد', link: '/dashboard' },
-  { title: 'فرم ها', link: '/dashboard/forms' },
-]
+import { getSession } from '@/lib/auth/get-session'
+import FormTable from '@/lib/features/form/ui/table'
+import { User } from '@/lib/features/user/interface'
+import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 
 interface Props {
   searchParams: Promise<{
@@ -13,13 +12,24 @@ interface Props {
 }
 
 export default async function Page({ searchParams }: Props) {
+  const user = (await getSession())?.user as User
+  const { resolvedLocale, dictionary } = await resolveLocale({ user })
+  const breadcrumbItems = [
+    { title: dictionary.shared.dashboard, link: '/dashboard' },
+    { title: dictionary.feature.form.title, link: '/dashboard/forms' },
+  ]
+
   const resolvedSearchParams = await searchParams
-  const { query = '', page = 1 } = resolvedSearchParams
+  const { page = '1', ...filters } = resolvedSearchParams
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <BreadCrumb items={breadcrumbItems} />
-      <Table query={query} page={page} />
+      <FormTable
+        locale={resolvedLocale}
+        filters={filters}
+        page={Number(page)}
+      />
     </div>
   )
 }

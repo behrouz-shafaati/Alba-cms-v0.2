@@ -2,7 +2,6 @@
 
 import { IconValue } from '@/components/input/IconPicker'
 import DynamicLucideIcon from './DynamicLucideIcon'
-import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import computedStyles from '../utils/computedStyles'
 import { combineClassNames } from '../utils/styleUtils'

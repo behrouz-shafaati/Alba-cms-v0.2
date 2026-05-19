@@ -3,6 +3,7 @@ import PageOrPost from './PostOrPage'
 import HomePage from '@/components/HomePage'
 import AuthorPage from './(author)/page'
 import ArchivePage from './(archive)/page'
+import LogoutPage from './(logout)/page'
 
 type Props = {
   slugs: string[]
@@ -42,6 +43,10 @@ const PageResolver = ({ locale, slugs, searchParams }: Props) => {
           searchParams={searchParams}
           slugs={slugs}
         />
+      )
+    case 'logout':
+      return (
+        <LogoutPage locale={locale} searchParams={searchParams} slugs={slugs} />
       )
     default:
       return <PageOrPost locale={locale} slugs={slugs} pageSlug={finalSlug} />

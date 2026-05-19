@@ -35,7 +35,7 @@ export class UserMigration {
 
   constructor(
     connectionData: { baseUrl: string; apiKey: string },
-    options: Partial<MigrationOptions> = {}
+    options: Partial<MigrationOptions> = {},
   ) {
     this.wpClient = createWPClient(connectionData)
     this.logService = wpEmigrationCtrl
@@ -96,13 +96,20 @@ export class UserMigration {
       wpUser.displayName ||
       wpUser.userName
 
+    const translations = [
+      {
+        locale: this.options.locale, // "fa", "en", "de", ...
+        firstName: wpUser.firstName || null,
+        lastName: wpUser.lastName || null,
+      },
+    ]
+
     return {
       email: wpUser.email.toLowerCase(),
       userName: wpUser.userName.toLowerCase(),
       password: this.generateSecurePassword(),
       passwordNeedsReset: true,
-      firstName: wpUser.firstName || null,
-      lastName: wpUser.lastName || null,
+      translations,
       fullName:
         fullName ||
         `${wpUser.firstName} ${wpUser.lastName}` ||
@@ -122,7 +129,7 @@ export class UserMigration {
    * بررسی وجود کاربر در MongoDB
    */
   private async checkExistingUser(
-    wpUser: WPUser
+    wpUser: WPUser,
   ): Promise<{ exists: boolean; mongoId?: string; reason?: string }> {
     // بررسی با email
     const byEmail = await userCtrl.findOne({
@@ -177,7 +184,7 @@ export class UserMigration {
           await this.logService.logSkipped(
             wpUser.wpId,
             existing.reason || 'already exists',
-            metadata
+            metadata,
           )
           return {
             wpId: wpUser.wpId,
@@ -253,7 +260,7 @@ export class UserMigration {
 
       // اضافه کردن failed ها برای retry
       const failedIds = await this.logService.getFailedWpIds(
-        this.options.maxRetries
+        this.options.maxRetries,
       )
       const idsToProcess = [...new Set([...pendingIds, ...failedIds])]
 
@@ -269,7 +276,7 @@ export class UserMigration {
           success,
           failed,
           skipped,
-          errors
+          errors,
         )
       }
 
@@ -278,11 +285,11 @@ export class UserMigration {
         const batchIds = idsToProcess.slice(i, i + this.options.batchSize)
         const batchNumber = Math.floor(i / this.options.batchSize) + 1
         const totalBatches = Math.ceil(
-          idsToProcess.length / this.options.batchSize
+          idsToProcess.length / this.options.batchSize,
         )
 
         this.logger(
-          `\n📦 Batch ${batchNumber}/${totalBatches} (${batchIds.length} کاربر)`
+          `\n📦 Batch ${batchNumber}/${totalBatches} (${batchIds.length} کاربر)`,
         )
 
         // دریافت اطلاعات کاربران از WP
@@ -293,7 +300,7 @@ export class UserMigration {
             if (this.options.verbose) {
               process.stdout.write(`\r  دریافت از WP: ${completed}/${total}`)
             }
-          }
+          },
         )
 
         if (this.options.verbose) {
@@ -328,12 +335,12 @@ export class UserMigration {
         // نمایش پیشرفت
         const progress = Math.round((processed / idsToProcess.length) * 100)
         this.logger(
-          `  پیشرفت: ${progress}% | ✓ ${success} | ✗ ${failed} | ⊘ ${skipped}`
+          `  پیشرفت: ${progress}% | ✓ ${success} | ✗ ${failed} | ⊘ ${skipped}`,
         )
       }
     } catch (error) {
       this.logger(
-        `❌ خطای کلی: ${error instanceof Error ? error.message : String(error)}`
+        `❌ خطای کلی: ${error instanceof Error ? error.message : String(error)}`,
       )
       throw error
     }
@@ -344,7 +351,7 @@ export class UserMigration {
       success,
       failed,
       skipped,
-      errors
+      errors,
     )
     this.logger('\n' + this.formatResult(result))
 
@@ -365,7 +372,7 @@ export class UserMigration {
     this.logger('🔄 شروع Retry موارد Failed...')
 
     const failedItems = await this.logService.getFailedWithDetails(
-      this.options.maxRetries
+      this.options.maxRetries,
     )
     this.logger(`تعداد موارد برای Retry: ${failedItems.length}`)
 
@@ -379,7 +386,7 @@ export class UserMigration {
     // دریافت اطلاعات کاربران از WP
     const wpUsersMap = await this.wpClient.getUsersBatch(
       wpIds,
-      this.options.concurrency
+      this.options.concurrency,
     )
 
     for (const [wpId, userOrError] of wpUsersMap) {
@@ -410,7 +417,7 @@ export class UserMigration {
       success,
       failed,
       skipped,
-      errors
+      errors,
     )
     this.logger('\n' + this.formatResult(result))
 
@@ -444,7 +451,7 @@ export class UserMigration {
     success: number,
     failed: number,
     skipped: number,
-    errors: Array<{ wpId: number; error: string }>
+    errors: Array<{ wpId: number; error: string }>,
   ): MigrationRunResult {
     const finishedAt = new Date()
     return {
@@ -486,7 +493,7 @@ export class UserMigration {
 // ✅ Export factory function
 export function createUserMigration(
   connectionData: { baseUrl: string; apiKey: string },
-  options?: Partial<MigrationOptions>
+  options?: Partial<MigrationOptions>,
 ): UserMigration {
   return new UserMigration(connectionData, options)
 }

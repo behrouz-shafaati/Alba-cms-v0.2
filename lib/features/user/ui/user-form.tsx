@@ -32,35 +32,41 @@ import { toast } from 'sonner'
 import { Option } from '@/lib/types'
 import MultipleSelect from '@/components/input/multiple-select'
 import ProfileUpload from '@/components/input/profile-upload'
+import { User } from '../interface'
+import { useLocale } from '@/hooks/useLocale'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import { ContentLanguageTabs } from '@/components/input/ContentLanguageTabs'
 
 interface ProductFormProps {
-  initialData: any | null
-  lodginedUser: User | null
+  locale: string
+  user: User
+  loginedUser: User | null
+  settings: any
+  initialState: any
 }
 
 export const UserForm: React.FC<ProductFormProps> = ({
-  initialData: user,
-  lodginedUser,
+  locale,
+  settings,
+  user,
+  initialState,
+  loginedUser,
 }) => {
   const META_DESC_LIMIT = 300
   const router = useRouter()
-  const lodginedUserRoles = lodginedUser?.roles || []
+  const dictionary = useLocale() as DashboardLocaleSchema
+  const lodginedUserRoles = loginedUser?.roles || []
 
   const canCreate = authorize(lodginedUserRoles, 'user.create')
   const canEdit = authorize(
     lodginedUserRoles,
-    lodginedUser?.id !== user?.id ? 'user.edit.any' : 'user.edit.own',
+    loginedUser?.id !== user?.id ? 'user.edit.any' : 'user.edit.own',
   )
   const canDelete = authorize(
     lodginedUserRoles,
-    lodginedUser?.id !== user?.id ? 'user.delete.any' : 'user.delete.own',
+    loginedUser?.id !== user?.id ? 'user.delete.any' : 'user.delete.own',
   )
 
-  const initialState = {
-    message: null,
-    errors: {},
-    values: { roles: [], ...user },
-  }
   const actionHandler = user
     ? updateUser.bind(null, String(user.id))
     : createUserAction
@@ -69,7 +75,10 @@ export const UserForm: React.FC<ProductFormProps> = ({
   const [loading, setLoading] = useState(false)
   const [imgLoading, setImgLoading] = useState(false)
 
-  const translation = getTranslation({ translations: user?.translations || [] })
+  const translation = getTranslation({
+    translations: user?.translations || [],
+    locale,
+  })
   const [about, setAbout] = useState(translation?.about || '')
   useEffect(() => {
     if (state.message && state.message !== null)
@@ -91,10 +100,10 @@ export const UserForm: React.FC<ProductFormProps> = ({
       })
     : []
 
-  const title = user ? 'ویرایش کاربر' : 'افزودن کاربر'
-  const description = user ? user.name : 'افزودن یک کاربر'
-  const toastMessage = user ? 'کاربر بروزرسانی شد' : 'کاربر اضافه شد'
-  const action = user ? 'ذخیره تغییرات' : 'ذخیره'
+  const title = user
+    ? dictionary.feature.user.edit
+    : dictionary.feature.user.create
+  const description = user ? user.name : dictionary.feature.user.create
 
   const onDelete = async () => {
     try {
@@ -149,60 +158,60 @@ export const UserForm: React.FC<ProductFormProps> = ({
           <input type="hidden" name="locale" value="fa" />
           {/* First Name */}
           <Text
-            title="نام"
+            title={dictionary.feature.user.fName.title}
             name="firstName"
-            defaultValue={state.values?.firstName || ''}
-            placeholder="نام"
+            defaultValue={state.values?.translation?.firstName || ''}
+            placeholder={dictionary.feature.user.fName.placeholder}
             state={state}
             icon={<UserIcon className="w-4 h-4" />}
             className="col-span-3 lg:col-span-1"
           />
           {/* Last Name */}
           <Text
-            title="نام خانوادگی"
+            title={dictionary.feature.user.lName.title}
             name="lastName"
-            defaultValue={state.values?.lastName}
-            placeholder="نام خانوادگی"
+            defaultValue={state.values?.translation?.lastName}
+            placeholder={dictionary.feature.user.lName.placeholder}
             state={state}
             icon={<UserIcon className="w-4 h-4" />}
             className="col-span-3 lg:col-span-1"
           />
           {/* Email */}
           <Text
-            title="ایمیل"
+            title={dictionary.feature.user.email.title}
             name="email"
             defaultValue={state.values?.email}
-            placeholder="ایمیل"
+            placeholder={dictionary.feature.user.email.placeholder}
             state={state}
             icon={<MailIcon className="w-4 h-4" />}
             className="col-span-3 lg:col-span-1"
           />
           {/* userName */}
           <Text
-            title="نام کاربری"
+            title={dictionary.feature.user.username.title}
             name="userName"
             defaultValue={state.values?.userName}
-            placeholder="نام کاربری"
+            placeholder={dictionary.feature.user.username.placeholder}
             state={state}
             icon={<MailIcon className="w-4 h-4" />}
             className="col-span-3 lg:col-span-1"
           />
           {/* Mobile */}
           <Text
-            title="موبایل"
+            title={dictionary.feature.user.mobile.title}
             name="mobile"
             defaultValue={state.values?.mobile}
-            placeholder="موبایل"
+            placeholder={dictionary.feature.user.mobile.placeholder}
             state={state}
             icon={<PhoneIcon className="w-4 h-4" />}
             className="col-span-3 lg:col-span-1"
           />
           {/* Roles */}
           <MultipleSelect
-            title="نقش"
+            title={dictionary.feature.user.roles.title}
             name="roles"
             defaultValues={userRoles}
-            placeholder="نقش های کاربر را انتخاب کنید"
+            placeholder={dictionary.feature.user.roles.placeholder}
             state={state}
             defaultSuggestions={roleOptions}
             icon={<ShieldQuestionIcon className="w-4 h-4" />}
@@ -210,14 +219,11 @@ export const UserForm: React.FC<ProductFormProps> = ({
           />
           {/* Password */}
           <Text
-            title="رمز ورود"
+            title={dictionary.feature.user.password.title}
             name="password"
             type="password"
-            placeholder="رمز ورود"
-            description={
-              user &&
-              'اگر می خواهید رمز ورود کاربر را تغییر دهید، این فیلد را پر کنید.'
-            }
+            placeholder={dictionary.feature.user.password.placeholder}
+            description={user && dictionary.feature.user.password.description}
             state={state}
             icon={<KeyRound className="w-4 h-4" />}
             className="col-span-3 lg:col-span-1"
@@ -225,16 +231,18 @@ export const UserForm: React.FC<ProductFormProps> = ({
           <div className="col-span-3">
             {/* Meta Description */}
             <div className="space-y-1">
-              <Label htmlFor="about">معرفی</Label>
+              <Label htmlFor="about">
+                {dictionary.feature.user.about.title}
+              </Label>
               <Textarea
                 id="about"
                 name="about"
-                defaultValue={state.values?.about}
+                defaultValue={state.values?.translation?.about || ''}
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
                 maxLength={META_DESC_LIMIT}
                 rows={3}
-                placeholder="معرفی کوتاه کاربر..."
+                placeholder={dictionary.feature.user.about.description}
               />
               <p
                 className={cn(
@@ -243,7 +251,7 @@ export const UserForm: React.FC<ProductFormProps> = ({
                   about.length >= META_DESC_LIMIT && 'text-red-600',
                 )}
               >
-                {about.length}/{META_DESC_LIMIT} کاراکتر
+                {about.length}/{META_DESC_LIMIT} {dictionary.shared.character}
               </p>
             </div>
           </div>
@@ -251,6 +259,7 @@ export const UserForm: React.FC<ProductFormProps> = ({
 
         <div className="relative col-span-12 md:col-span-3 gap-2">
           <StickyBox offsetBottom={0}>
+            <ContentLanguageTabs settings={settings} />
             <ProfileUpload title="" name="image" defaultValue={user?.image} />
             <SubmitButton loading={loading} className="my-4 w-full" />
           </StickyBox>

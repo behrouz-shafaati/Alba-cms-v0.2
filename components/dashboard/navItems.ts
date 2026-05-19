@@ -326,7 +326,7 @@ export default function getNavItems({ locale, dictionary }: Props) {
     {
       slug: 'logout',
       title: t?.feature?.logout?.title || 'Logout',
-      href: '/logout',
+      href: `/${t.lang}/logout`,
       icon: 'LogOut',
       label: '',
       authorized: [],

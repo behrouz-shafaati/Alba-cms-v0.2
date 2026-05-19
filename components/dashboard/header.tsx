@@ -8,12 +8,14 @@ import getTranslation from '@/lib/utils/getTranslation'
 import { ModeToggle } from '../theme-mode-toggle/ModeToggle'
 
 type props = {
+  locale: string
   siteSettings: Settings
 }
 
-export default function Header({ siteSettings }: props) {
+export default function Header({ siteSettings, locale }: props) {
   const siteInfo = getTranslation({
     translations: siteSettings?.general?.translations || [],
+    locale,
   })
   const src =
     siteSettings?.general?.faviconDetails?.srcSmall &&

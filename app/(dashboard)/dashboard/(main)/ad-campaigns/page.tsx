@@ -1,6 +1,8 @@
 import { BreadCrumb } from '@/components/other/breadcrumb'
+import { getSession } from '@/lib/auth/get-session'
 import CampaignTable from '@/lib/features/campaign/ui/table'
-const breadcrumbItems = [{ title: 'کمپین‌ها', link: '/dashboard/campaigns' }]
+import { User } from '@/lib/features/user/interface'
+import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 
 interface PageProps {
   searchParams: Promise<{
@@ -10,13 +12,25 @@ interface PageProps {
 }
 
 async function Page({ searchParams }: PageProps) {
+  const user = (await getSession())?.user as User
+  const { resolvedLocale, dictionary } = await resolveLocale({ user })
+  const breadcrumbItems = [
+    {
+      title: dictionary.feature.adCampaign.title,
+      link: '/dashboard/campaigns',
+    },
+  ]
   const resolvedSearchParams = await searchParams
-  const { query = '', page = '1' } = resolvedSearchParams
+  const { page = '1', ...filters } = resolvedSearchParams
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <BreadCrumb items={breadcrumbItems} />
-      <CampaignTable query={query} page={Number(page)} />
+      <CampaignTable
+        locale={resolvedLocale}
+        filters={filters}
+        page={Number(page)}
+      />
     </div>
   )
 }

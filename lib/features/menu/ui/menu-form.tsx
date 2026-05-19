@@ -13,6 +13,8 @@ import { useSession } from '@/components/context/SessionContext'
 import AccessDenied from '@/components/other/access-denied'
 import { toast } from 'sonner'
 import authorize from '@/lib/utils/authorize'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import { useLocale } from '@/hooks/useLocale'
 
 interface MenuFormProps {
   initialState: any | null
@@ -27,6 +29,7 @@ export const MenuForm: React.FC<MenuFormProps> = ({
 }) => {
   const searchParams = useSearchParams()
   const localedFallback = settings.language?.siteDefault
+  const dictionary = useLocale() as DashboardLocaleSchema
 
   const locale = searchParams.get('locale') ?? localedFallback
   const router = useRouter()
@@ -50,8 +53,12 @@ export const MenuForm: React.FC<MenuFormProps> = ({
   const [state, dispatch] = useActionState(actionHandler as any, initialState)
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-  const title = isUpdate ? 'ویرایش فهرست' : 'افزودن فهرست'
-  const description = isUpdate ? 'ویرایش فهرست' : 'افزودن فهرست'
+  const title = isUpdate
+    ? dictionary.feature.menu.edit
+    : dictionary.feature.menu.create
+  const description = isUpdate
+    ? dictionary.feature.menu.edit
+    : dictionary.feature.menu.create
 
   const onDelete = async () => {
     try {
@@ -69,7 +76,6 @@ export const MenuForm: React.FC<MenuFormProps> = ({
 
   if ((menu && !canEdit) || !canCreate) return <AccessDenied />
 
-  console.log('#234 state in form:', state)
   return (
     <>
       <div className="flex items-center justify-between">
@@ -106,10 +112,10 @@ export const MenuForm: React.FC<MenuFormProps> = ({
             />
             {/* Title */}
             <Text
-              title="عنوان"
+              title={dictionary.feature.menu.title}
               name="title"
               defaultValue={state?.values?.translation?.title || ''}
-              placeholder="عنوان"
+              placeholder={dictionary.feature.menu.title}
               state={state}
               icon={<HeadingIcon className="h-4 w-4" />}
             />

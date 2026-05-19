@@ -17,6 +17,7 @@ import { MenuItem } from '../types/menu'
 import { Button } from '@/components/ui/button'
 // import DraggableLinksWrapper from './draggable-links-wrapper'
 import { ContentLanguageTabs } from '@/components/input/ContentLanguageTabs'
+import { useLocale } from '@/hooks/useLocale'
 
 type props = {
   name: string
@@ -33,6 +34,7 @@ export default function MenuBuilder({
   className = '',
   settings,
 }: props) {
+  const dictionary = useLocale()
   const { items, setItems, addItem, getJson, reorderItems } = useMenuStore()
   const [activeItem, setActiveItem] = useState<MenuItem | null>(null)
 
@@ -103,7 +105,7 @@ export default function MenuBuilder({
           </DragOverlay>
         </DndContext>
         <Button type="button" onClick={addItem} className="w-full">
-          + افزودن آیتم
+          + {dictionary.feature.menu.addItem}
         </Button>
         {/* <pre className=" ltr bg-slate-200 dark:bg-slate-800 p-4 mt-4">
         <code>{getJson()}</code>

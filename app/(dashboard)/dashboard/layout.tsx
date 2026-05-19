@@ -5,9 +5,8 @@ import { Settings } from '@/lib/features/settings/interface'
 import { redirect } from 'next/navigation'
 import { ThemeProvider } from '@/components/context/theme-provider'
 import { DashboardLocaleProvider } from '@/components/context/dashboard-locale-provider'
-import { getDashboardDictionary } from '@/lib/i18n/dashboard'
 import { getSession } from '@/lib/auth/get-session'
-import { Session, SupportedLanguage } from '@/lib/types'
+import { Session } from '@/lib/types'
 import authorize from '@/lib/utils/authorize'
 import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 import { SessionProvider } from '@/components/context/SessionContext'
@@ -48,7 +47,11 @@ const Layout_ = async ({
   children: React.ReactNode
 }>) => {
   const siteSettings: Settings = (await getSettings()) as Settings
-  if (siteSettings?.appInstalled == false) redirect('/install/en/language')
+  if (
+    siteSettings?.appInstalled == false ||
+    siteSettings?.appInstalled == undefined
+  )
+    redirect('/install/en/language')
 
   const session = (await getSession()) as Session
   const user = session?.user
@@ -57,8 +60,7 @@ const Layout_ = async ({
     redirect('/en/login')
   }
   const locale = user?.locale || siteSettings?.language?.dashboardDefault || ''
-  const resolvedLocale = (await resolveLocale({ locale })) as SupportedLanguage
-  const dictionary = getDashboardDictionary(resolvedLocale)
+  const { resolvedLocale, dictionary } = await resolveLocale({ locale })
   const dir = dictionary.dir
   return (
     <html lang={resolvedLocale} dir={dir}>

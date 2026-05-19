@@ -3,14 +3,21 @@
   "lang": "fa",
   "language": "فارسی",
   "dir": "rtl",
+  "post": {},
   "shared": {
-    "chooseYorLanguage": "زبانتان را انتخاب کنید",
-    "failMongodbConnection": "اتصال به پایگاه داده ناموفق بود.",
-    "next": "بعدی",
-    "previous": "قبلی",
-    "mongodbUri": "Mongodb URL",
-    "fillForm": "لطفا فیلدهای لازم را پر کنید.",
-    "dbError": "خطای پایگاه داده.",
-    "login": "وارد شوید"
+    "rightNow": "همین الان",
+    "minutesAgo": "دقیقه قبل",
+    "hoursAgo": "ساعت قبل",
+    "daysAgo": "روز قبل",
+    "monthsAgo": "ماه قبل",
+    "yearsAgo": "سال قبل",
+    "yearsAnd": "سال و"
+  },
+  "input": {
+    "comboBox": {
+      "loading": "در حال بارگزاری...",
+      "notFound": "چیزی پیدا نشد",
+      "placeholder": "انتخاب کنید..."
+    }
   }
 }

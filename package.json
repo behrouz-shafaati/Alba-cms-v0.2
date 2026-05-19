@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3001",
+    "dev": "next dev",
     "build": "next build",
     "buildDebug": "next build --debug-prerender",
-    "start": "next start --port 3001",
+    "start": "next start",
     "lint": "eslint",
-    "analyze": "cross-env ANALYZE=true next build --webpack"
+    "analyze": "cross-env ANALYZE=true next build --webpack",
+    "i18n:check": "i18n-check"
   },
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",

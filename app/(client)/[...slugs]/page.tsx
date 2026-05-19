@@ -43,12 +43,11 @@ export default async function Page({ params, searchParams }: Props) {
   slugs = slugs.map((slug) => decodeURI(slug))
   const firstSlug = slugs?.[0] || null
   const locale = firstSlug || ''
-  const resolvedLocale = (await resolveLocale({ locale })) as SupportedLanguage
+  const { resolvedLocale, dir } = await resolveLocale({ locale })
   const slugsWithoutLocale = getSlugsWithoutLocale(slugs)
   // console.log('#234987 slugs:', slugs)
   console.log('#234987 resolvedLocale:', resolvedLocale)
   // console.log('#234987 slugsWithoutLocale:', slugsWithoutLocale)
-  const dir = getDirection(resolvedLocale)
 
   return (
     <html lang={resolvedLocale} dir={dir}>

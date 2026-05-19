@@ -84,6 +84,7 @@ export async function startUserMigration(
   try {
     const migration = createUserMigration(values, {
       verbose: true,
+      locale: values.locale,
       ...options,
     })
 

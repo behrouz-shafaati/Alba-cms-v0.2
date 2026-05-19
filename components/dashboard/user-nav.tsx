@@ -13,20 +13,26 @@ import React from 'react'
 import { ButtonProps } from '../ui/loading-button'
 import authorize from '@/lib/utils/authorize'
 import { getSession } from '@/lib/auth/get-session'
+import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 
 const AvatarButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (props, ref) => <Button ref={ref} {...props} />
+  (props, ref) => <Button ref={ref} {...props} />,
 )
 AvatarButton.displayName = 'AvatarButton'
 
 export async function UserNav() {
   const { user } = await getSession()
+  const {
+    dictionary,
+    resolvedLocale: locale,
+    dir,
+  } = await resolveLocale({ user })
   const userRoles = user?.roles || []
   const canCreatePost = authorize(userRoles, 'post.create', false)
   const canDashboardView = authorize(userRoles, 'dashboard.view.any', false)
   if (user) {
     return (
-      <DropdownMenu dir="rtl">
+      <DropdownMenu dir={dir}>
         <DropdownMenuTrigger asChild>
           <AvatarButton
             variant="ghost"
@@ -57,7 +63,7 @@ export async function UserNav() {
                 href="/dashboard/posts/create"
                 className="w-full flex justify-between py-1.5 px-2"
               >
-                <span>افزودن مطلب</span>
+                <span>{dictionary.feature.post.create}</span>
               </Link>
             </DropdownMenuItem>
           )}
@@ -67,7 +73,7 @@ export async function UserNav() {
                 href="/dashboard"
                 className="w-full flex justify-between py-1.5 px-2"
               >
-                <span>داشبورد</span>
+                <span>{dictionary.shared.dashboard}</span>
               </Link>
             </DropdownMenuItem>
           )}
@@ -87,10 +93,10 @@ export async function UserNav() {
 
           <DropdownMenuItem>
             <Link
-              href="/logout"
+              href={`/${locale}/logout`}
               className="w-full flex justify-between py-1.5 px-2"
             >
-              <span>خروج</span>
+              <span>{dictionary.feature.logout.title}</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuContent>

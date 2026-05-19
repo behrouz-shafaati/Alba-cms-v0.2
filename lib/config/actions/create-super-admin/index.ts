@@ -9,21 +9,30 @@ import { writeConfigAction } from '../../action'
 
 export default async function configSuperAdminAction(
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ) {
   let newUser = null
   const rawValues = Object.fromEntries(formData)
   const locale = formData.get('locale')?.toString() || 'en'
+  const values = {
+    ...rawValues,
+    translation: {
+      locale,
+      firstName: rawValues.firstName,
+      lastName: rawValues.lastName,
+      about: rawValues?.about,
+    },
+  }
   const t = getInstallDictionary(locale)
   const FormSchema = createConfigSuperAdminSchema(locale)
   // Validate form fields
   const validatedFields = FormSchema.safeParse(
-    Object.fromEntries(formData.entries())
+    Object.fromEntries(formData.entries()),
   )
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
     return {
-      values: rawValues,
+      values,
       errors: validatedFields.error.flatten().fieldErrors,
       message: t.shared.fillForm,
       success: false,
@@ -32,7 +41,7 @@ export default async function configSuperAdminAction(
 
   if (validatedFields.data.password !== validatedFields.data.confirmPassword) {
     return {
-      values: rawValues,
+      values,
       message: t.user.confirmPassword.dontEqual_error,
       success: false,
     }
@@ -51,6 +60,12 @@ export default async function configSuperAdminAction(
       mobileVerified: true,
       emailVerified: true,
       userName: await userCtrl.generateUniqueUsername(),
+      translation: {
+        locale,
+        firstName: validatedFields.data.firstName,
+        lastName: validatedFields.data.lastName,
+        about: '',
+      },
     }
 
     console.log('#234324 cleanedUserData:', cleanedUserData)

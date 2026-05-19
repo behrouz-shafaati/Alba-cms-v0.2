@@ -90,7 +90,7 @@ export const Form: React.FC<FormProps> = ({ initialData: form, settings }) => {
             }
           : {
               // initialContent: { type: 'form', templateFor: ['form'], rows: [] },
-              initialContent: { type: 'form', rows: [] },
+              initialContent: { type: 'form', templateFor: ['form'], rows: [] },
             })}
         locale={locale}
       />

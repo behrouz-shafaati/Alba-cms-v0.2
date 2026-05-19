@@ -12,6 +12,7 @@ import { MessageSquareShare } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useUpdatedUrl } from '@/hooks/use-updated-url'
 import getTranslation from '@/lib/utils/getTranslation'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
 type FilterType = 'text' | 'select' | 'boolean'
 
@@ -27,7 +28,10 @@ declare module '@tanstack/react-table' {
   }
 }
 
-export const columns: ColumnDef<PostComment>[] = [
+export const getColumns = (
+  dictionary: DashboardLocaleSchema,
+  locale: string,
+): ColumnDef<PostComment>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -48,21 +52,25 @@ export const columns: ColumnDef<PostComment>[] = [
     enableHiding: false,
   },
   {
-    header: 'دیدگاه',
+    header: dictionary.feature.postComment.title,
     accessorFn: (row) => {
       const translation = getTranslation({
         translations: row.translations,
-        locale: row.locale ?? 'fa',
+        locale,
       })
       return JSON.stringify(translation.contentJson) // برای فیلتر پذیری
     },
     cell: ({ row }) => {
-      return <PostCommentItemManage postComment={row.original} />
+      return (
+        <div className="max-w-md">
+          <PostCommentItemManage postComment={row.original} />
+        </div>
+      )
     },
   },
   {
     accessorKey: 'post',
-    header: 'مطلب',
+    header: dictionary.feature.post.title,
     accessorFn: (row) => {
       const translation = getTranslation({
         translations: row.post?.translations,
@@ -102,6 +110,7 @@ export const columns: ColumnDef<PostComment>[] = [
           return postResult.data.map((post: Post) => {
             const translation = getTranslation({
               translations: post.translations,
+              locale,
             })
             return {
               label: translation.title,
@@ -118,15 +127,15 @@ export const columns: ColumnDef<PostComment>[] = [
   },
   {
     accessorKey: 'status',
-    header: 'وضعیت',
+    header: dictionary.feature.postComment.status,
     cell: ({ row }) => <Status row={row} />,
     meta: {
       filterConfig: {
         type: 'select',
         options: [
-          { label: 'در انتظار بررسی', value: 'pending' },
-          { label: 'تایید شده', value: 'approved' },
-          { label: 'رد شده', value: 'rejected' },
+          { label: dictionary.feature.postComment.pending, value: 'pending' },
+          { label: dictionary.feature.postComment.approved, value: 'approved' },
+          { label: dictionary.feature.postComment.rejected, value: 'rejected' },
         ],
       },
     },

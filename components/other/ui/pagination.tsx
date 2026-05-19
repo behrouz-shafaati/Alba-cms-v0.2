@@ -8,8 +8,11 @@ import { Suspense } from 'react'
 import generatePagination from '@/lib/utils/generatePagination'
 import { Button } from '@/components/ui/button'
 import { LinkAlba } from '../link-alba'
+import { useLocale } from '@/hooks/useLocale'
 
 function PaginationComponent({ totalPages }: { totalPages: number }) {
+  const dictionary = useLocale()
+  const dir = dictionary.dir
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const currentPage = Number(searchParams.get('page')) || 1
@@ -30,7 +33,7 @@ function PaginationComponent({ totalPages }: { totalPages: number }) {
       <div className="inline-flex gap-1">
         {currentPage > 1 && (
           <PaginationArrow
-            direction="left"
+            direction={dir == 'rtl' ? 'left' : 'right'}
             href={createPageURL(currentPage - 1)}
             isDisabled={currentPage <= 1}
           />
@@ -59,7 +62,7 @@ function PaginationComponent({ totalPages }: { totalPages: number }) {
 
         {currentPage < totalPages && (
           <PaginationArrow
-            direction="right"
+            direction={dir == 'rtl' ? 'right' : 'left'}
             href={createPageURL(currentPage + 1)}
             isDisabled={currentPage >= totalPages}
           />
@@ -89,7 +92,7 @@ function PaginationNumber({
       'hover:bg-gray-100': !isActive && position !== 'middle',
       'dark:hover:bg-gray-800': !isActive && position !== 'middle',
       'text-gray-300': position === 'middle',
-    }
+    },
   )
 
   return isActive || position === 'middle' ? (
@@ -118,7 +121,7 @@ function PaginationArrow({
       'hover:bg-gray-100': !isDisabled,
       'ml-2 md:mr-4': direction === 'right',
       'mr-2 md:ml-4': direction === 'left',
-    }
+    },
   )
 
   const icon =

@@ -6,7 +6,7 @@ import {
 
 const TranslationSchema = new Schema<FormSubmissionTranslationSchema>(
   {
-    lang: { type: String, required: true }, // "fa", "en", "de", ...
+    locale: { type: String, required: true }, // "fa", "en", "de", ...
     values: {
       type: Schema.Types.Mixed, // شیء داینامیک شامل فیلدها و مقادیرشان
       required: true,

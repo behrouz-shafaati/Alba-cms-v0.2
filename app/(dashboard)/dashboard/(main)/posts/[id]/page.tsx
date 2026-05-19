@@ -8,7 +8,7 @@ import { PostFormTranslation } from '@/lib/features/post/ui/post-form-translatio
 import { User } from '@/lib/features/user/interface'
 import { getSession } from '@/lib/auth/get-session'
 import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
-import { getDashboardDictionary } from '@/lib/i18n/dashboard'
+import getTranslation from '@/lib/utils/getTranslation'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -24,21 +24,17 @@ export default async function Page({ params }: PageProps) {
     getSettingsAction(),
     categoryCtrl.findAll({}),
   ])
-  const locale = user?.locale || settings?.language?.dashboardDefault || ''
-  const resolvedLocale = await resolveLocale({ locale })
-  const dictionary = getDashboardDictionary(resolvedLocale)
+  const { resolvedLocale: locale, dictionary } = await resolveLocale({ user })
   if (id !== 'create') {
     ;[post] = await Promise.all([postCtrl.findById({ id })])
 
     if (!post) {
       notFound()
     }
-    const translation: PostTranslationSchema =
-      post?.translations?.find(
-        (t: PostTranslationSchema) => t.locale === locale,
-      ) ||
-      post?.translations[0] ||
-      {}
+    const translation: PostTranslationSchema = getTranslation({
+      translations: post?.translations,
+      locale,
+    })
 
     pageBreadCrumb = {
       title: translation?.title,

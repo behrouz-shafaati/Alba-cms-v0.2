@@ -224,7 +224,7 @@ export async function updateStatusPostComment(
   }
   console.log('#09345798 id v params:', id, 'and: ', parsed.data)
   try {
-    await can(user.roles, 'postComment.moderate.any')
+    await authorize(user.roles, 'postComment.moderate.any')
     const updatedPostComment = await postCommentCtrl.findOneAndUpdate({
       filters: id,
       params: parsed.data,

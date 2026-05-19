@@ -3,8 +3,12 @@ import { ColumnDef } from '@tanstack/react-table'
 import { CellAction } from './cell-action'
 import { Checkbox } from '@/components/ui/checkbox'
 import { User } from '@/lib/features/user/interface'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
-export const columns: ColumnDef<User>[] = [
+export const getColumns = (
+  dictionary: DashboardLocaleSchema,
+  locale: string,
+): ColumnDef<User>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -26,19 +30,19 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: 'name',
-    header: 'نام',
+    header: dictionary.feature.user.name,
   },
   {
     accessorKey: 'email',
-    header: 'ایمیل',
+    header: dictionary.feature.user.email.title,
   },
   {
     accessorKey: 'roles',
-    header: 'نقش',
+    header: dictionary.feature.user.roles.title,
   },
   {
     accessorKey: 'mobile',
-    header: 'موبایل',
+    header: dictionary.feature.user.mobile.title,
   },
   {
     id: 'actions',

@@ -68,7 +68,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <DropdownMenuItem
               onClick={() => router.push(`/dashboard/posts/${data.id}`)}
             >
-              <Edit className="ml-2 h-4 w-4" /> {dictionary.shared.update}
+              <Edit className="me-1 h-4 w-4" /> {dictionary.shared.update}
             </DropdownMenuItem>
           )}
           <DropdownMenuItem asChild>
@@ -77,12 +77,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Eye className="ml-2 h-4 w-4" /> {dictionary.shared.view}
+              <Eye className="me-1 h-4 w-4" /> {dictionary.shared.view}
             </Link>
           </DropdownMenuItem>
           {canDelete && (
             <DropdownMenuItem onClick={() => setOpen(true)}>
-              <Trash className="ml-2 h-4 w-4" /> {dictionary.shared.delete}
+              <Trash className="me-1 h-4 w-4" /> {dictionary.shared.delete}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

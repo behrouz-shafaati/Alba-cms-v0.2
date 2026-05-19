@@ -15,12 +15,14 @@ import { deleteFormAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
 import Link from 'next/link'
 import authorize from '@/lib/utils/authorize'
+import { useLocale } from '@/hooks/useLocale'
 
 interface CellActionProps {
   data: Form
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const dictionary = useLocale()
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const router = useRouter()
@@ -56,7 +58,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         />
       )}
       <div className="flex flex-row gap-2 items-center justify-center">
-        <Button variant="ghost" title="پیام های دریافتی">
+        <Button
+          aria-label="inbox messages"
+          variant="ghost"
+          title={dictionary.feature.form.inboxMessages}
+        >
           <Link href={`/dashboard/forms/${data.id}/submissions`}>
             <Inbox className="h-4 w-4" />
           </Link>
@@ -75,12 +81,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
               <DropdownMenuItem
                 onClick={() => router.push(`/dashboard/forms/${data.id}`)}
               >
-                <Edit className="ml-2 h-4 w-4" /> بروزرسانی
+                <Edit className="me-1 h-4 w-4" /> {dictionary.shared.update}
               </DropdownMenuItem>
             )}
             {canDelete && (
               <DropdownMenuItem onClick={() => setOpen(true)}>
-                <Trash className="ml-2 h-4 w-4" /> حذف
+                <Trash className="me-1 h-4 w-4" /> {dictionary.shared.delete}
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>

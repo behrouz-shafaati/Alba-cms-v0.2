@@ -1,35 +1,23 @@
-import { DataTable } from '@/components/ui/data-table'
-import { Heading } from '@/components/ui/heading'
-import PostCommentCtrl from '@/features/post-comment/controller'
-import { columns } from './table/columns'
-import { QueryResponse } from '@/lib/entity/core/interface'
-import { PostComment } from '../interface'
 import { commentsUrl } from '../utils'
-import { LinkButton } from '@/components/ui/link-button'
+import { Heading } from '@/components/other/ui/heading'
+import { DataTable } from '@/components/other/ui/data-table'
+import { getColumns } from './table/columns'
+import { LinkButton } from '@/components/other/ui/link-button'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
 interface PostCommentTableProps {
   refetchDataUrl?: string
-  filters: {
-    status?: 'pending' | 'approved' | 'rejected'
-    query?: string
-    post?: string
-  }
-  page?: number
+  locale: string
+  dictionary: DashboardLocaleSchema
+  findResult: any
 }
 
 export default async function LastPostComments({
   refetchDataUrl = commentsUrl,
-  filters,
-  page = 1,
+  locale,
+  dictionary,
+  findResult,
 }: PostCommentTableProps) {
-  const findResult: QueryResponse<PostComment> = await PostCommentCtrl.find(
-    {
-      filters,
-      pagination: { page, perPage: 4 },
-    },
-    false
-  )
-
   return (
     <>
       <div className="flex items-start justify-between">
@@ -39,7 +27,7 @@ export default async function LastPostComments({
         <>
           <DataTable
             searchTitle="جستجو ..."
-            columns={columns}
+            columns={getColumns(dictionary, locale)}
             response={findResult}
             refetchDataUrl={refetchDataUrl}
             showSearch={false}

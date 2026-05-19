@@ -173,7 +173,8 @@ export const useBuilderStore = create<State>((set, get) => ({
       if (
         node.type === 'page' ||
         node.type === 'template' ||
-        node.type === 'templateSegment'
+        node.type === 'templateSegment' ||
+        node.type === 'form'
       ) {
         return {
           ...node,
@@ -254,6 +255,7 @@ export const useBuilderStore = create<State>((set, get) => ({
           case 'templateSegment':
           case 'page':
           case 'template':
+          case 'form':
             return {
               ...node,
               rows: node.rows.map(recurse).filter(Boolean), // حذف null

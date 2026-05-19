@@ -11,13 +11,16 @@ const getCachedSettings = unstable_cache(
     )
       return { appInstalled: false }
     if (!settingsFromDB.data) return { appInstalled: false }
-    return Object.fromEntries(settingsFromDB.data.map((s) => [s.key, s.value]))
+    const mapedData = Object.fromEntries(
+      settingsFromDB.data.map((s) => [s.key, s.value]),
+    )
+    return { ...mapedData, appInstalled: true }
   },
   ['site-settings'],
   {
     revalidate: 3600,
     tags: ['site-settings'],
-  }
+  },
 )
 
 export default getCachedSettings

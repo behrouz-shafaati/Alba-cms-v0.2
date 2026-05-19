@@ -15,10 +15,7 @@ interface PageProps {
 
 async function Page({ searchParams }: PageProps) {
   const user = (await getSession())?.user as User
-  const [siteSettings] = await Promise.all([getSettings()])
-  const locale = user?.locale || siteSettings?.language?.dashboardDefault || ''
-  const resolvedLocale = await resolveLocale({ locale })
-  const dictionary = getDashboardDictionary(resolvedLocale)
+  const { resolvedLocale, dictionary } = await resolveLocale({ user })
 
   const breadcrumbItems = [
     { title: dictionary.feature.tag.title, link: '/dashboard/tags' },

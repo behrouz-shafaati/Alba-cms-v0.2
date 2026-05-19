@@ -1,6 +1,6 @@
 'use client'
 import { useActionState, useCallback, useEffect, useRef, useState } from 'react'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import {
   Braces as PostIcon,
@@ -51,6 +51,7 @@ import { getEmbedUrl } from '@/components/tiptap-editor/utils'
 import TiptapEditorLazy from '@/components/tiptap-editor/TiptapEditorLazy'
 import { useLocale } from '@/hooks/useLocale'
 import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
+import getTranslation from '@/lib/utils/getTranslation'
 
 interface PostFormProps {
   post: any | null
@@ -122,10 +123,10 @@ export const PostForm: React.FC<PostFormProps> = ({
   )
 
   const categoryOptions: Option[] = allCategories.map((category: Category) => {
-    const translation: any =
-      category?.translations?.find((t: any) => t.locale === locale) ||
-      category?.translations[0] ||
-      {}
+    const translation: any = getTranslation({
+      translations: category?.translations,
+      locale,
+    })
 
     return {
       value: String(category.id),

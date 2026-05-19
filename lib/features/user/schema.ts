@@ -4,10 +4,12 @@ import hashPassword from '@/lib/utils/hashPassword'
 
 const TranslationsUserSchema = new Schema(
   {
-    lang: { type: String, required: true }, // "fa", "en", "de", ...
+    locale: { type: String, required: true }, // "fa", "en", "de", ...
     about: { type: String, default: '' },
+    firstName: String,
+    lastName: String,
   },
-  { _id: false }
+  { _id: false },
 )
 
 const userSchema = new Schema<UserSchema>(
@@ -28,8 +30,6 @@ const userSchema = new Schema<UserSchema>(
     userName: { type: String, required: true, unique: true },
     emailVerified: { type: Boolean, default: false },
     password: { type: String, required: true },
-    firstName: String,
-    lastName: String,
     country: String,
     state: String,
     city: String,
@@ -53,12 +53,10 @@ const userSchema = new Schema<UserSchema>(
     deleted: { type: Boolean, default: false },
     translations: [TranslationsUserSchema],
   },
-  { timestamps: true }
+  { timestamps: true },
 )
 
 userSchema.index({
-  firstName: 'text',
-  lastName: 'text',
   email: 'text',
   mobile: 'text',
 })
@@ -103,7 +101,7 @@ userSchema.index(
       mobile: { $exists: true, $ne: null },
       deleted: false,
     },
-  }
+  },
 )
 
 userSchema.index(
@@ -114,7 +112,7 @@ userSchema.index(
       email: { $exists: true, $ne: null },
       deleted: false,
     },
-  }
+  },
 )
 
 userSchema
@@ -128,8 +126,8 @@ userSchema
 const transform = (doc: any, ret: any, options: any) => {
   ret.id = ret._id?.toHexString()
   ret.name =
-    ret.firstName && ret.lastName
-      ? `${ret.firstName} ${ret.lastName}`
+    ret?.firstName && ret?.lastName
+      ? `${ret?.firstName} ${ret?.lastName}`
       : ret.email
   delete ret._id
   delete ret.__v

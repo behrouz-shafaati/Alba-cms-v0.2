@@ -4,13 +4,35 @@
   "language": "فارسی",
   "dir": "rtl",
   "shared": {
-    "chooseYorLanguage": "زبانتان را انتخاب کنید",
-    "failMongodbConnection": "اتصال به پایگاه داده ناموفق بود.",
+    "chooseYorLanguage": "زبان خود را انتخاب کنید",
     "next": "بعدی",
     "previous": "قبلی",
-    "mongodbUri": "Mongodb URL",
-    "fillForm": "لطفا فیلدهای لازم را پر کنید.",
-    "dbError": "خطای پایگاه داده.",
-    "login": "وارد شوید"
+    "mongodbUri": "Mongodb URI",
+    "failMongodbConnection": "Connection to database failed.",
+    "fillForm": "Please fill in the required fields.",
+    "dbError": "Database error",
+    "login": "Login",
+    "dashboard": "Dashboard",
+    "submitLabel": "Submit",
+    "notAuthorized": "You do not have permission to perform this operation."
+  },
+  "input": {
+    "combobox": {
+      "placeholder": "Choose...",
+      "notFound": "No items found.",
+      "loading": "Loading...",
+      "all": "All"
+    }
+  },
+  "login": {
+    "title": "ورود",
+    "titleWithSiteTitle": "ورود به %s%",
+    "dontHaveAccount": "حساب کاربری ندارید؟",
+    "signup": "ثبت نام",
+    "forgotPassword": "رمز عبور خود را فراموش کرده‌اید؟",
+    "resetPassword": "بازسازی رمز عبور",
+    "identifier": { "title": "ایمیل یا موبایل" },
+    "password": { "title": "رمز عبور" },
+    "submit": "ورود"
   }
 }

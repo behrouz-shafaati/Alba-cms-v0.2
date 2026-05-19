@@ -1,9 +1,7 @@
 import { BreadCrumb } from '@/components/other/breadcrumb'
 import { getSession } from '@/lib/auth/get-session'
 import PostTable from '@/lib/features/post/ui/table'
-import { getSettings } from '@/lib/features/settings/controller'
 import { User } from '@/lib/features/user/interface'
-import { getDashboardDictionary } from '@/lib/i18n/dashboard'
 import { resolveLocale } from '@/lib/i18n/utils/resolve-locale'
 
 interface PageProps {
@@ -15,11 +13,7 @@ interface PageProps {
 
 async function Page({ searchParams }: PageProps) {
   const user = (await getSession())?.user as User
-  const [siteSettings] = await Promise.all([getSettings()])
-
-  const locale = user?.locale || siteSettings?.language?.dashboardDefault || ''
-  const resolvedLocale = await resolveLocale({ locale })
-  const dictionary = getDashboardDictionary(resolvedLocale)
+  const { resolvedLocale, dictionary } = await resolveLocale({ user })
 
   const breadcrumbItems = [
     { title: dictionary.feature.post.title, link: '/dashboard/categories' },
@@ -32,7 +26,6 @@ async function Page({ searchParams }: PageProps) {
       <BreadCrumb items={breadcrumbItems} />
       <PostTable
         locale={resolvedLocale}
-        dictionary={dictionary}
         filters={filters}
         page={Number(page)}
       />

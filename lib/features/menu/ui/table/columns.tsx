@@ -3,8 +3,12 @@ import { ColumnDef } from '@tanstack/react-table'
 import { CellAction } from './cell-action'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Menu } from '@/lib/features/menu/interface'
+import { DashboardLocaleSchema } from '@/lib/i18n/dashboard'
 
-export const columns: ColumnDef<Menu>[] = [
+export const getColumns = (
+  dictionary: DashboardLocaleSchema,
+  locale: string,
+): ColumnDef<Menu>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -25,9 +29,8 @@ export const columns: ColumnDef<Menu>[] = [
     enableHiding: false,
   },
   {
-    header: 'عنوان',
+    header: dictionary.feature.menu.title,
     accessorFn: (row) => {
-      const locale = 'fa' // یا از context/state
       return row.translations?.find((t) => t.locale === locale)?.title ?? ''
     },
   },

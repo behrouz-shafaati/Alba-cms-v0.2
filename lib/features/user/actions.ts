@@ -100,7 +100,7 @@ const loginFormSchema = z.object({
       (val) =>
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || // ایمیل معتبر
         /^(\+98|0)?9\d{9}$/.test(val), // شماره موبایل ایران (09xxxxxxxxx یا +989xxxxxxxxx)
-      { message: 'لطفاً ایمیل یا شماره موبایل معتبر وارد کنید.' }
+      { message: 'لطفاً ایمیل یا شماره موبایل معتبر وارد کنید.' },
     ),
   password: z
     .string({ required_error: 'لطفاً رمز ورود را وارد کنید.' })
@@ -122,7 +122,7 @@ type State = {
 
 export async function loginAction(
   prevState: string | undefined,
-  formData: FormData
+  formData: FormData,
 ) {
   let user = null
   let flgNeedVerification: boolean = false
@@ -130,13 +130,13 @@ export async function loginAction(
   const rawValues = Object.fromEntries(formData)
   // Validate form fields
   const validatedFields = loginFormSchema.safeParse(
-    Object.fromEntries(formData.entries())
+    Object.fromEntries(formData.entries()),
   )
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
     return {
-      values: rawValues,
       errors: validatedFields.error.flatten().fieldErrors,
+      values: rawValues,
       message: 'لطفا فیلدهای لازم را پر کنید.',
       success: false,
     }
@@ -164,7 +164,7 @@ export async function loginAction(
 
     const { isValid, needsRehash } = await verifyPassword(
       password,
-      user.password
+      user.password,
     )
     if (!isValid)
       return {
@@ -184,6 +184,8 @@ export async function loginAction(
 
     flgNeedVerification = await verificationCtrl.verificationRequired({ user })
   } catch (error) {
+    if (process.env.NODE_ENV == 'development')
+      console.log('#23487 error:', error)
     return {
       values: rawValues,
       message: 'ورود شما امکان پذیر نیست. با پشتیبانی تماس بگیرید',
@@ -221,24 +223,36 @@ export async function loginAction(
 export async function createUserAction(prevState: State, formData: FormData) {
   const siteSettings = await getSettings()
   const rawValues = Object.fromEntries(formData.entries())
-  const values = rawValues
+  const values = {
+    ...rawValues,
+    translation: {
+      locale: rawValues.locale,
+      firstName: rawValues.firstName,
+      lastName: rawValues.lastName,
+      about: rawValues.about,
+    },
+  }
   try {
     const user = (await getSession())?.user as User
-    await authorize(user.roles, 'user.create')
+    authorize(user.roles, 'user.create')
 
     if (!siteSettings?.validation?.mobileVerificationRequired) {
-      if (prevUser?.mobile !== rawValues.mobile) {
-        await userCtrl.isDuplicateUnverifiedMobileEmail({
-          mobile: rawValues.mobile,
-        })
-      }
+      await userCtrl.isDuplicateUnverifiedMobileEmail({
+        mobile: rawValues.mobile,
+        throwError: false,
+      })
     }
     if (!siteSettings?.validation?.emailVerificationRequired) {
-      if (prevUser?.email !== rawValues.email) {
-        await userCtrl.isDuplicateUnverifiedMobileEmail({
-          email: rawValues.email,
-        })
-      }
+      await userCtrl.isDuplicateUnverifiedMobileEmail({
+        email: rawValues.email,
+        throwError: false,
+      })
+    }
+    if (rawValues.username) {
+      await userCtrl.isDuplicateUsername({
+        username: rawValues.username,
+        throwError: false,
+      })
     }
     // Validate form fields
     const validatedFields = FormSchema.safeParse(rawValues)
@@ -258,7 +272,6 @@ export async function createUserAction(prevState: State, formData: FormData) {
     }
     // Create the user
     const params = await sanitizeData(validatedFields.data)
-
     await userCtrl.create({ params })
     const pathes = await revalidatePathCtrl.getAllPathesNeedRevalidate({
       feature: 'user',
@@ -300,17 +313,25 @@ const UpdateUserSchema = FormSchema.omit({ password: true })
 export async function updateUser(
   id: string,
   prevState: State,
-  formData: FormData
+  formData: FormData,
 ) {
   const siteSettings = await getSettings()
   const user = (await getSession())?.user as User
   const rawValues = Object.fromEntries(formData.entries())
-  const values = rawValues
+  const values = {
+    ...rawValues,
+    translation: {
+      locale: rawValues.locale,
+      firstName: rawValues.firstName,
+      lastName: rawValues.lastName,
+      about: rawValues.about,
+    },
+  }
   try {
     const prevUser = await userCtrl.findById({ id })
-    await can(
+    authorize(
       user.roles,
-      prevUser.id !== user.id ? 'user.edit.any' : 'user.edit.own'
+      prevUser.id !== user.id ? 'user.edit.any' : 'user.edit.own',
     )
 
     if (!siteSettings?.validation?.mobileVerificationRequired) {
@@ -378,7 +399,7 @@ export async function updateUser(
 export async function updateAccountUserAction(
   id: string,
   prevState: State,
-  formData: FormData
+  formData: FormData,
 ) {
   const siteSettings = await getSettings()
   const user = (await getSession())?.user as User
@@ -389,7 +410,7 @@ export async function updateAccountUserAction(
     const prevUser = await userCtrl.findById({ id })
     await can(
       user.roles,
-      prevUser.id !== user.id ? 'user.edit.any' : 'user.edit.own'
+      prevUser.id !== user.id ? 'user.edit.any' : 'user.edit.own',
     )
     if (!siteSettings?.validation?.mobileVerificationRequired) {
       if (prevUser?.mobile !== rawValues.mobile) {
@@ -481,7 +502,7 @@ export async function deleteUsersAction(ids: string[]) {
     for (const prevUser of prevUserResult.data) {
       await can(
         user.roles,
-        prevUser.id !== user.id ? 'user.delete.any' : 'user.delete.own'
+        prevUser.id !== user.id ? 'user.delete.any' : 'user.delete.own',
       )
     }
     await userCtrl.delete({ filters: ids })
@@ -538,7 +559,7 @@ export async function signUpAction(prevState: State, formData: FormData) {
   const rawValues = Object.fromEntries(formData)
   // Validate form fields
   const validatedFields = SignupFormSchema.safeParse(
-    Object.fromEntries(formData.entries())
+    Object.fromEntries(formData.entries()),
   )
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
@@ -606,8 +627,13 @@ export async function signUpAction(prevState: State, formData: FormData) {
 
 const sanitizeData = async (data: any, prevUser?: User) => {
   const translations = [
-    ...(prevUser?.translations.filter((t) => t.lang !== data.locale) || []),
-    { lang: data.locale, about: data.about },
+    ...(prevUser?.translations.filter((t) => t.locale !== data.locale) || []),
+    {
+      locale: data.locale,
+      about: data.about,
+      firstName: data.firstName,
+      lastName: data.lastName,
+    },
   ]
   const roles: Option[] = data.roles || []
   const cleanedUserData = {

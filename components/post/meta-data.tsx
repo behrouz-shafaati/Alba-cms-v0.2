@@ -3,7 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import timeAgo from '@/lib/utils/timeAgo'
 import { LinkAlba } from '../other/link-alba'
 
-type PostCoverProps = {
+type PostMetadataProps = {
+  dictionary: any
   createdAt: any
   author: { name: string }
   readingDuration: any
@@ -11,12 +12,13 @@ type PostCoverProps = {
 } & React.HTMLAttributes<HTMLParagraphElement> // ✅ اجازه‌ی دادن onclick, className و ...
 
 const PostMetaData = ({
+  dictionary,
   createdAt,
   author,
   readingDuration,
   styles = {},
   ...restProps
-}: PostCoverProps) => {
+}: PostMetadataProps) => {
   console.log('PostMetaData rendered for:', author?.name)
   return (
     <div style={styles} {...restProps} className="text-sm text-gray-500 mb-4">
@@ -32,7 +34,7 @@ const PostMetaData = ({
             <span>{author?.name}</span>
           </LinkAlba>
           <span className="font-thin">
-            خواندن {readingDuration} دقیقه . {timeAgo(createdAt)}
+            خواندن {readingDuration} دقیقه . {timeAgo(createdAt, dictionary)}
           </span>
         </div>
       </div>

@@ -5,10 +5,10 @@
   "dir": "rtl",
   "shared": {
     "chooseYorLanguage": "زبانتان را انتخاب کنید",
-    "failMongodbConnection": "اتصال به پایگاه داده ناموفق بود.",
     "next": "بعدی",
     "previous": "قبلی",
     "mongodbUri": "Mongodb URL",
+    "failMongodbConnection": "اتصال به پایگاه داده ناموفق بود.",
     "fillForm": "لطفا فیلدهای لازم را پر کنید.",
     "dbError": "خطای پایگاه داده.",
     "login": "وارد شوید"
@@ -17,11 +17,6 @@
     "title": "نصب اولیه",
     "chooseLanguage": " زبان",
     "steps": {
-      "admin": { "title": "ساخت مدیر" },
-      "finish": {
-        "title": "پایان",
-        "description": "پیکربندی با موفقیت انجام شد 🥳"
-      },
       "dashboard_lang": { "title": "زبان شما" },
       "variables": {
         "title": "متغییرها",
@@ -33,7 +28,12 @@
           "success_description": "متغییر DB_URI معتبربوده و ارتباط با پایگاه داده موفق بود."
         }
       },
-      "suported_lang": { "title": "زبان‌های سایت" }
+      "admin": { "title": "ساخت مدیر" },
+      "suported_lang": { "title": "زبان‌های سایت" },
+      "finish": {
+        "title": "پایان",
+        "description": "پیکربندی با موفقیت انجام شد 🥳"
+      }
     }
   },
   "input": { "combobox": { "placeholder": "انتخاب کنید" } },
@@ -76,5 +76,15 @@
       "required_error": "لطفا زبان پیش‌فرض سایت خود را انتخاب کنید."
     },
     "success": "زبان‌ها با موفقیت تنظیم شدند."
+  },
+  "variables": {
+    "title": "متغییر‌ها",
+    "check_variables": "بررسی متغییر‌ها",
+    "jwt_secret": {
+      "title": "JWT_SECRET",
+      "await_description": "بررسی متغییر JWT_SECRET",
+      "fail_description": "متغییر JWT_SECRET نامعتبر است. متغییر را ایجاد و برنامه را مجدد راه‌اندازی کنید.",
+      "success_description": "متغییر JWT_SECRET معتبر است."
+    }
   }
 }

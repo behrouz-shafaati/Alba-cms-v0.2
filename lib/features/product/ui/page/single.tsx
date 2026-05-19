@@ -14,6 +14,7 @@ import { CommentsHeader } from '@/components/post/comments-header'
 import PostMetaDataLazy from '@/components/post/meta-data-lazy'
 import getTranslation from '@/lib/utils/getTranslation'
 import { PostBreadcrumbServer } from '@/components/post/breadcrumb.server'
+import { getClientDictionary } from '@/lib/i18n/client'
 
 type props = {
   locale?: string
@@ -30,7 +31,7 @@ const DefaultSinglePageProduct = ({
   breadcrumbItems,
   post,
   siteSettings,
-  locale = 'fa',
+  locale,
   readingDuration,
   tableOfContent = null,
   comments = null,
@@ -39,7 +40,7 @@ const DefaultSinglePageProduct = ({
   const translation: PostTranslationSchema = getTranslation({
     translations: post?.translations,
   })
-
+  const dictionary = getClientDictionary(locale)
   return (
     <div className=" max-w-4xl m-auto text-justify p-2">
       <PostBreadcrumbServer content={breadcrumbItems} locale={locale} />
@@ -53,6 +54,7 @@ const DefaultSinglePageProduct = ({
       )}
       <div className="flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
         <PostMetaDataLazy
+          dictionary={dictionary}
           author={post?.author || post?.user || null}
           createdAt={post.createdAt}
           readingDuration={readingDuration}

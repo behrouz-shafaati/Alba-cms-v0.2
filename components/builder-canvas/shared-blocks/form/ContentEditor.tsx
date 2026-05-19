@@ -6,6 +6,7 @@ import { getAllForms } from '@/lib/features/form/actions'
 import { Option } from '@/lib/types'
 import { Form, FormTranslationSchema } from '@/lib/features/form/interface'
 import Combobox from '@/components/input/combobox'
+import getTranslation from '@/lib/utils/getTranslation'
 
 type Props = {
   initialData: any
@@ -20,15 +21,13 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
     const fetchData = async () => {
       const [allForms] = await Promise.all([getAllForms()])
       const formOptions: Option[] = allForms.data.map((form: Form) => {
-        const translation: FormTranslationSchema =
-          form?.translations?.find(
-            (t: FormTranslationSchema) => t.lang === locale
-          ) ||
-          form?.translations[0] ||
-          {}
+        const translation: FormTranslationSchema = getTranslation({
+          translations: form?.translations,
+          locale,
+        })
         return {
           value: String(form.id),
-          label: form?.title,
+          label: translation?.title,
         }
       })
       setFormOptions(formOptions)
@@ -46,10 +45,10 @@ export const ContentEditor = ({ initialData, savePage }: Props) => {
         defaultValue={selectedBlock?.content?.formId || ''}
         options={formOptions}
         placeholder="انتخاب فرم"
-        onChange={(e) =>
+        onChange={(option) =>
           update(selectedBlock?.id as string, 'content', {
             ...selectedBlock?.content,
-            formId: e.target.value,
+            formId: option.value,
           })
         }
       />

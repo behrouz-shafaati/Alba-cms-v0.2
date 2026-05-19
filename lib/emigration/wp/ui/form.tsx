@@ -53,7 +53,7 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
     setState(result)
     setLoading(false)
   }
-  const handleStartEmigration = async (e: React.FormEvent) => {
+  const handleStartUserEmigration = async (e: React.FormEvent) => {
     setLoading(true)
     e.preventDefault()
     const formData = new FormData(formRef.current!)
@@ -187,7 +187,7 @@ export const FormWPEmigration: React.FC<SettingsFormProps> = ({ settings }) => {
               loading={loading}
               type="button"
               role="button"
-              onClick={handleStartEmigration}
+              onClick={handleStartUserEmigration}
             >
               {t?.userBtn || 'Starting user migration'}
             </Button>

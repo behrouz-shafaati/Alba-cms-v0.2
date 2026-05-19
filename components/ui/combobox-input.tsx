@@ -67,7 +67,7 @@ export default function ComboboxInput({
   const _placeholder = placeholder ? placeholder : t.placeholder
 
   const _options = showClean
-    ? [{ label: t?.all, value: '' }, ...options]
+    ? [{ label: t?.all || 'All', value: '' }, ...options]
     : options
 
   if (disabled)

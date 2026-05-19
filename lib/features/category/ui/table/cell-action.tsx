@@ -17,6 +17,7 @@ import { buildCategoryHref } from '../../utils'
 import { deleteCategorysAction } from '../../actions'
 import { useSession } from '@/components/context/SessionContext'
 import authorize from '@/lib/utils/authorize'
+import { useLocale } from '@/hooks/useLocale'
 
 interface CellActionProps {
   data: Category
@@ -27,6 +28,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const { user } = useSession()
+  const dictionary = useLocale()
   const userRoles = user?.roles || []
 
   const canEdit = authorize(
@@ -70,7 +72,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <DropdownMenuItem
               onClick={() => router.push(`/dashboard/categories/${data.id}`)}
             >
-              <Edit className="ml-2 h-4 w-4" /> بروزرسانی
+              <Edit className="me-1 h-4 w-4" /> {dictionary.shared.update}
             </DropdownMenuItem>
           )}
 
@@ -80,12 +82,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Eye className="ml-2 h-4 w-4" /> مشاهده
+              <Eye className="me-1 h-4 w-4" /> {dictionary.shared.view}
             </Link>
           </DropdownMenuItem>
           {canDelete && (
             <DropdownMenuItem onClick={() => setOpen(true)}>
-              <Trash className="ml-2 h-4 w-4" /> حذف
+              <Trash className="me-1 h-4 w-4" /> {dictionary.shared.delete}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

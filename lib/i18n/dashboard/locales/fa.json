@@ -5,12 +5,495 @@
   "dir": "rtl",
   "shared": {
     "chooseYorLanguage": "زبانتان را انتخاب کنید",
-    "failMongodbConnection": "اتصال به پایگاه داده ناموفق بود.",
     "next": "بعدی",
     "previous": "قبلی",
-    "mongodbUri": "Mongodb URL",
-    "fillForm": "لطفا فیلدهای لازم را پر کنید.",
-    "dbError": "خطای پایگاه داده.",
-    "login": "وارد شوید"
+    "mongodbUri": "Mongodb URI",
+    "failMongodbConnection": "اتصال به دیتابیس ناموفق بود.",
+    "fillForm": "لطفا فیلدهای خواسته شده را پر کنید.",
+    "dbError": "خطای دیتابیس",
+    "login": "ورود",
+    "dashboard": "داشبورد",
+    "submitLabel": "ذخیره",
+    "notAuthorized": "شما اجازه‌ی انجام این عملیات را ندارید.",
+    "search": "جستجو",
+    "ah": "آه!",
+    "isEmpty": "خالیه",
+    "from": "از",
+    "selectedRow": "ردیف‌های انتخابی",
+    "filter": "فیلتر",
+    "deleteItems": "حذف آیتم‌ها",
+    "deleteItemsAlarm": "آیا از حذف %s% آیتم اطمینان دارید؟",
+    "warning": "هشدار",
+    "cancel": "لغو",
+    "continue": "ادامه",
+    "update": "بروزرسانی",
+    "view": "مشاهده",
+    "delete": "خذف",
+    "status": "وضعیت",
+    "draft": "پیش‌نویس",
+    "active": "فعال",
+    "deactive": "غیر‌فعال",
+    "published": "منتشر شده",
+    "pending": "در انتظار",
+    "approved": "تایید شده",
+    "rejected": "رد شده",
+    "read": "خواندن",
+    "unread": "نخواندن",
+    "uknown": "نامشخص",
+    "character": "کاراکتر",
+    "close": "بستن",
+    "hello": "سلام",
+
+    "rightNow": "همین الان",
+    "minutesAgo": "دقیقه قبل",
+    "hoursAgo": "ساعت قبل",
+    "daysAgo": "روز قبل",
+    "monthsAgo": "ما قبل",
+    "yearsAgo": "سال قبل",
+    "yearsAnd": "سال و"
+  },
+  "input": {
+    "combobox": {
+      "placeholder": "انتخاب کنید...",
+      "notFound": "چیزی پیدا نشد",
+      "loading": "در حال بارگیری...",
+      "all": "همه"
+    }
+  },
+  "feature": {
+    "dashboard": { "title": "داشبورد" },
+    "post": {
+      "posts": "پست‌ها",
+      "title": "پست‌ها",
+      "create": "افزودن پست",
+      "description": "مدیریت پست‌ها",
+      "status": "وضعیت",
+      "published": "منتشر شده",
+      "draft": "پیش‌نویس",
+      "edit": "ویرایش پست",
+      "view": "مشاهده پست",
+      "form": {
+        "title": "عنوان",
+        "titlePlaceholder": "عنوان",
+        "schema": "JSON Schema",
+        "mainCategory": "دسته اصلی",
+        "otherCategory": "سایر دسته‌ها",
+        "otherCategoryPlaceholder": "دسته‌ها را وارد کنید...",
+        "tags": "برچسب‌ها",
+        "tagsPlaceholder": "برچسب‌ها را وارد کنید...",
+        "featuredImage": "تصویر شاخص",
+        "featuredMovie": "فیلم شاخص",
+        "featuredMovieDescription": "آدرس صفحه‌ی وب آپارات یا یوتیوب",
+        "seoTitle": "عنوان سئو",
+        "seoTitlePlaceholder": "عنوان سئو برای موتورهای جستجو",
+        "slug": "نامک یکتا",
+        "slugDescription": "از حروف، اعداد و خط فاصله (-) استفاده کنید.",
+        "metaDescription": "توضیحات متا",
+        "metaDescriptionPlaceholder": "توضیح مختصر برای نتایج جستجو…",
+        "googleSnippetPreview": "پیش‌نمایش اسنیپت گوگل",
+        "linkOffer": "پیشنهاد لینک",
+        "submit": "ذخیره"
+      }
+    },
+    "postComment": {
+      "title": "مظرات",
+      "description": "مدیریت نظرات",
+      "status": "وضعیت",
+      "pending": "در انتظار",
+      "approved": "پذیرفته شده",
+      "rejected": "رد شده",
+      "unknown": "ناشناخته",
+      "replay": "پاسخ",
+      "accept": "پذیرفتن",
+      "reject": "رد کردن",
+      "delete": "حذف"
+    },
+    "user": {
+      "title": "کاربران",
+      "description": "مدیریت کاربران",
+      "create": "افزودن کاربر",
+      "edit": "ویرایش کاربر",
+      "name": "نام",
+      "username": {
+        "title": "نام کاربری",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "roles": {
+        "title": "نقش‌ها",
+        "description": "",
+        "placeholder": "نقش‌های کاربر را انتخاب کنید...",
+        "required_error": ""
+      },
+      "fName": {
+        "title": "نام",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "lName": {
+        "title": "نام خانوادگی",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "email": {
+        "title": "ایمیل",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "mobile": {
+        "title": "موبایل",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "about": {
+        "title": "درباره‌ی کاربر",
+        "description": "معرفی مختصر کاربر...",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "password": {
+        "title": "رمز عبور",
+        "description": "اگر می‌خواهید رمز عبور کاربر را تغییر دهید، این فیلد را پر کنید.",
+        "placeholder": "",
+        "required_error": ""
+      },
+      "confirmPassword": {
+        "title": "تایید رمز عبور",
+        "description": "",
+        "placeholder": "",
+        "required_error": ""
+      }
+    },
+    "category": {
+      "title": "دسته‌ها",
+      "description": "مدیریت دسته‌ها",
+      "create": "افزودن دسته",
+      "createDescription": "افزودن دسته",
+      "edit": "ویرایش دسته",
+      "editDescription": "ویرایش دسته",
+      "active": "فعال",
+      "deactive": "غیرفعال",
+      "form": {
+        "title": "عنوان",
+        "titlePlaceholder": "عنوان",
+        "slug": "نامک یکتا",
+        "slugPlaceholder": "نامک",
+        "parent": "دسته والد",
+        "parentPlaceholder": "دسته والد",
+        "description": "توضیحات",
+        "descriptionPlaceholder": "توضیحات",
+        "status": "وضعیت",
+        "statusPlaceholder": "وضعیت",
+        "icon": "آیکون",
+        "image": "تصویر شاخص دسته"
+      }
+    },
+    "tag": {
+      "title": "برچسب‌ها",
+      "description": "مدیریت برچسب‌ها",
+      "create": "افزودن برچسب",
+      "createDescription": "افزودن برچسب",
+      "edit": "ویرایش برچسب",
+      "editDescription": "ویرایش برچسب",
+      "active": "فعال",
+      "deactive": "غیرفعال",
+      "form": {
+        "title": "عنوان",
+        "titlePlaceholder": "عنوان",
+        "slug": "نامک یکتا",
+        "slugPlaceholder": "نامک",
+        "description": "توضیحات",
+        "descriptionPlaceholder": "توضیحات",
+        "status": "وضعیت",
+        "statusPlaceholder": "وضعیت",
+        "icon": "آیکون",
+        "image": "تصویر شاخص برچسب"
+      }
+    },
+    "menu": {
+      "title": "فهرست‌ها",
+      "description": "مدیریت فهرست‌ها",
+      "create": "افزودن منو",
+      "edit": "ویرایش منو",
+      "addItem": "افزودن آیتم*"
+    },
+    "page": {
+      "title": "برگه‌ها",
+      "description": "توضیحات برگه‌ها",
+      "create": "افزودن برگه",
+      "status": "وضعیت",
+      "published": "منتشر شده",
+      "draft": "پیش‌نویس"
+    },
+    "adCampaign": {
+      "title": "کمپین‌های تبلیغاتی",
+      "description": "مدیریت کمپین‌های تبلیغاتی",
+      "create": "ایجاد کمپین",
+      "status": "Status",
+      "draft": "وضعیت",
+      "scheduled": "زمان‌بندی",
+      "active": "فعال",
+      "inactive": "غیرفعال",
+      "ended": "پایان یافته"
+    },
+    "form": {
+      "title": "فرم‌ها",
+      "description": "مدیریت فرم‌ها",
+      "create": "افزودن فرم",
+      "status": "وضعیت",
+      "active": "فعال",
+      "deactive": "غیر‌فعال",
+      "read": "خواندن",
+      "unread": "نخواندن",
+      "inboxMessages": "پیام‌های دریافتی",
+      "inboxMessagesDes": "مدیرت پیام‌های دریافتی",
+      "formDetails": "جزییات فرم",
+      "view": "مشاهده",
+      "delete": "حذف"
+    },
+    "file": {
+      "title": "فایل‌ها",
+      "dropHere": "فایل‌ها را اینجا رها کنید...",
+      "dropHereOrClick": "فایل‌ها را بکشید و اینجا رها کنید یا کلیک کنید",
+      "featured": "شاخص",
+      "fileDetailsForm": {
+        "title": "جزییات فایل",
+        "name": "عنوان",
+        "alt": "متن جایگزین",
+        "description": "توضیحات",
+        "href": "لینک",
+        "target": "باز شدن لینک در",
+        "targetSelf": "همان پنجره",
+        "targetBlamk": "پنجره جدید",
+        "cancel": "لغو",
+        "save": "ذخیره"
+      },
+      "error": {
+        "upload": "خطا در بارگزاری فایل",
+        "maxCount": "حداکثر %s% فایل می‌توانید آپلود کنید",
+        "delete": "خطا در حذف فایل"
+      }
+    },
+    "template": {
+      "title": "قالب‌ها",
+      "create": "افزودن قالب",
+      "description": "مدیریت قالب‌ها",
+      "templateFor": "قالب برای",
+      "status": "وضعیت",
+      "active": "فعال",
+      "deactive": "غیر‌فعال"
+    },
+    "templateSegment": {
+      "title": "قطعه قالب",
+      "description": "مدیریت قطعه قالب‌ها",
+      "create": "افزودن قطعه",
+      "status": "وضعیت",
+      "active": "فعال",
+      "deactive": "غیر فعال"
+    },
+    "setting": {
+      "title": "تنظیمات",
+      "success": "تنظیمات با موفقیت ذخیره شد",
+      "general": {
+        "title": "عمومی",
+        "siteTitle": { "title": "عنوان سایت" },
+        "siteIntroduction": { "title": "معرفی کوتاه" },
+        "siteUrl": { "title": "آدرس سایت" },
+        "homePage": { "title": "برگه خانه" },
+        "termsPage": { "title": "برگه قوانین" },
+        "privacyPage": { "title": "برگه حریم خصوصی" },
+        "favicon": { "title": "Favicon" }
+      },
+      "users": {
+        "title": "کاربران",
+        "defaultRoles": {
+          "title": "نقش‌های پیش‌فرض",
+          "placeholder": "نقش‌های پیش‌فرض را انتخاب کنید"
+        }
+      },
+      "locales": {
+        "title": "زبان‌ها",
+        "locales": {
+          "title": "زبان‌های سایت",
+          "placeholder": "زیان‌های سایت را انتخاب کنید...",
+          "required_error": "لطفا زبان‌های سایت را انتخاب کنید"
+        },
+        "siteDefault": {
+          "title": "زبان پیش‌فرض سایت",
+          "placeholder": "زبان پیش‌فرض را انتخاب کنید...",
+          "required_error": "لطفا زبان پیش‌فرض سایت را انتخاب کنید"
+        },
+        "dashboardDefault": {
+          "title": "زبان پیش‌فرض داشبورد",
+          "placeholder": "زبان پیش‌فرض داشبورد را انتخاب کنید...",
+          "required_error": "لطفا زبان پیش‌فرض سایت را انتخاب کنید"
+        },
+        "success": "زبان با موفقیت تنظیم شد"
+      },
+      "appearance": {
+        "title": "ظاهر",
+        "desktopHeaderHeight": {
+          "title": "ارتفاع سربرگ در دسکتاپ"
+        },
+        "tabletHeaderHeight": {
+          "title": "ارتفاع سربرگ در تبلت"
+        },
+        "mobileHeaderHeight": {
+          "title": "ارتفاع سربرگ در موبایل"
+        }
+      },
+      "adCampaign": {
+        "title": "کمپین تبلیغات",
+        "defaultBanners": "بنر‌های پیش‌فرض",
+        "ratio": "نسبت عرض به ارتفاع",
+        "fallbackBehavior": {
+          "title": "رفتار در نبود بنر تبلیغاتی",
+          "placeholder": "رفتار در نبود بنر تبلیغاتی",
+          "options": {
+            "random": "نمایش بنر تصادفی",
+            "default_banner": "نمایش بنر پیش‌فرض",
+            "hide": "عدم نمایش"
+          }
+        },
+        "targetUrl": {
+          "title": "لینک بنر پیش‌فرض",
+          "placeholder": "لینک مقصد"
+        }
+      },
+      "email": {
+        "title": "ایمیل",
+        "mail_host": {
+          "title": "Mail host",
+          "placeholder": "mail.example.com",
+          "description": "The SMTP server address you get from your host or email service."
+        },
+        "mail_port": {
+          "title": "Mail post",
+          "placeholder": "Usually 465 or 587",
+          "description": "The port number used to connect to SMTP."
+        },
+        "mail_username": {
+          "title": "Mail usename",
+          "placeholder": "noreply@example.com",
+          "description": "The same email address you use for sending."
+        },
+        "mail_password": {
+          "title": "Mail password",
+          "placeholder": "",
+          "description": "Password or App Password of the same email."
+        }
+      },
+      "sms": {
+        "title": "پیامک"
+      },
+      "validation": {
+        "title": "اعتبارسنجی",
+        "commentApprovalRequired": {
+          "title": "نمایش دیدگاه‌ها بعد از بررسی"
+        },
+        "emailVerificationRequired": {
+          "title": "اعتبار سنجی مالکیت ایمیل کاربران"
+        },
+        "mobileVerificationRequired": {
+          "title": "اعتبار سنجی مالکیت شماره موبایل کابران"
+        }
+      },
+      "wpEmigration": {
+        "title": "مهاجرت از وردپرس",
+        "note": "Note: For a successful WordPress migration, your database must be completely empty. In other words, the first thing you do after the site is up and running is to perform the migration.",
+        "baseUrl": { "title": "Site address" },
+        "apiKey": { "title": "API Key" },
+        "newDomain": {
+          "title": "New site address",
+          "description": "If you change the domain by filling in this field, the internal links will change to the new domain. If the domain is not going to change, leave this field blank."
+        },
+        "contentLanguage": {
+          "title": "Content language",
+          "placeholder": "Select your content language..."
+        },
+        "testBtn": "Connection test",
+        "userBtn": "Starting user migration",
+        "taxoBtn": "Taxonomy migration begins",
+        "postBtn": "Start post migration",
+        "commentBtn": "Start migration Post views"
+      }
+    },
+    "logout": { "title": "خروج" },
+    "productCategory": {
+      "title": "Product categories",
+      "description": "Product categories management",
+      "create": "Add product category",
+      "edit": "Edit product catgory",
+      "editDescription": "Edit product catgory",
+      "add": "Add product catgory",
+      "addDescription": "Add product catgory",
+      "active": "Active",
+      "deactive": "Dective",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Title",
+        "slug": "Slug",
+        "slugPlaceholder": "Slug",
+        "parent": "Parent product category",
+        "parentPlaceholder": "Parent product category",
+        "description": "Description",
+        "descriptionPlaceholder": "Description",
+        "status": "Status",
+        "statusPlaceholder": "Status",
+        "icon": "Icon",
+        "image": "Featured product category image"
+      }
+    },
+    "productTag": {
+      "title": "Product tags",
+      "description": "Product tags management",
+      "create": "Add product tags",
+      "createDescription": "Add product tags",
+      "edit": "Edit product tags",
+      "editDescription": "Edit product tags",
+      "active": "Active",
+      "deactive": "Dective",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Title",
+        "slug": "Slug",
+        "slugPlaceholder": "Slug",
+        "parent": "Parent product tags",
+        "parentPlaceholder": "Parent product tags",
+        "description": "Description",
+        "descriptionPlaceholder": "Description",
+        "status": "Status",
+        "statusPlaceholder": "Status",
+        "icon": "Icon",
+        "image": "Featured product tags image"
+      }
+    }
+  },
+  "installer": {
+    "title": "Installation",
+    "chooseLanguage": "Choose language",
+    "steps": {
+      "dashboard_lang": {
+        "title": "Your language"
+      },
+      "db": {
+        "title": "Database"
+      },
+      "admin": {
+        "title": "Create admin"
+      },
+      "suported_lang": {
+        "title": "Site Languages"
+      },
+      "finish": {
+        "title": "Finish",
+        "description": "Configuration completed successfully 🥳"
+      }
+    }
   }
 }

@@ -46,6 +46,7 @@ export const SettingsSchema = {
       type: 'string',
       title: 'آیکون',
       default: undefined,
+      'x-field': 'IconPickerField',
     },
     readOnly: {
       title: 'مقدار ثابت',
